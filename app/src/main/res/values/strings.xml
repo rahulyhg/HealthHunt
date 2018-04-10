@@ -19,6 +19,12 @@
     <string name="terms_and_conditions_part2">Conditions and Privacy Policy </string>
     <string name="already_have_account">Already have an account?</string>
     <string name="signin">Sign in</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="setup_new_password">Set Up new password</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_password">Repeat password</string>
+
+
 
 
     <!-- Tags screen string values -->

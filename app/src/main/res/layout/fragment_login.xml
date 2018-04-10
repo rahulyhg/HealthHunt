@@ -30,56 +30,27 @@
 
         <include layout="@layout/login_with_facebook_gmail_view"></include>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/receive_product_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/receive_product_offer"/>
-
-        </LinearLayout>
-
         <Button
             android:id="@+id/login"
             android:layout_width="250dp"
             android:layout_height="48dp"
-            android:text="@string/signup"
+            android:text="@string/login"
             android:textColor="@android:color/white"
             android:gravity="center"
             android:layout_gravity="center"
             android:textAllCaps="false"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="25dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions_part1"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions_part2"
-                android:gravity="center"
-                />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/forgot_password"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:text="@string/forgot_your_password"
+            android:layout_marginTop="2dp"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@null"/>
 
     </LinearLayout>
 
@@ -106,14 +77,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="@string/already_have_account" />
+                android:text="@string/dont_have_an_account" />
 
             <Button
-                android:id="@+id/sign_in"
+                android:id="@+id/sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="@string/signin" />
+                android:text="@string/signup" />
 
 
         </LinearLayout>
