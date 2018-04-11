@@ -1,7 +1,5 @@
-package presenter;
+package in.healthhunt.presenter;
 
-
-import android.os.Handler;
 
 /**
  * Created by abhishekkumar on 4/9/18.

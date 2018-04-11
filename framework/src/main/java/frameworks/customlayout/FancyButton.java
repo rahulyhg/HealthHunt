@@ -260,7 +260,7 @@ public class FancyButton  extends LinearLayout{
     }
 
     /**
-     * Text Icon resource view
+     * Text Icon resource in.healthhunt.view
      * @return : ImageView
      */
     private ImageView setupIconView(){
@@ -821,7 +821,7 @@ public class FancyButton  extends LinearLayout{
     }
 
     /**
-     * Override setEnabled and rebuild the fancybutton view
+     * Override setEnabled and rebuild the fancybutton in.healthhunt.view
      * To redraw the button according to the state : enabled or disabled
      * @param value
      */

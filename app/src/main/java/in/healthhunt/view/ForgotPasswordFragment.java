@@ -1,4 +1,4 @@
-package view;
+package in.healthhunt.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
-import presenter.ILoginPresenter;
+import in.healthhunt.presenter.ILoginPresenter;
 
 /**
  * Created by abhishekkumar on 4/10/18.
