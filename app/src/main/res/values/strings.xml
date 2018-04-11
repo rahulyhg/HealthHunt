@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">HealthHunt</string>
+
+    <!-- Login and sign up screen string values -->
+
+    <string name="skip">Skip</string>
+    <string name="healthhunt">healthhunt</string>
+    <string name="login_with">Login with</string>
+    <string name="or">OR</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="signup">Sign Up</string>
+    <string name="signup_with">Sign Up with</string>
+    <string name="receive_product_offer">Receive product offers and discount \n offers on marketplace</string>
+    <string name="terms_and_conditions_part1">By signing up, you agree to Terms and </string>
+    <string name="terms_and_conditions_part2">Conditions and Privacy Policy </string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="signin">Sign in</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="setup_new_password">Set Up new password</string>
+    <string name="new_password">New password</string>
+    <string name="repeat_password">Repeat password</string>
+
+
+
+
+    <!-- Tags screen string values -->
+
+    <string name="select_at_least_5_tags_part1">You\'re almost done! Select at least 5 tags to</string>
+    <string name="select_at_least_5_tags_part2">personalize your feed</string>
+    <string name="done">Done</string>
+    <string name="search_by_tags">Search by tags</string>
+    <string name="select_all">Select all</string>
+    <string name="exercise">Exercise</string>
+
+
+    <!-- USP screen string values -->
+
+    <string name="explore_new_things_part1">Explore a lot of new things about mental and</string>
+    <string name="explore_new_things_part2">physical health</string>
+    <string name="get_started">Get started</string>
+    <string name="swipe_left_and_right">Swipe left and right</string>
 </resources>
