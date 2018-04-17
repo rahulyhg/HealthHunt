@@ -5,114 +5,147 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/hh_background"
     tools:context="com.example.abhishekkumar.sample_healthhunt.LoginActivity">
 
 
     <include layout="@layout/login_signup_skip_view"></include>
 
-
-    <LinearLayout
-        android:id="@+id/login_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/login_with" />
-
-
-        <include layout="@layout/login_with_facebook_gmail_view"></include>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <CheckBox
-                android:id="@+id/receive_product_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/receive_product_offer"/>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/sign_up"
-            android:layout_width="250dp"
-            android:layout_height="48dp"
-            android:text="@string/signup"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textAllCaps="false"
-            android:layout_marginTop="20dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions_part1"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions_part2"
-                android:gravity="center"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:layout_weight="1"
-        android:gravity="bottom">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black"></View>
+        android:layout_marginTop="1dp">
 
         <LinearLayout
+            android:id="@+id/login_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:text="@string/already_have_account" />
+                android:layout_gravity="center"
+                android:text="@string/signup_with"
+                android:fontFamily="@string/font_family_regular"
+                android:textSize="16sp"
+                android:textColor="@color/hh_text_color"/>
+
+
+            <include layout="@layout/login_with_facebook_gmail_view"></include>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:gravity="left|center">
+
+                <CheckBox
+                    android:id="@+id/receive_product_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/receive_product_offer"
+                    android:textSize="12sp"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_text_color"/>
+
+            </LinearLayout>
 
             <Button
-                android:id="@+id/sign_in"
-                android:layout_width="wrap_content"
+                android:id="@+id/sign_up"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/signin" />
+                android:backgroundTint="@color/hh_green_light2"
+                android:text="@string/signup"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@string/font_family_medium"
+                android:textSize="14sp"
+                android:layout_marginStart="95dp"
+                android:layout_marginEnd="95dp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/terms_and_conditions_part1"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:fontFamily="@string/font_family_regular"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/terms_and_conditions_part2"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:fontFamily="@string/font_family_regular"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:background="@android:color/transparent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/hh_line_color"></View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:gravity="center"
+                    android:text="@string/already_have_account"
+                    android:textSize="14sp"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_grey_dark"/>
+
+                <TextView
+                    android:id="@+id/sign_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="@string/signin"
+                    android:textSize="14sp"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_green_light2"/>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 

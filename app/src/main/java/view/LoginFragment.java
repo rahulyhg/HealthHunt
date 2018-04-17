@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.BindView;
@@ -31,10 +32,10 @@ public class LoginFragment extends Fragment{
     Button mLogin;
 
     @BindView(R.id.sign_up)
-    Button mSignUp;
+    TextView mSignUp;
 
     @BindView(R.id.forgot_password)
-    Button mForgot_Password;
+    TextView mForgot_Password;
 
     @BindView(R.id.facebook)
     ImageButton mFacebook;
