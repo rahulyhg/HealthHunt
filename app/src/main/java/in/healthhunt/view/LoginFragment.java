@@ -1,6 +1,7 @@
 package in.healthhunt.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,13 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
+import in.healthhunt.model.Constants;
 import in.healthhunt.presenter.ILoginPresenter;
 
 /**
@@ -29,10 +31,10 @@ public class LoginFragment extends Fragment{
     Button mLogin;
 
     @BindView(R.id.sign_up)
-    Button mSignUp;
+    TextView mSignUp;
 
     @BindView(R.id.forgot_password)
-    Button mForgot_Password;
+    TextView mForgot_Password;
 
     @BindView(R.id.facebook)
     ImageButton mFacebook;
@@ -85,6 +87,10 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.gmail)
     void onGmail() {
+        Intent intent = IPresenter.loginGoogle(getContext());
+        if(intent != null) {
+            startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
+        }
 
     }
 

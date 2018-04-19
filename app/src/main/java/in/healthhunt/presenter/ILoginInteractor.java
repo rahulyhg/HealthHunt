@@ -1,5 +1,6 @@
 package in.healthhunt.presenter;
-
+import android.content.Context;
+import android.content.Intent;
 import in.healthhunt.model.ErrorInfo;
 
 /**
@@ -14,4 +15,6 @@ public interface ILoginInteractor {
     }
 
     void login(String userName, String password, OnLoginFinishListener loginFinishListener);
+    String loginWithFacebook(Context context);
+    Intent loginWithGmail(Context context);
 }

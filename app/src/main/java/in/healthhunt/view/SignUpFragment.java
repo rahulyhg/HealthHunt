@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +28,7 @@ public class SignUpFragment extends Fragment {
     Button mSignUp;
 
     @BindView(R.id.sign_in)
-    Button mSignIn;
+    TextView mSignIn;
 
     @BindView(R.id.facebook)
     ImageButton mFacebook;

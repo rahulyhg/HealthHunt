@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    >
-    <Button
+    android:layout_height="80dp"
+    android:background="@color/hh_grey_light">
+    <TextView
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:gravity="center"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
         android:layout_alignParentRight="true"
-        android:text="@string/skip" />
+        android:fontFamily="@string/font_family_regular"
+        android:textSize="15sp"
+        android:text="@string/skip"
+        android:textAllCaps="true"
+        android:textColor="@color/hh_grey_dark"/>
 
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
-
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@mipmap/h_blue"
-            android:layout_marginEnd="5dp"
-            />
+            android:layout_width="24dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/image"
+            android:scaleType="centerCrop"
+            android:id="@+id/imageView"
+            android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/skip"
             android:text="@string/healthhunt"
-            android:textSize="30dp"
-            android:gravity="bottom"
-            android:textColor="@android:color/holo_green_dark"
-            />
+            android:textColor="@color/hh_green_light"
+            android:textSize="32sp"
+            android:fontFamily="@string/font_family_light"
+            android:paddingStart="13dp"
+            android:paddingTop="5dp"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
-
-    <View android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/black"></View>
-
-
 </RelativeLayout>
 
