@@ -1,4 +1,4 @@
-package model;
+package in.healthhunt.model;
 
 /**
  * Created by abhishekkumar on 4/19/18.

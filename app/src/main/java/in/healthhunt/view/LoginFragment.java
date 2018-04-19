@@ -1,6 +1,7 @@
-package view;
+package in.healthhunt.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,18 +18,23 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
-import presenter.ILoginPresenter;
+import in.healthhunt.model.Constants;
+import in.healthhunt.presenter.ILoginPresenter;
 
 /**
  * Created by abhishekkumar on 4/9/18.
  */
 
-public class SignUpFragment extends Fragment {
-    @BindView(R.id.sign_up)
-    Button mSignUp;
+public class LoginFragment extends Fragment{
 
-    @BindView(R.id.sign_in)
-    TextView mSignIn;
+    @BindView(R.id.login)
+    Button mLogin;
+
+    @BindView(R.id.sign_up)
+    TextView mSignUp;
+
+    @BindView(R.id.forgot_password)
+    TextView mForgot_Password;
 
     @BindView(R.id.facebook)
     ImageButton mFacebook;
@@ -48,7 +54,7 @@ public class SignUpFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_signup, container,  false);
+        View view = inflater.inflate(R.layout.fragment_login, container,  false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -59,14 +65,19 @@ public class SignUpFragment extends Fragment {
         IPresenter = ((LoginActivity) context).getPresenter();
     }
 
-    @OnClick(R.id.sign_up)
-    void onSignUp() {
-        IPresenter.validateCredentialsSignUp(mEmail.getText().toString(), mPassword.getText().toString());
+    @OnClick(R.id.login)
+    void onLogin() {
+        IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
-    @OnClick(R.id.sign_in)
-    void OnSignIn(){
-        IPresenter.loadFragment(LoginFragment.class.getSimpleName());
+    @OnClick(R.id.sign_up)
+    void onSignUp() {
+        IPresenter.loadFragment(SignUpFragment.class.getSimpleName());
+    }
+
+    @OnClick(R.id.forgot_password)
+    void onForgotPassword(){
+        IPresenter.loadFragment(ForgotPasswordFragment.class.getSimpleName());
     }
 
     @OnClick(R.id.facebook)
@@ -76,6 +87,10 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.gmail)
     void onGmail() {
+        Intent intent = IPresenter.loginGoogle(getContext());
+        if(intent != null) {
+            startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
+        }
 
     }
 

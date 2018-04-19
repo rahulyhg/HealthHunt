@@ -1,9 +1,7 @@
-package presenter;
-
+package in.healthhunt.presenter;
 import android.content.Context;
 import android.content.Intent;
-
-import model.ErrorInfo;
+import in.healthhunt.model.ErrorInfo;
 
 /**
  * Created by abhishekkumar on 4/9/18.

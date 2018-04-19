@@ -1,4 +1,4 @@
-package view;
+package in.healthhunt.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,11 +20,11 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import model.Constants;
-import presenter.ILoginPresenter;
-import presenter.ILoginView;
-import presenter.LoginInteractorImpl;
-import presenter.LoginPresenterImpl;
+import in.healthhunt.model.Constants;
+import in.healthhunt.presenter.ILoginPresenter;
+import in.healthhunt.presenter.ILoginView;
+import in.healthhunt.presenter.LoginInteractorImpl;
+import in.healthhunt.presenter.LoginPresenterImpl;
 
 /**
  * Created by abhishekkumar on 4/9/18.
