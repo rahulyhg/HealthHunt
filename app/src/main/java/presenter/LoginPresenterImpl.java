@@ -1,5 +1,10 @@
 package presenter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
+import in.healthhunt.R;
 import model.ErrorInfo;
 
 /**
@@ -8,6 +13,7 @@ import model.ErrorInfo;
 
 public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnLoginFinishListener {
 
+    private final String TAG = LoginPresenterImpl.class.getSimpleName();
     ILoginView ILoginView;
     ILoginInteractor ILoginInteractor;
 
@@ -59,9 +65,30 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         }
     }
 
+    private boolean validateGoogleServerClientID(Context context) {
+        String serverClientId = context.getString(R.string.server_client_id);
+        String suffix = ".apps.googleusercontent.com";
+        if (!serverClientId.trim().endsWith(suffix)) {
+            String message = "Invalid server client ID in strings.xml, must end with " + suffix;
+            Log.d(TAG, message);
+            return false;
+
+        }
+        return true;
+    }
+
     @Override
     public void loadFragment(String tag) {
         ILoginView.showFragment(tag);
+    }
+
+    @Override
+    public Intent loginGoogle(Context context) {
+        Intent intent = null;
+        if(validateGoogleServerClientID(context)) {
+            intent = ILoginInteractor.loginWithGmail(context);
+        }
+        return intent;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package presenter;
 
+import android.content.Context;
+import android.content.Intent;
+
 import model.ErrorInfo;
 
 /**
@@ -14,4 +17,6 @@ public interface ILoginInteractor {
     }
 
     void login(String userName, String password, OnLoginFinishListener loginFinishListener);
+    String loginWithFacebook(Context context);
+    Intent loginWithGmail(Context context);
 }

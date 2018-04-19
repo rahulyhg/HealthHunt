@@ -1,10 +1,10 @@
 package view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
+import model.Constants;
 import presenter.ILoginPresenter;
 
 /**
@@ -88,6 +87,10 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.gmail)
     void onGmail() {
+        Intent intent = IPresenter.loginGoogle(getContext());
+        if(intent != null) {
+            startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
+        }
 
     }
 

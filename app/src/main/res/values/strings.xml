@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">HealthHunt</string>
+    <string name="server_client_id">Your client id</string>
+
 
     <!-- Font family -->
 
