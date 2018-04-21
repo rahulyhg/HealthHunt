@@ -13,4 +13,5 @@ public interface ILoginPresenter {
     void validateNewPassword(String newPassword, String repeatPassword);
     void loadFragment(String tag);
     Intent loginGoogle(Context context);
+    void loginFacebook(Context context);
 }
