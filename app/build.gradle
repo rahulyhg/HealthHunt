@@ -5,9 +5,15 @@ android {
     signingConfigs {
         debug {
             storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_debug.jks')
+            keyAlias 'healthhunt'
+            keyPassword 'healthhunt@123'
+            storePassword 'healthhunt@123'
         }
         release {
             storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_keystore')
+            keyAlias 'healthhunt'
+            keyPassword 'healthhunt@123'
+            storePassword 'healthhunt@123'
         }
     }
     compileSdkVersion 26
@@ -23,6 +29,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
@@ -35,6 +45,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     //implementation 'com.jakewharton:butterknife:8.0.1'
     //compile 'com.jakewharton:butterknife:8.0.1'
     //apt 'com.jakewharton:butterknife-compiler:8.0.1'

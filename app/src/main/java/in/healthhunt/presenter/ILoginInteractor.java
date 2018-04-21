@@ -1,6 +1,10 @@
 package in.healthhunt.presenter;
 import android.content.Context;
 import android.content.Intent;
+
+import com.facebook.FacebookCallback;
+import com.facebook.login.LoginResult;
+
 import in.healthhunt.model.ErrorInfo;
 
 /**
@@ -15,6 +19,6 @@ public interface ILoginInteractor {
     }
 
     void login(String userName, String password, OnLoginFinishListener loginFinishListener);
-    String loginWithFacebook(Context context);
+    String loginWithFacebook(Context context, FacebookCallback<LoginResult> facebookCallback);
     Intent loginWithGmail(Context context);
 }

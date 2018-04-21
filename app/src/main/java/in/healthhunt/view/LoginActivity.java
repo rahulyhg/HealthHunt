@@ -25,6 +25,7 @@ import in.healthhunt.presenter.ILoginPresenter;
 import in.healthhunt.presenter.ILoginView;
 import in.healthhunt.presenter.LoginInteractorImpl;
 import in.healthhunt.presenter.LoginPresenterImpl;
+import in.healthhunt.presenter.facebook.Facebook;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -134,7 +135,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             } catch (ApiException e) {
                 Log.d(TAG, "Sign-in failed", e);
             }
-            // [END get_auth_code]
         }
+            else {
+                Facebook.getInstance(getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
+            }
+            // [END get_auth_code]
     }
 }

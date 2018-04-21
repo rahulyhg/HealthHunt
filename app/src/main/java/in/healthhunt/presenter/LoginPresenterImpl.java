@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+
 import in.healthhunt.R;
 import in.healthhunt.model.ErrorInfo;
 
@@ -89,6 +93,25 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
             intent = ILoginInteractor.loginWithGmail(context);
         }
         return intent;
+    }
+
+    @Override
+    public void loginFacebook(Context context) {
+        ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // here write code When Login successfully
+                //Log.i("TAG1","Result " + loginResult.getAccessToken().getToken());
+            }
+
+            @Override
+            public void onCancel() {}
+
+            @Override
+            public void onError(FacebookException e) {
+                // here write code when get error
+            }
+        });
     }
 
     @Override

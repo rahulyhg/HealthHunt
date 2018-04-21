@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.facebook)
     void onFacebook() {
-
+          IPresenter.loginFacebook(getContext());
     }
 
     @OnClick(R.id.gmail)

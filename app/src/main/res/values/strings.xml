@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">HealthHunt</string>
     <string name="server_client_id">Your client id</string>
-
+    <string name="facebook_app_id">177899886168346</string>
+    <string name="fb_login_protocol_scheme">fb177899886168346</string>
 
     <!-- Font family -->
 
