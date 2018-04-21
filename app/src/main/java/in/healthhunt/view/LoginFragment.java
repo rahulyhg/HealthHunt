@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,13 +26,14 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.Constants;
 import in.healthhunt.presenter.ILoginPresenter;
+import in.healthhunt.presenter.facebook.Facebook;
 
 /**
  * Created by abhishekkumar on 4/9/18.
  */
 
 public class LoginFragment extends Fragment{
-
+    private final String TAG = LoginActivity.class.getSimpleName();
     @BindView(R.id.login)
     Button mLogin;
 
@@ -92,6 +99,29 @@ public class LoginFragment extends Fragment{
             startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
         }
 
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.GMAIL_REQUEST_CODE) {
+            // [START get_auth_code]
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                String authCode = account.getIdToken();
+
+                Log.d(TAG, "AuthCode = " + authCode);
+                // TODO(developer): send code to server and exchange for access/refresh/ID tokens
+            } catch (ApiException e) {
+                e.printStackTrace();
+                Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            }
+        }
+        else {
+            Facebook.getInstance(getContext().getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        }
+        // [END get_auth_code]
     }
 
     @Override

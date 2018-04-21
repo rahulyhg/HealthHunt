@@ -119,26 +119,5 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         loadFragment(fragment);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.GMAIL_REQUEST_CODE) {
-            // [START get_auth_code]
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                String authCode = account.getServerAuthCode();
-
-                Log.d(TAG, "AuthCode = " + authCode);
-                // TODO(developer): send code to server and exchange for access/refresh/ID tokens
-            } catch (ApiException e) {
-                Log.d(TAG, "Sign-in failed", e);
-            }
-        }
-            else {
-                Facebook.getInstance(getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
-            }
-            // [END get_auth_code]
-    }
 }

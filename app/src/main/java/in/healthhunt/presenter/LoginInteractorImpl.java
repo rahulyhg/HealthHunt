@@ -46,7 +46,7 @@ public class LoginInteractorImpl implements ILoginInteractor {
     public Intent loginWithGmail(Context context) {
         String serverClientId = context.getResources().getString(R.string.server_client_id);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestServerAuthCode(serverClientId)
+                .requestIdToken(serverClientId)
                 .requestEmail()
                 .build();
         return GoogleSignIn.getClient(context, gso).getSignInIntent();
