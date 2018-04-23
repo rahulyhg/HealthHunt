@@ -14,10 +14,19 @@ import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
+import framework.retrofit.ResponseResolver;
+import framework.retrofit.RestError;
+import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.R;
+import in.healthhunt.model.beans.LoginRequest;
+import in.healthhunt.model.beans.LoginResponse;
 import in.healthhunt.presenter.facebook.Facebook;
+import retrofit2.Response;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -25,7 +34,18 @@ import in.healthhunt.presenter.facebook.Facebook;
 
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
-    public void login(String userName, String password, OnLoginFinishListener loginFinishListener) {
+    public void login(String authCode, LoginRequest loginRequest, OnLoginFinishListener loginFinishListener) {
+        WebServicesWrapper.getInstance().login(authCode, loginRequest, new ResponseResolver<LoginResponse>() {
+            @Override
+            public void onSuccess(LoginResponse loginResponse, Response response) {
+                Log.i("TAGLoginInte", "response " + loginResponse + "Response " + response);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                Log.i("TAGLoginInte", "Failure " + error.getMessage());
+            }
+        });
         // implement the login code here
 
     }

@@ -6,6 +6,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.login.LoginResult;
 
 import in.healthhunt.model.ErrorInfo;
+import in.healthhunt.model.beans.LoginRequest;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -18,7 +19,7 @@ public interface ILoginInteractor {
         void onError(ErrorInfo errorInfo);
     }
 
-    void login(String userName, String password, OnLoginFinishListener loginFinishListener);
+    void login(String authCode, LoginRequest loginRequest, OnLoginFinishListener loginFinishListener);
     String loginWithFacebook(Context context, FacebookCallback<LoginResult> facebookCallback);
     Intent loginWithGmail(Context context);
 }

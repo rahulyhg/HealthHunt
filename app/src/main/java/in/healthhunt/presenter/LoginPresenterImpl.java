@@ -7,9 +7,10 @@ import android.util.Log;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
-
 import in.healthhunt.R;
 import in.healthhunt.model.ErrorInfo;
+import in.healthhunt.model.beans.LoginRequest;
+import in.healthhunt.model.beans.Utility;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -31,7 +32,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         if((username != null && !username.isEmpty())
                 && (password != null && !password.isEmpty())) {
             ILoginView.onShowProgress();
-            ILoginInteractor.login(username,password, this);
+            ILoginInteractor.login(createAuthCode("login"), createLoginRequest(username,password), this);
         }
         else {
             ILoginView.onHideProgress();
@@ -45,7 +46,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         if((username != null && !username.isEmpty())
                 && (password != null && !password.isEmpty())) {
             ILoginView.onShowProgress();
-            ILoginInteractor.login(username,password, this);
+            //ILoginInteractor.login(createLoginRequest(username, password), this);
         }
         else {
             ILoginView.onHideProgress();
@@ -60,7 +61,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
             if(newPassword.equals(repeatPassword)) {
                 // get Username and then call login
                 ILoginView.onShowProgress();
-                ILoginInteractor.login("", newPassword, this);
+                //ILoginInteractor.login(null, newPassword, this);
             }
             else {
                 // show alert box for wrong passwords
@@ -122,5 +123,18 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     @Override
     public void onError(ErrorInfo errorInfo) {
 
+    }
+
+    private LoginRequest createLoginRequest(String email, String password) {
+        LoginRequest loginRequest = new LoginRequest();
+        //loginRequest.setmEmail(email);
+        //loginRequest.setmPassword(password);
+        return loginRequest;
+    }
+
+    private String createAuthCode(String requestUrl) {
+        String timeStamp = Utility.getTimeStamp();
+        String authCode = requestUrl + "Bd6723sXcVBg12Fe" + timeStamp;
+        return authCode;
     }
 }
