@@ -41,8 +41,7 @@
 
     <!-- Tags screen string values -->
 
-    <string name="select_at_least_5_tags_part1">You\'re almost done! Select at least 5 tags to</string>
-    <string name="select_at_least_5_tags_part2">personalize your feed</string>
+    <string name="select_at_least_5_tags">You\'re almost done! Select at least 5 tags to personalize your feed</string>
     <string name="done">Done</string>
     <string name="search_by_tags">Search by tags</string>
     <string name="select_all">Select all</string>

@@ -14,6 +14,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Tag;
 import in.healthhunt.presenter.TagPresenterImp;
@@ -30,9 +31,6 @@ public class TagActivity extends BaseActivity {
     @BindView(R.id.select_all)
     public TextView mSelectAll;
 
-    @BindView(R.id.spinner_toolbar)
-    public Toolbar mToolbar;
-
     @BindView(R.id.spinner)
     public Spinner mSpinner;
 
@@ -46,11 +44,6 @@ public class TagActivity extends BaseActivity {
         setContentView(R.layout.activity_tags);
         ButterKnife.bind(this);
 
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        }
         addSpinnerAdapter();
         mTagPresenterImp = new TagPresenterImp(getApplicationContext());
 
@@ -68,6 +61,8 @@ public class TagActivity extends BaseActivity {
 
     private void addTagAdapter() {
         TagAdapter tagAdapter = new TagAdapter(mTagPresenterImp);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        //gridLayoutManager.setS
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(tagAdapter);
     }
@@ -75,6 +70,12 @@ public class TagActivity extends BaseActivity {
     private void addSpinnerAdapter() {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
         mSpinner.setAdapter(arrayAdapter);
+    }
+
+
+    @OnClick(R.id.done)
+    void onDoneClick(){
+         // To Do
     }
 
 
