@@ -1,31 +1,22 @@
 package in.healthhunt.view;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.Constants;
 import in.healthhunt.presenter.ILoginPresenter;
 import in.healthhunt.presenter.ILoginView;
 import in.healthhunt.presenter.LoginInteractorImpl;
 import in.healthhunt.presenter.LoginPresenterImpl;
-import in.healthhunt.presenter.facebook.Facebook;
 
 /**
  * Created by abhishekkumar on 4/9/18.
