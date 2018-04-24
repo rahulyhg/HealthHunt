@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:id="@+id/tag_view"
+    android:layout_height="36dp"
+    android:background="@drawable/tag_item_bg"
+    android:layout_margin="4dp"
+    android:gravity="center">
 
     <LinearLayout
-        android:id="@+id/tag_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/tag_image"
-            android:layout_width="40dp"
-            android:layout_height="30dp"
-            android:src="@mipmap/h_blue"
+            android:layout_width="15dp"
+            android:layout_height="9dp"
+            android:src="@mipmap/ic_tag_item_icon"
+            android:layout_gravity="center"
             />
 
         <TextView
             android:id="@+id/tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/exercise"/>
+            android:text="@string/exercise"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14dp"
+            android:textAllCaps="true"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/hh_green_light2"
+            android:fontFamily="@string/font_family_medium"/>
     </LinearLayout>
 
 </LinearLayout>
