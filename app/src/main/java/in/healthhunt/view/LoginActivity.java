@@ -47,10 +47,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
+        if(ForgotPasswordFragment.class.getSimpleName().equals(tag)) { // Needed when user press the back button on forgot password screen
+            fragmentTransaction.addToBackStack(tag);
+        }
         fragmentTransaction.commit();
     }
 
@@ -107,8 +110,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             }
             fragmentMap.put(tag, fragment);
         }
-        loadFragment(fragment);
+        loadFragment(fragment, tag);
     }
-
-
 }
