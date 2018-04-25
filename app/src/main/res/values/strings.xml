@@ -38,7 +38,6 @@
 
 
 
-
     <!-- Tags screen string values -->
 
     <string name="select_at_least_5_tags">You\'re almost done! Select at least 5 tags to personalize your feed</string>
@@ -48,10 +47,10 @@
     <string name="exercise">Exercise</string>
 
 
-    <!-- USP screen string values -->
+    <!-- OnBoarding screen string values -->
 
-    <string name="explore_new_things_part1">Explore a lot of new things about mental and</string>
-    <string name="explore_new_things_part2">physical health</string>
+    <string name="explore_new_things">Explore a lot of new things about mental and physical health</string>
     <string name="get_started">Get started</string>
     <string name="swipe_left_and_right">Swipe left and right</string>
+    <string name="swipe_right_back">Swipe right to go back to previous page</string>
 </resources>
