@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
 
+import in.healthhunt.model.beans.HealthHuntUtility;
 import in.healthhunt.model.beans.LoginRequest;
 import in.healthhunt.model.beans.LoginResponse;
 import okhttp3.Interceptor;
@@ -51,16 +52,13 @@ public class WebServicesWrapper {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder request = chain.request().newBuilder();
-                request.addHeader("deviceType", "Android");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                Date date = Calendar.getInstance().getTime();
-                String timeStamp = dateFormat.format(date);
 
-                //String timeStamp = Utility.getTimeStamp();
+
+                String timeStamp = HealthHuntUtility.getGmtTimeStamp();
                 String authCode = "wp-json/sd2/v0.1/login" + " Bd6723sXcVBg12Fe " + timeStamp;
-                String md5 = md5(authCode);
+                String md5 = HealthHuntUtility.getMD5(authCode);
 
+                request.addHeader("deviceType", "Android");
                 request.addHeader("authToken", md5);
                 request.addHeader("apiVersion", "v0.1");
                 request.addHeader("timestamp", timeStamp);
@@ -115,24 +113,6 @@ public class WebServicesWrapper {
 
     }
 
-    public String md5(String s) {
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
-
-            return hexString.toString();
-        }catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 
 
 //    private MultipartBody.Part getPart(String name, File file) {
