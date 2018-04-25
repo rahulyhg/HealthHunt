@@ -34,8 +34,8 @@ import retrofit2.Response;
 
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
-    public void login(String authCode, LoginRequest loginRequest, OnLoginFinishListener loginFinishListener) {
-        WebServicesWrapper.getInstance().login(authCode, loginRequest, new ResponseResolver<LoginResponse>() {
+    public void login(LoginRequest loginRequest, OnLoginFinishListener loginFinishListener) {
+        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<LoginResponse>() {
             @Override
             public void onSuccess(LoginResponse loginResponse, Response response) {
                 Log.i("TAGLoginInte", "response " + loginResponse + "Response " + response);

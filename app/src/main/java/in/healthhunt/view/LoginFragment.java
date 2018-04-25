@@ -75,6 +75,7 @@ public class LoginFragment extends Fragment{
     @OnClick(R.id.login)
     void onLogin() {
         IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
+        //startActivity(new Intent(getActivity(), TagActivity.class));
     }
 
     @OnClick(R.id.sign_up)

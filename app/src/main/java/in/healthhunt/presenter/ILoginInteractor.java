@@ -19,7 +19,7 @@ public interface ILoginInteractor {
         void onError(ErrorInfo errorInfo);
     }
 
-    void login(String authCode, LoginRequest loginRequest, OnLoginFinishListener loginFinishListener);
+    void login(LoginRequest loginRequest, OnLoginFinishListener loginFinishListener);
     String loginWithFacebook(Context context, FacebookCallback<LoginResult> facebookCallback);
     Intent loginWithGmail(Context context);
 }

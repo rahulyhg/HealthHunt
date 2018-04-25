@@ -3,24 +3,24 @@ package framework.retrofit;
 
 import android.util.Log;
 
+import com.facebook.internal.Utility;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
-import java.io.File;
+
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import in.healthhunt.model.beans.LoginRequest;
 import in.healthhunt.model.beans.LoginResponse;
-import in.healthhunt.model.beans.Utility;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "http://www.healthhunt.in/wp-json/sd2/v0.1/";
+    private final static String BASE_URL = "https://www.healthhunt.in/wp-json/sd2/v0.1/";
 
     private static WebServicesWrapper wrapper;
 
@@ -52,12 +52,27 @@ public class WebServicesWrapper {
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder request = chain.request().newBuilder();
                 request.addHeader("deviceType", "Android");
-                String timeStamp = Utility.getTimeStamp();
-                String authCode = "wp-json/sd2/v0.1/login" + " Bd6723sXcVBg12Fe " + timeStamp;
-                request.addHeader("authToken", authCode);
-                request.addHeader("apiVersion", "0.1");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                Date date = Calendar.getInstance().getTime();
+                String timeStamp = dateFormat.format(date);
 
-                Log.i("TAG123", " chain request = " + chain.request().url().encodedPath());
+                //String timeStamp = Utility.getTimeStamp();
+                String authCode = "wp-json/sd2/v0.1/login" + " Bd6723sXcVBg12Fe " + timeStamp;
+                String md5 = md5(authCode);
+
+                request.addHeader("authToken", md5);
+                request.addHeader("apiVersion", "v0.1");
+                request.addHeader("timestamp", timeStamp);
+                request.addHeader("Content-Type", "application/json");
+
+                Log.i("TAG123", " Md5 = " + md5);
+                Log.i("TAG123", " authCode = " + authCode);
+                Log.i("TAG123", " timeStamp = " + timeStamp);
+
+
+
+                Log.i("TAG123", " URL = " + chain.request().url().encodedPath());
                 return chain.proceed(request.build());
             }
         });
@@ -100,6 +115,25 @@ public class WebServicesWrapper {
 
     }
 
+    public String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+
+            return hexString.toString();
+        }catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 
 //    private MultipartBody.Part getPart(String name, File file) {
 //
@@ -116,7 +150,7 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<LoginResponse> login(String authCode, LoginRequest loginRequest, ResponseResolver<LoginResponse> responseResponseResolver) {
+    public Call<LoginResponse> login(LoginRequest loginRequest, ResponseResolver<LoginResponse> responseResponseResolver) {
 
         Call<LoginResponse> loginResponseCall = webServices.login(loginRequest);
 

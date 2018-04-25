@@ -14,11 +14,9 @@ public class LoginRequest {
     @SerializedName("password")
     private String mPassword = "123456";
 
-    @SerializedName("username")
-    private String mUserName = "charlene777";
-
-    @SerializedName("name")
-    private String mName = "charlene";
+//
+//    @SerializedName("name")
+//    private String mName = "charlene";
 
    // @SerializedName("authToken")
     //private String mAuthCode;
@@ -42,13 +40,13 @@ public class LoginRequest {
         this.mPassword = mPassword;
     }
 
-    public String getmUserName() {
-        return mUserName;
-    }
-
-    public String getmName() {
-        return mName;
-    }
+//    public String getmUserName() {
+//        return mUserName;
+//    }
+//
+//    public String getmName() {
+//        return mName;
+//    }
 
 
 
