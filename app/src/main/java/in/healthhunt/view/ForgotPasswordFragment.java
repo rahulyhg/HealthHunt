@@ -40,7 +40,7 @@ public class ForgotPasswordFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forgotpassword, container, false);
-        unbinder = ButterKnife.bind(getActivity(), view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 

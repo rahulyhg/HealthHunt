@@ -21,22 +21,26 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     private final String TAG = LoginPresenterImpl.class.getSimpleName();
     ILoginView ILoginView;
     ILoginInteractor ILoginInteractor;
+    private Context mContext;
 
-    public LoginPresenterImpl(ILoginView loginView, ILoginInteractor loginInteractor) {
+    public LoginPresenterImpl(Context context, ILoginView loginView, ILoginInteractor loginInteractor) {
+        mContext = context;
         ILoginView = loginView;
         ILoginInteractor = loginInteractor;
     }
 
     @Override
     public void validateCredentialsLogIn(String username, String password) {
-        if((username != null && !username.isEmpty())
-                && (password != null && !password.isEmpty())) {
+        if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
-            ILoginInteractor.login(createLoginRequest(username,password), this);
-        }
-        else {
+            //login  and check for email and password is correct or not
             ILoginView.onHideProgress();
-            ILoginView.onEmailError();
+
+            if(true){
+                ILoginView.showLoginAlert();
+            }
+            ILoginInteractor.login(createLoginRequest(username,password), this);
+
         }
         //ILoginView.onHideProgress();
     }
@@ -57,17 +61,18 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
 
     @Override
     public void validateNewPassword(String newPassword, String repeatPassword) {
-        if(newPassword != null && repeatPassword != null) {
-            if(newPassword.equals(repeatPassword)) {
+        Log.i("TAG", "password "+ newPassword);
+        if(!newPassword.isEmpty() && !repeatPassword.isEmpty()) {
+            if (newPassword.equals(repeatPassword)) {
                 // get Username and then call login
-                ILoginView.onShowProgress();
+                ILoginView.showEmailSentAlert();
+                return;
                 //ILoginInteractor.login(null, newPassword, this);
             }
-            else {
-                // show alert box for wrong passwords
-                ILoginView.onHideProgress();
-            }
         }
+        // show alert box for wrong passwords
+        String str = mContext.getResources().getString(R.string.new_password_incorrect);
+        ILoginView.showToast(str);
     }
 
     private boolean validateGoogleServerClientID(Context context) {

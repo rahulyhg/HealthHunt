@@ -13,7 +13,6 @@ import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;

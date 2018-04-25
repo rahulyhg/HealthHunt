@@ -1,5 +1,6 @@
 package in.healthhunt.view;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         ButterKnife.bind(this);
 
-        IPresenter = new LoginPresenterImpl(this, new LoginInteractorImpl());
+        IPresenter = new LoginPresenterImpl(getApplicationContext(), this, new LoginInteractorImpl());
         IPresenter.loadFragment(LoginFragment.class.getSimpleName());
 
     }
@@ -111,5 +116,61 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             fragmentMap.put(tag, fragment);
         }
         loadFragment(fragment, tag);
+    }
+
+    @Override
+    public void showEmailSentAlert() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alertdialog_view);
+        String linkSent = getResources().getString(R.string.link_sent);
+        linkSent = String.format("%s", linkSent, "email");
+        TextView message = dialog.findViewById(R.id.alert_message);
+        message.setText(linkSent);
+
+        TextView title = dialog.findViewById(R.id.alert_title);
+        title.setVisibility(View.GONE);
+
+        Button okButton = dialog.findViewById(R.id.action_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void showLoginAlert() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alertdialog_view);
+        String str = getResources().getString(R.string.email_password_incorrect);
+
+        TextView message = dialog.findViewById(R.id.alert_message);
+        message.setText(str);
+
+        str = getResources().getString(R.string.could_not_log_in);
+        TextView title = dialog.findViewById(R.id.alert_title);
+        title.setText(str);
+
+        str = getResources().getString(R.string.try_again);
+        Button okButton = dialog.findViewById(R.id.action_button);
+        okButton.setText(str);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private View getAlertView() {
+        return getLayoutInflater().inflate(R.layout.alertdialog_view, null, false);
     }
 }
