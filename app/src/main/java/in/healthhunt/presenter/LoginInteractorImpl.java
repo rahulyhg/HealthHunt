@@ -8,16 +8,11 @@ import android.util.Log;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;

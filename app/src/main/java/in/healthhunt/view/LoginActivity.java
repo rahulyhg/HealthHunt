@@ -1,31 +1,22 @@
 package in.healthhunt.view;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.Constants;
 import in.healthhunt.presenter.ILoginPresenter;
 import in.healthhunt.presenter.ILoginView;
 import in.healthhunt.presenter.LoginInteractorImpl;
 import in.healthhunt.presenter.LoginPresenterImpl;
-import in.healthhunt.presenter.facebook.Facebook;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -56,10 +47,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
+        if(ForgotPasswordFragment.class.getSimpleName().equals(tag)) { // Needed when user press the back button on forgot password screen
+            fragmentTransaction.addToBackStack(tag);
+        }
         fragmentTransaction.commit();
     }
 
@@ -116,8 +110,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             }
             fragmentMap.put(tag, fragment);
         }
-        loadFragment(fragment);
+        loadFragment(fragment, tag);
     }
-
-
 }
