@@ -39,6 +39,7 @@
     <string name="could_not_log_in">Could not log in</string>
     <string name="email_password_incorrect">Email or password was incorrect</string>
     <string name="try_again">Try again</string>
+    <string name="email_password_blank">Email and password fields are empty</string>
 
 
 
@@ -61,5 +62,5 @@
     <!-- Alert Screen message for email sent -->
     
     <string name="link_sent">A link to reset your password has been sent to  </string>
-    <string name="new_password_incorrect">Passwords are not same or Password field is empty</string>
+    <string name="new_password_incorrect">Passwords not same or Password fields empty</string>
 </resources>

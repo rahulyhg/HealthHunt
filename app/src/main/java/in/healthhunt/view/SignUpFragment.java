@@ -42,6 +42,9 @@ public class SignUpFragment extends Fragment {
     @BindView(R.id.password)
     EditText mPassword;
 
+    @BindView(R.id.skip)
+    TextView mSkipView;
+
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
 
@@ -50,6 +53,7 @@ public class SignUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container,  false);
         unbinder = ButterKnife.bind(this, view);
+        mSkipView.setVisibility(View.GONE);
         return view;
     }
 

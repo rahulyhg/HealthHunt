@@ -42,19 +42,27 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
             ILoginInteractor.login(createLoginRequest(username,password), this);
 
         }
+        else {
+            String str = mContext.getResources().getString(R.string.email_password_blank);
+            ILoginView.showToast(str);
+        }
         //ILoginView.onHideProgress();
     }
 
     @Override
     public void validateCredentialsSignUp(String username, String password) {
-        if((username != null && !username.isEmpty())
-                && (password != null && !password.isEmpty())) {
+        if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
-            //ILoginInteractor.login(createLoginRequest(username, password), this);
+            //signup
+            ILoginView.onHideProgress();
+
+            if(true){
+                ILoginView.onEmailError();
+            }
         }
         else {
-            ILoginView.onHideProgress();
-            ILoginView.onEmailError();
+            String str = mContext.getResources().getString(R.string.email_password_blank);
+            ILoginView.showToast(str);
         }
         //ILoginView.onHideProgress();
     }
