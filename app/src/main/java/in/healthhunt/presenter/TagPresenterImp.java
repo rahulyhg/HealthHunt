@@ -67,14 +67,14 @@ public class TagPresenterImp implements ITagPresenter {
             return;
         }
 
-        for(int i =0; i<mSelectedList.size(); i++) {
-            Tag tag = mSelectedList.get(i);
-            if(tag.getmTagId() == tagId){
-                mSelectedList.remove(i);
-                Log.d(TAG, "Unselect tag");
-                break;
-            }
-        }
+//        for(int i =0; i<mSelectedList.size(); i++) {
+//            Tag tag = mSelectedList.get(i);
+//            if(tag.getmTagId() == tagId){
+//                mSelectedList.remove(i);
+//                Log.d(TAG, "Unselect tag");
+//                break;
+//            }
+//        }
     }
 
     @Override

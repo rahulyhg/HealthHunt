@@ -22,10 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="30dp"
-            android:src="@mipmap/ic_logo"
-            android:scaleType="centerCrop"
+            android:layout_width="23dp"
+            android:layout_height="29dp"
+            android:background="@mipmap/ic_logo"
             android:id="@+id/imageView"
             android:layout_gravity="center"/>
 
@@ -39,7 +38,9 @@
             android:fontFamily="@string/font_family_light"
             android:paddingStart="13dp"
             android:paddingTop="5dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
 
     </LinearLayout>
 </RelativeLayout>

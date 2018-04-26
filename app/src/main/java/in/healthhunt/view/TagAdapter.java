@@ -1,5 +1,6 @@
 package in.healthhunt.view;
 
+import in.healthhunt.model.beans.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import in.healthhunt.R;
-import in.healthhunt.model.beans.Tag;
 import in.healthhunt.presenter.ITagPresenter;
 
 /**

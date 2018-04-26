@@ -3,6 +3,7 @@
     <string name="server_client_id">473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com</string>
     <string name="facebook_app_id">177899886168346</string>
     <string name="fb_login_protocol_scheme">fb177899886168346</string>
+    <string name="private_key">Bd6723sXcVBg12Fe</string>
 
     <!-- Font family -->
 
@@ -27,14 +28,18 @@
     <string name="signup">Sign Up</string>
     <string name="signup_with">Sign Up with</string>
     <string name="receive_product_offer">Receive product offers and discount offers on marketplace</string>
-    <string name="terms_and_conditions_part1">By signing up, you agree to Terms and Conditions</string>
-    <string name="terms_and_conditions_part2">and Privacy Policy </string>
+    <string name="terms_and_conditions_part1">By signing up, you agree to</string>
+    <string name="terms_and_conditions_part2"> Terms and Conditions and Privacy Policy </string>
     <string name="already_have_account">Already have an account?</string>
     <string name="signin">Sign In</string>
     <string name="please_wait">Please Wait</string>
     <string name="setup_new_password">Set Up new password</string>
     <string name="new_password">New password</string>
     <string name="repeat_password">Repeat password</string>
+    <string name="could_not_log_in">Could not log in</string>
+    <string name="email_password_incorrect">Email or password was incorrect</string>
+    <string name="try_again">Try again</string>
+    <string name="email_password_blank">Email and password fields are empty</string>
 
 
 
@@ -53,4 +58,9 @@
     <string name="get_started">Get started</string>
     <string name="swipe_left_and_right">Swipe left and right</string>
     <string name="swipe_right_back">Swipe right to go back to previous page</string>
+    
+    <!-- Alert Screen message for email sent -->
+    
+    <string name="link_sent">A link to reset your password has been sent to  </string>
+    <string name="new_password_incorrect">Passwords not same or Password fields empty</string>
 </resources>

@@ -36,6 +36,7 @@
                     android:fontFamily="@string/font_family_regular"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
+                    android:gravity="center"
                     android:textColor="@color/hh_text_color_primary"/>
             </LinearLayout>
 

@@ -1,0 +1,65 @@
+package in.healthhunt.model.beans.login;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Created by abhishekkumar on 4/26/18.
+ */
+
+public class SignUpRequest {
+
+    @SerializedName("email")
+    private String mEmail;
+
+    @SerializedName("password")
+    private String mPassword;
+
+    @SerializedName("username")
+    private String mUserName = "charlene777";
+
+    @SerializedName("name")
+    private String mName ="charlene";
+
+    @SerializedName("gender")
+    private String mMale ="male";
+
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public String getmPassword() {
+        return mPassword;
+    }
+
+    public void setmPassword(String mPassword) {
+        this.mPassword = mPassword;
+    }
+
+    public String getmUserName() {
+        return mUserName;
+    }
+
+    public void setmUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmMale() {
+        return mMale;
+    }
+
+    public void setmMale(String mMale) {
+        this.mMale = mMale;
+    }
+}

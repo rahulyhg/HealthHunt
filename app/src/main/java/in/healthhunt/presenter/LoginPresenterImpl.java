@@ -2,69 +2,95 @@ package in.healthhunt.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
+import framework.retrofit.RestError;
 import in.healthhunt.R;
-import in.healthhunt.model.ErrorInfo;
+import in.healthhunt.model.beans.login.ForgotPasswordRequest;
+import in.healthhunt.model.beans.login.LoginRequest;
+import in.healthhunt.model.beans.login.SignUpRequest;
 
 /**
  * Created by abhishekkumar on 4/9/18.
  */
 
-public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnLoginFinishListener {
+public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnLoginFinishListener, ILoginInteractor.OnPasswordChangeListener {
 
     private final String TAG = LoginPresenterImpl.class.getSimpleName();
     ILoginView ILoginView;
     ILoginInteractor ILoginInteractor;
+    private Context mContext;
 
-    public LoginPresenterImpl(ILoginView loginView, ILoginInteractor loginInteractor) {
+    public LoginPresenterImpl(Context context, ILoginView loginView, ILoginInteractor loginInteractor) {
+        mContext = context;
         ILoginView = loginView;
         ILoginInteractor = loginInteractor;
     }
 
     @Override
     public void validateCredentialsLogIn(String username, String password) {
-        if((username != null && !username.isEmpty())
-                && (password != null && !password.isEmpty())) {
+        if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
-            ILoginInteractor.login(username,password, this);
+            //login  and check for email and password is correct or not
+            //ILoginView.onHideProgress();
+
+//            if(true){
+//                ILoginView.showLoginAlert();
+//            }
+            ILoginInteractor.login(createLoginRequest(username,password,"", ""), this);
+
         }
         else {
-            ILoginView.onHideProgress();
-            ILoginView.onEmailError();
+            String str = mContext.getResources().getString(R.string.email_password_blank);
+            ILoginView.showToast(str);
         }
         //ILoginView.onHideProgress();
     }
 
     @Override
     public void validateCredentialsSignUp(String username, String password) {
-        if((username != null && !username.isEmpty())
-                && (password != null && !password.isEmpty())) {
+        if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
-            ILoginInteractor.login(username,password, this);
+            //signup
+
+            SignUpRequest signUpRequest = createSignUpRequest(username, password);
+            ILoginInteractor.signUp(signUpRequest, this);
+
+
+//            if(true){
+//                ILoginView.onEmailError();
+//            }
         }
         else {
-            ILoginView.onHideProgress();
-            ILoginView.onEmailError();
+            String str = mContext.getResources().getString(R.string.email_password_blank);
+            ILoginView.showToast(str);
         }
         //ILoginView.onHideProgress();
     }
 
     @Override
-    public void validateNewPassword(String newPassword, String repeatPassword) {
-        if(newPassword != null && repeatPassword != null) {
-            if(newPassword.equals(repeatPassword)) {
-                // get Username and then call login
+    public void validateNewPassword(String newPassword, String repeatPassword, String email, String username) {
+        Log.i("TAG", "password "+ newPassword);
+        if(!newPassword.isEmpty() && !repeatPassword.isEmpty()) {
+            if (newPassword.equals(repeatPassword)) {
                 ILoginView.onShowProgress();
-                ILoginInteractor.login("", newPassword, this);
+                ForgotPasswordRequest request = createForgotPasswordRequest(email, username, newPassword);
+                ILoginInteractor.resetLoginPassword(request, this);
             }
             else {
                 // show alert box for wrong passwords
-                ILoginView.onHideProgress();
+                String str = mContext.getResources().getString(R.string.new_password_incorrect);
+                ILoginView.showToast(str);
             }
         }
     }
@@ -82,14 +108,15 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     }
 
     @Override
-    public void loadFragment(String tag) {
-        ILoginView.showFragment(tag);
+    public void loadFragment(String tag, Bundle bundle) {
+        ILoginView.showFragment(tag, bundle);
     }
 
     @Override
     public Intent loginGoogle(Context context) {
         Intent intent = null;
         if(validateGoogleServerClientID(context)) {
+            ILoginView.onShowProgress();
             intent = ILoginInteractor.loginWithGmail(context);
         }
         return intent;
@@ -97,30 +124,85 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
 
     @Override
     public void loginFacebook(Context context) {
+        ILoginView.onShowProgress();
         ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // here write code When Login successfully
-                //Log.i("TAG1","Result " + loginResult.getAccessToken().getToken());
+                String token = loginResult.getAccessToken().getToken();
+                Log.i("TAG1","Result " + token);
+                LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
+                ILoginInteractor.login(loginRequest, LoginPresenterImpl.this);
             }
 
             @Override
-            public void onCancel() {}
+            public void onCancel() {
+                Log.i("TAG1","onCancel ");
+                ILoginView.onHideProgress();
+            }
 
             @Override
             public void onError(FacebookException e) {
-                // here write code when get error
+                ILoginView.onHideProgress();
+                Log.i("TAG1","Facebook Error " + e);
             }
         });
     }
 
     @Override
     public void onSuccess() {
-
+        ILoginView.onHideProgress();
     }
 
     @Override
-    public void onError(ErrorInfo errorInfo) {
+    public void onError(RestError errorInfo) {
+            ILoginView.onHideProgress();
+            ILoginView.showLoginAlert(errorInfo.getMessage());
+    }
 
+    @Override
+    public void loginGoogle(String social_token) {
+        LoginRequest loginRequest = createLoginRequest(null,null, "google", social_token);
+        ILoginInteractor.login(loginRequest, this);
+    }
+
+    @Override
+    public void onChangeResponse(boolean status, String email, String msg) {
+        ILoginView.onHideProgress();
+        Spannable spannable = new SpannableString(msg);
+        Log.i("TAGWW", "Email " + email);
+        if(status) {
+            String linkSent = mContext.getResources().getString(R.string.link_sent);
+            msg = linkSent + " " + email;
+            spannable = new SpannableString(msg);
+            spannable.setSpan(new ForegroundColorSpan(Color.BLACK),
+                    linkSent.length() + 1 , msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        ILoginView.showPasswordChangeAlert(spannable);
+    }
+
+    private SignUpRequest createSignUpRequest(String email, String password) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setmEmail("abhibansal0955@gmail.com");
+        signUpRequest.setmPassword("123456");
+        signUpRequest.setmUserName("abhibansal0955@gmail.com");
+        return signUpRequest;
+    }
+
+    private LoginRequest createLoginRequest(String email, String password, String social, String social_token) {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setmEmail(email);
+        loginRequest.setmPassword(password);
+        loginRequest.setmSocialNetwork(social);
+        loginRequest.setmSocialToken(social_token);
+        return loginRequest;
+    }
+
+    private ForgotPasswordRequest createForgotPasswordRequest(String email, String userName, String password) {
+        ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
+        forgotPasswordRequest.setmEmail(email);
+        forgotPasswordRequest.setmNewPassword(password);
+        forgotPasswordRequest.setmUsername(userName);
+        return forgotPasswordRequest;
     }
 }

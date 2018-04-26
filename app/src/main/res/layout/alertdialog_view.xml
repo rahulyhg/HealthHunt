@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="152dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="21dp"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp">
+
+        <TextView
+            android:id="@+id/alert_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_medium"
+            android:textSize="20sp"
+            android:layout_gravity="left|top"
+            android:gravity="left"
+            android:textColor="@color/hh_edittext_text_color" />
+
+        <TextView
+            android:id="@+id/alert_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="16sp"
+            android:layout_gravity="left|top"
+            android:gravity="left"
+            android:textColor="@color/hh_text_color"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="@android:string/ok"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:fontFamily="@string/font_family_medium"
+        android:gravity="right|center"
+        android:layout_marginBottom="3dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/hh_green_light2"/>
+
+</RelativeLayout>
