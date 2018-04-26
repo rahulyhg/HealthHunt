@@ -93,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="3dp"
-                    android:gravity="center"
+                    android:gravity="left|center"
                     android:textSize="14sp"
                     android:fontFamily="@string/font_family_regular"
                     android:text="@string/dont_have_an_account"
@@ -102,11 +102,13 @@
                 <TextView
                     android:id="@+id/sign_up"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="wrap_content"
                     android:text="@string/signup"
                     android:textSize="14sp"
                     android:fontFamily="@string/font_family_regular"
-                    android:textColor="@color/hh_green_light2"/>
+                    android:textColor="@color/hh_green_light2"
+                    android:gravity="left|center"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
 
 
             </LinearLayout>

@@ -36,9 +36,9 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
             //login  and check for email and password is correct or not
             ILoginView.onHideProgress();
 
-            if(true){
-                ILoginView.showLoginAlert();
-            }
+//            if(true){
+//                ILoginView.showLoginAlert();
+//            }
             ILoginInteractor.login(createLoginRequest(username,password), this);
 
         }

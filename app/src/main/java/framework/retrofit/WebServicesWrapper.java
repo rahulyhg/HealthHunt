@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "https://www.healthhunt.in/wp-json/sd2/v0.1/";
+    private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
 
     private static WebServicesWrapper wrapper;
 
@@ -55,7 +55,7 @@ public class WebServicesWrapper {
 
 
                 String timeStamp = HealthHuntUtility.getGmtTimeStamp();
-                String authCode = "wp-json/sd2/v0.1/login" + " Bd6723sXcVBg12Fe " + timeStamp;
+                String authCode = "/wp-json/sd2/v0.1/login" + "Bd6723sXcVBg12Fe" + timeStamp;
                 String md5 = HealthHuntUtility.getMD5(authCode);
 
                 request.addHeader("deviceType", "Android");
