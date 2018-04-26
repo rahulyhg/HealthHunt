@@ -90,7 +90,7 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.sign_in)
     void OnSignIn(){
-        IPresenter.loadFragment(LoginFragment.class.getSimpleName());
+        IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
     }
 
     @OnClick(R.id.facebook)

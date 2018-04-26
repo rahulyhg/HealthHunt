@@ -2,12 +2,15 @@ package in.healthhunt.view;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -22,6 +25,9 @@ import in.healthhunt.presenter.ILoginPresenter;
 import in.healthhunt.presenter.ILoginView;
 import in.healthhunt.presenter.LoginInteractorImpl;
 import in.healthhunt.presenter.LoginPresenterImpl;
+import in.healthhunt.presenter.facebook.Facebook;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -48,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         ButterKnife.bind(this);
 
         IPresenter = new LoginPresenterImpl(getApplicationContext(), this, new LoginInteractorImpl());
-        IPresenter.loadFragment(LoginFragment.class.getSimpleName());
+        IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
 
     }
 
@@ -102,7 +108,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     }
 
     @Override
-    public void showFragment(String tag) {
+    public void showFragment(String tag, Bundle bundle) {
         Fragment fragment = fragmentMap.get(tag);
 
         if(fragment == null) {
@@ -115,17 +121,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             }
             fragmentMap.put(tag, fragment);
         }
+        fragment.setArguments(bundle);
         loadFragment(fragment, tag);
     }
 
     @Override
-    public void showEmailSentAlert() {
+    public void showPasswordChangeAlert(Spannable  spannable) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alertdialog_view);
-        String linkSent = getResources().getString(R.string.link_sent);
-        linkSent = String.format("%s", linkSent, "email");
+
         TextView message = dialog.findViewById(R.id.alert_message);
-        message.setText(linkSent);
+        message.setText(spannable, TextView.BufferType.SPANNABLE);
 
         TextView title = dialog.findViewById(R.id.alert_title);
         title.setVisibility(View.GONE);
@@ -171,5 +177,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
     private View getAlertView() {
         return getLayoutInflater().inflate(R.layout.alertdialog_view, null, false);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Facebook.getInstance(
+                getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        Log.i("TAGActivity", "Facebook token " + requestCode);
     }
 }

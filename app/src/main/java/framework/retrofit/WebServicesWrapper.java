@@ -11,8 +11,9 @@ import java.util.Map;
 
 import in.healthhunt.model.Constants;
 import in.healthhunt.model.beans.HealthHuntUtility;
-import in.healthhunt.model.beans.LoginRequest;
-import in.healthhunt.model.beans.SignUpRequest;
+import in.healthhunt.model.beans.login.ForgotPasswordRequest;
+import in.healthhunt.model.beans.login.LoginRequest;
+import in.healthhunt.model.beans.login.SignUpRequest;
 import in.healthhunt.model.beans.login.User;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -26,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
+    private final static String BASE_URL = "https://www.healthhunt.in/wp-json/sd2/v0.1/";
 
     private final String authUrl = "/wp-json/sd2/v0.1/";
 
@@ -151,6 +152,16 @@ public class WebServicesWrapper {
     public Call<User> signUp(SignUpRequest signUpRequest, ResponseResolver<User> responseResponseResolver) {
 
         Call<User> loginResponseCall = webServices.signUp(signUpRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<String> forgotPassword(ForgotPasswordRequest forgotPasswordRequest, ResponseResolver<String> responseResponseResolver) {
+
+        Call<String> loginResponseCall = webServices.forgotPassword(forgotPasswordRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

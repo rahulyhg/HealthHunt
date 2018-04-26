@@ -75,7 +75,9 @@
             android:textSize="16sp"
             android:fontFamily="@string/font_family_regular"
             android:textColorHint="@color/hh_edittext_hint_color"
-            android:textColor="@color/hh_edittext_text_color"/>
+            android:textColor="@color/hh_edittext_text_color"
+            android:inputType="textVisiblePassword"
+            android:completionThreshold="100"/>
 
         <EditText
             android:id="@+id/password"

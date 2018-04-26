@@ -14,5 +14,7 @@ public interface Constants {
     String API_VERSION = "apiVersion";
     String TIME_STAMP = "timestamp";
     String CONTENT_TYPE = "Content-Type";
+    String EMAIL = "email";
+    String USER_NAME = "username";
 
 }

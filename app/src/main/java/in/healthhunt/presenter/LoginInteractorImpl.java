@@ -17,8 +17,9 @@ import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.LoginRequest;
-import in.healthhunt.model.beans.SignUpRequest;
+import in.healthhunt.model.beans.login.ForgotPasswordRequest;
+import in.healthhunt.model.beans.login.LoginRequest;
+import in.healthhunt.model.beans.login.SignUpRequest;
 import in.healthhunt.model.beans.login.User;
 import in.healthhunt.presenter.facebook.Facebook;
 import retrofit2.Response;
@@ -29,16 +30,18 @@ import retrofit2.Response;
 
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
-    public void login(LoginRequest loginRequest, OnLoginFinishListener loginFinishListener) {
+    public void login(LoginRequest loginRequest, final OnLoginFinishListener loginFinishListener) {
         WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<User>() {
             @Override
             public void onSuccess(User user, Response response) {
+                loginFinishListener.onSuccess();
                 Log.i("TAGLoginInte", "response " + user + "Response " + response);
             }
 
             @Override
             public void onFailure(RestError error, String msg) {
-                Log.i("TAGLoginInte", "Failure " + error.getMessage());
+                Log.i("TAG", "msg " + msg);
+                loginFinishListener.onError(error);
             }
         });
         // implement the login code here
@@ -51,7 +54,6 @@ public class LoginInteractorImpl implements ILoginInteractor {
         CallbackManager callbackManager = facebook.getCallbackManager();
         LoginManager loginManager = facebook.getLoginManager();
         loginManager.logInWithReadPermissions((Activity) context, facebook.getPermissions());
-
         loginManager.registerCallback(callbackManager, facebookCallback);
 
         return null;
@@ -73,12 +75,28 @@ public class LoginInteractorImpl implements ILoginInteractor {
             WebServicesWrapper.getInstance().signUp(signUpRequest, new ResponseResolver<User>() {
                 @Override
                 public void onSuccess(User user, Response response) {
-
+                        onLoginFinishListener.onSuccess();
                 }
 
                 @Override
                 public void onFailure(RestError error, String msg) {
                     onLoginFinishListener.onError(error);
+                }
+            });
+    }
+
+    @Override
+    public void resetLoginPassword(final ForgotPasswordRequest forgotPasswordRequest, final OnPasswordChangeListener passwordChangeListener) {
+            WebServicesWrapper.getInstance().forgotPassword(forgotPasswordRequest, new ResponseResolver<String>() {
+                @Override
+                public void onSuccess(String s, Response response) {
+                    passwordChangeListener.onChangeResponse(true, forgotPasswordRequest.getmEmail(), response.message());
+                }
+
+                @Override
+                public void onFailure(RestError error, String msg) {
+                    Log.i("TAG", "resonse onFailure" + msg);
+                    passwordChangeListener.onChangeResponse(false, null, error.getMessage());
                 }
             });
     }

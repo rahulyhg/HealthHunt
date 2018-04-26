@@ -28,6 +28,8 @@ import in.healthhunt.model.Constants;
 import in.healthhunt.presenter.ILoginPresenter;
 import in.healthhunt.presenter.facebook.Facebook;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
  * Created by abhishekkumar on 4/9/18.
  */
@@ -80,12 +82,14 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.sign_up)
     void onSignUp() {
-        IPresenter.loadFragment(SignUpFragment.class.getSimpleName());
+        IPresenter.loadFragment(SignUpFragment.class.getSimpleName(), null);
     }
 
     @OnClick(R.id.forgot_password)
     void onForgotPassword(){
-        IPresenter.loadFragment(ForgotPasswordFragment.class.getSimpleName());
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.EMAIL, mEmail.getText().toString());
+        IPresenter.loadFragment(ForgotPasswordFragment.class.getSimpleName(), bundle);
     }
 
     @OnClick(R.id.facebook)
@@ -104,6 +108,7 @@ public class LoginFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i("TAG", "requestCode " + requestCode);
 
         if (requestCode == Constants.GMAIL_REQUEST_CODE) {
             // [START get_auth_code]
@@ -111,16 +116,15 @@ public class LoginFragment extends Fragment{
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 String authCode = account.getIdToken();
+                IPresenter.loginGoogle(authCode);
 
                 Log.d(TAG, "AuthCode = " + authCode);
                 // TODO(developer): send code to server and exchange for access/refresh/ID tokens
             } catch (ApiException e) {
+                ((LoginActivity)getActivity()).onHideProgress();
                 e.printStackTrace();
                 Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             }
-        }
-        else {
-            Facebook.getInstance(getContext().getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
         }
         // [END get_auth_code]
     }

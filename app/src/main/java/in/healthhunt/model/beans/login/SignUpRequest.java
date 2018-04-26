@@ -1,4 +1,4 @@
-package in.healthhunt.model.beans;
+package in.healthhunt.model.beans.login;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -37,5 +37,29 @@ public class SignUpRequest {
 
     public void setmPassword(String mPassword) {
         this.mPassword = mPassword;
+    }
+
+    public String getmUserName() {
+        return mUserName;
+    }
+
+    public void setmUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public void setmName(String mName) {
+        this.mName = mName;
+    }
+
+    public String getmMale() {
+        return mMale;
+    }
+
+    public void setmMale(String mMale) {
+        this.mMale = mMale;
     }
 }
