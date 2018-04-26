@@ -1,9 +1,9 @@
 package framework.retrofit;
 
-import in.healthhunt.model.beans.login.ForgotPasswordRequest;
-import in.healthhunt.model.beans.login.LoginRequest;
-import in.healthhunt.model.beans.login.SignUpRequest;
-import in.healthhunt.model.beans.login.User;
+import in.healthhunt.model.login.ForgotPasswordRequest;
+import in.healthhunt.model.login.LoginRequest;
+import in.healthhunt.model.login.SignUpRequest;
+import in.healthhunt.model.login.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;

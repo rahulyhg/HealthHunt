@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="in.healthhunt.view.LoginActivity"
+        <activity android:name="in.healthhunt.view.loginView.LoginActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation">
             <intent-filter>
@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.TagActivity"></activity>
-        <activity android:name=".view.OnBoardingActivity"></activity>
+        <activity android:name=".view.tagView.TagActivity"></activity>
+        <activity android:name=".view.onBoardingView.OnBoardingActivity"></activity>
 
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=

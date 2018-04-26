@@ -9,12 +9,12 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.IOException;
 import java.util.Map;
 
-import in.healthhunt.model.Constants;
-import in.healthhunt.model.beans.HealthHuntUtility;
-import in.healthhunt.model.beans.login.ForgotPasswordRequest;
-import in.healthhunt.model.beans.login.LoginRequest;
-import in.healthhunt.model.beans.login.SignUpRequest;
-import in.healthhunt.model.beans.login.User;
+import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.utility.HealthHuntUtility;
+import in.healthhunt.model.login.ForgotPasswordRequest;
+import in.healthhunt.model.login.LoginRequest;
+import in.healthhunt.model.login.SignUpRequest;
+import in.healthhunt.model.login.User;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -58,7 +58,7 @@ public class WebServicesWrapper {
                 Request.Builder request = chain.request().newBuilder();
 
 
-                String timeStamp = HealthHuntUtility.getGmtTimeStamp();
+                String timeStamp = HealthHuntUtility.getUTCTimeStamp();
 
                 String url = request.build().url().toString();
                 String requestUrl = authUrl + url.substring(url.lastIndexOf("/") + 1, url.length());
@@ -80,7 +80,6 @@ public class WebServicesWrapper {
 
 
                 Response response = chain.proceed(request.build());
-
                 return response;
             }
         });
