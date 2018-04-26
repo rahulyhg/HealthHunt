@@ -141,15 +141,14 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     }
 
     @Override
-    public void showLoginAlert() {
+    public void showLoginAlert(String msg) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alertdialog_view);
-        String str = getResources().getString(R.string.email_password_incorrect);
 
         TextView message = dialog.findViewById(R.id.alert_message);
-        message.setText(str);
+        message.setText(msg);
 
-        str = getResources().getString(R.string.could_not_log_in);
+        String str = getResources().getString(R.string.could_not_log_in);
         TextView title = dialog.findViewById(R.id.alert_title);
         title.setText(str);
 

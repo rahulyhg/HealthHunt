@@ -5,6 +5,7 @@ import android.text.style.UnderlineSpan;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,11 +26,18 @@ public class HealthHuntUtility {
     }
 
     public static String getGmtTimeStamp() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        Date date = Calendar.getInstance().getTime();
-        String timeStamp = dateFormat.format(date);
+        String timeStamp = "";
+        Date date = new Date();
+        DateFormat formatterUTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatterUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+        timeStamp = formatterUTC.format(date);
         return timeStamp;
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        Date date = Calendar.getInstance().getTime();
+//        String timeStamp = dateFormat.format(date);
+//        return timeStamp;
     }
 
     public static String getMD5(String s) {

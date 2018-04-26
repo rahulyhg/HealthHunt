@@ -1,7 +1,8 @@
 package framework.retrofit;
 
 import in.healthhunt.model.beans.LoginRequest;
-import in.healthhunt.model.beans.LoginResponse;
+import in.healthhunt.model.beans.SignUpRequest;
+import in.healthhunt.model.beans.login.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -13,7 +14,11 @@ public interface WebServices {
    //@POST("/api/account-login")
     //Call<LoginResponse> login(@Field("access_token") String token);
     @POST("login")
-    public Call<LoginResponse> login(@Body LoginRequest loginRequest);
+    public Call<User> login(@Body LoginRequest loginRequest);
+
+    @POST("signup")
+    public Call<User> signUp(@Body SignUpRequest signUpRequest);
+
     /*@Header("authToken") String token,*/
 
 

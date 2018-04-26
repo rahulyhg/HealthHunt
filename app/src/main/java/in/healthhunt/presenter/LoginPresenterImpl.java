@@ -8,9 +8,10 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
+import framework.retrofit.RestError;
 import in.healthhunt.R;
-import in.healthhunt.model.ErrorInfo;
 import in.healthhunt.model.beans.LoginRequest;
+import in.healthhunt.model.beans.SignUpRequest;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -54,11 +55,14 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
             //signup
+
+            SignUpRequest signUpRequest = createSignUpRequest(username, password);
+            ILoginInteractor.signUp(signUpRequest, this);
             ILoginView.onHideProgress();
 
-            if(true){
-                ILoginView.onEmailError();
-            }
+//            if(true){
+//                ILoginView.onEmailError();
+//            }
         }
         else {
             String str = mContext.getResources().getString(R.string.email_password_blank);
@@ -134,14 +138,21 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     }
 
     @Override
-    public void onError(ErrorInfo errorInfo) {
+    public void onError(RestError errorInfo) {
+            ILoginView.showLoginAlert(errorInfo.getMessage());
+    }
 
+    private SignUpRequest createSignUpRequest(String email, String password) {
+        SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setmEmail("charlene@test.com");
+        signUpRequest.setmPassword("123456");
+        return signUpRequest;
     }
 
     private LoginRequest createLoginRequest(String email, String password) {
         LoginRequest loginRequest = new LoginRequest();
-        //loginRequest.setmEmail(email);
-        //loginRequest.setmPassword(password);
+        loginRequest.setmEmail(email);
+        loginRequest.setmPassword(password);
         return loginRequest;
     }
 }

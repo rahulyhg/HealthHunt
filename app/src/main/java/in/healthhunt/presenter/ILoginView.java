@@ -12,6 +12,6 @@ public interface ILoginView {
     void onPasswordError();
     void showFragment(String tag);
     void showEmailSentAlert();
-    void showLoginAlert();
+    void showLoginAlert(String msg);
     void showToast(String message);
 }

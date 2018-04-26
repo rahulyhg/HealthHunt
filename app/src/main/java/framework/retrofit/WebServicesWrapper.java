@@ -3,22 +3,17 @@ package framework.retrofit;
 
 import android.util.Log;
 
-import com.facebook.internal.Utility;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
-import java.util.TimeZone;
 
+import in.healthhunt.model.Constants;
 import in.healthhunt.model.beans.HealthHuntUtility;
 import in.healthhunt.model.beans.LoginRequest;
-import in.healthhunt.model.beans.LoginResponse;
+import in.healthhunt.model.beans.SignUpRequest;
+import in.healthhunt.model.beans.login.User;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,6 +28,16 @@ public class WebServicesWrapper {
 
     private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
 
+    private final String authUrl = "/wp-json/sd2/v0.1/";
+
+    private final String privateKey = "Bd6723sXcVBg12Fe";
+
+    private final String type = "Android";
+
+    private final String apiVersion = "v0.1";
+
+    private final String content_type = "application/json";
+
     private static WebServicesWrapper wrapper;
 
     protected WebServices webServices;
@@ -46,8 +51,6 @@ public class WebServicesWrapper {
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        //OkHttpClient.Builder client = new OkHttpClient.Builder().addInterceptor(interceptor);
-
         OkHttpClient.Builder client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -55,23 +58,29 @@ public class WebServicesWrapper {
 
 
                 String timeStamp = HealthHuntUtility.getGmtTimeStamp();
-                String authCode = "/wp-json/sd2/v0.1/login" + "Bd6723sXcVBg12Fe" + timeStamp;
+
+                String url = request.build().url().toString();
+                String requestUrl = authUrl + url.substring(url.lastIndexOf("/") + 1, url.length());
+
+                String authCode = requestUrl + privateKey + timeStamp;
                 String md5 = HealthHuntUtility.getMD5(authCode);
 
-                request.addHeader("deviceType", "Android");
-                request.addHeader("authToken", md5);
-                request.addHeader("apiVersion", "v0.1");
-                request.addHeader("timestamp", timeStamp);
-                request.addHeader("Content-Type", "application/json");
+                request.addHeader(Constants.DEVICE_TYPE, type);
+                request.addHeader(Constants.AUTH_TOKEN, md5);
+                request.addHeader(Constants.API_VERSION, apiVersion);
+                request.addHeader(Constants.TIME_STAMP, timeStamp);
+                request.addHeader(Constants.CONTENT_TYPE, content_type);
 
                 Log.i("TAG123", " Md5 = " + md5);
                 Log.i("TAG123", " authCode = " + authCode);
                 Log.i("TAG123", " timeStamp = " + timeStamp);
+                Log.i("TAG123", "Auth URL " + requestUrl);
+                Log.i("TAG123", "URL " + request.build().url().toString());
 
 
+                Response response = chain.proceed(request.build());
 
-                Log.i("TAG123", " URL = " + chain.request().url().encodedPath());
-                return chain.proceed(request.build());
+                return response;
             }
         });
 
@@ -114,7 +123,6 @@ public class WebServicesWrapper {
     }
 
 
-
 //    private MultipartBody.Part getPart(String name, File file) {
 //
 //        if (file == null || name == null)
@@ -130,9 +138,19 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<LoginResponse> login(LoginRequest loginRequest, ResponseResolver<LoginResponse> responseResponseResolver) {
+    public Call<User> login(LoginRequest loginRequest, ResponseResolver<User> responseResponseResolver) {
 
-        Call<LoginResponse> loginResponseCall = webServices.login(loginRequest);
+        Call<User> loginResponseCall = webServices.login(loginRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<User> signUp(SignUpRequest signUpRequest, ResponseResolver<User> responseResponseResolver) {
+
+        Call<User> loginResponseCall = webServices.signUp(signUpRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

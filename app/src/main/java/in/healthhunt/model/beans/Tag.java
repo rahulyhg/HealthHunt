@@ -6,32 +6,32 @@ package in.healthhunt.model.beans;
 
 public class Tag {
 
-    private long mTagId;
-    private String mTag;
-    private String mUrl;
+  private long mTagId;
+  private String mTag;
+  private String mUrl;
 
-    public String getmTag() {
-        return mTag;
-    }
+  public String getmTag() {
+    return mTag;
+  }
 
-    public void setmTag(String mTag) {
-        this.mTag = mTag;
-    }
+  public void setmTag(String mTag) {
+    this.mTag = mTag;
+  }
 
-    public String getmUrl() {
-        return mUrl;
-    }
+  public String getmUrl() {
+    return mUrl;
+  }
 
-    public void setmUrl(String mUrl) {
-        this.mUrl = mUrl;
-    }
+  public void setmUrl(String mUrl) {
+    this.mUrl = mUrl;
+  }
 
-    public long getmTagId() {
-        return mTagId;
-    }
+  public long getmTagId() {
+    return mTagId;
+  }
 
-    public void setmTagId(long mTagId) {
-        this.mTagId = mTagId;
-    }
+  public void setmTagId(long mTagId) {
+    this.mTagId = mTagId;
+  }
 
 }

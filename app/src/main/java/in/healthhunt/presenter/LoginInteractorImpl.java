@@ -18,7 +18,8 @@ import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.LoginRequest;
-import in.healthhunt.model.beans.LoginResponse;
+import in.healthhunt.model.beans.SignUpRequest;
+import in.healthhunt.model.beans.login.User;
 import in.healthhunt.presenter.facebook.Facebook;
 import retrofit2.Response;
 
@@ -29,10 +30,10 @@ import retrofit2.Response;
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
     public void login(LoginRequest loginRequest, OnLoginFinishListener loginFinishListener) {
-        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<LoginResponse>() {
+        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<User>() {
             @Override
-            public void onSuccess(LoginResponse loginResponse, Response response) {
-                Log.i("TAGLoginInte", "response " + loginResponse + "Response " + response);
+            public void onSuccess(User user, Response response) {
+                Log.i("TAGLoginInte", "response " + user + "Response " + response);
             }
 
             @Override
@@ -64,5 +65,21 @@ public class LoginInteractorImpl implements ILoginInteractor {
                 .requestEmail()
                 .build();
         return GoogleSignIn.getClient(context, gso).getSignInIntent();
+    }
+
+
+    @Override
+    public void signUp(SignUpRequest signUpRequest, final OnLoginFinishListener onLoginFinishListener) {
+            WebServicesWrapper.getInstance().signUp(signUpRequest, new ResponseResolver<User>() {
+                @Override
+                public void onSuccess(User user, Response response) {
+
+                }
+
+                @Override
+                public void onFailure(RestError error, String msg) {
+                    onLoginFinishListener.onError(error);
+                }
+            });
     }
 }
