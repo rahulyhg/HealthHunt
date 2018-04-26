@@ -1,5 +1,8 @@
 package in.healthhunt.model.beans;
 
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -46,5 +49,11 @@ public class HealthHuntUtility {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String convertToHyperLink(String str) {
+        SpannableString content = new SpannableString(str);
+        content.setSpan(new UnderlineSpan(), 0, str.length(), 0);
+        return content.toString();
     }
 }

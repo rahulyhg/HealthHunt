@@ -28,8 +28,8 @@
     <string name="signup">Sign Up</string>
     <string name="signup_with">Sign Up with</string>
     <string name="receive_product_offer">Receive product offers and discount offers on marketplace</string>
-    <string name="terms_and_conditions_part1">By signing up, you agree to Terms and Conditions</string>
-    <string name="terms_and_conditions_part2">and Privacy Policy </string>
+    <string name="terms_and_conditions_part1">By signing up, you agree to</string>
+    <string name="terms_and_conditions_part2"> Terms and Conditions and Privacy Policy </string>
     <string name="already_have_account">Already have an account?</string>
     <string name="signin">Sign In</string>
     <string name="please_wait">Please Wait</string>
