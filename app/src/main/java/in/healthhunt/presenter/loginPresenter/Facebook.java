@@ -42,6 +42,6 @@ public class Facebook {
     }
 
     public List<String> getPermissions() {
-        return Arrays.asList("email", "public_profile", "user_birthday");
+        return Arrays.asList("email", "public_profile");
     }
 }

@@ -9,10 +9,10 @@ import com.google.gson.annotations.SerializedName;
 public class LoginRequest {
 
     @SerializedName("email")
-    private String mEmail = "charlene@test.com";
+    private String mEmail;
 
     @SerializedName("password")
-    private String mPassword = "123456";
+    private String mPassword;
 
     @SerializedName("social_network")
     private String mSocialNetwork;

@@ -26,6 +26,8 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
+import in.healthhunt.view.homeScreenView.HomeActivity;
+import in.healthhunt.view.tagView.TagActivity;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -73,8 +75,8 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.login)
     void onLogin() {
-        IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
-        //startActivity(new Intent(getActivity(), TagActivity.class));
+        //IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
+        startActivity(new Intent(getActivity(), HomeActivity.class));
     }
 
     @OnClick(R.id.sign_up)
