@@ -3,6 +3,7 @@ package in.healthhunt.presenter.loginPresenter;
 import android.content.Context;
 
 import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import java.util.Arrays;
@@ -42,6 +43,6 @@ public class Facebook {
     }
 
     public List<String> getPermissions() {
-        return Arrays.asList("email", "public_profile");
+        return Arrays.asList("public_profile");
     }
 }

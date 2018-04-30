@@ -1,4 +1,4 @@
-package in.healthhunt.presenter.homeScreenPresenter;
+package in.healthhunt.presenter.homeScreenPresenter.articlePresenter;
 
 import android.content.Context;
 import android.content.Intent;
