@@ -1,6 +1,7 @@
 package framework.retrofit;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -15,6 +16,8 @@ import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.view.HealthHuntApplication;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -80,6 +83,14 @@ public class WebServicesWrapper {
 
 
                 Response response = chain.proceed(request.build());
+
+                String session_token = response.header(Constants.SESSION_TOKEN);
+                if(session_token != null) {
+                    HealthHuntApplication application = HealthHuntApplication.getHealthHuntApplication();
+                    Context context = application.getApplicationContext();
+                    HealthHuntPreference.putString(context, Constants.SESSION_TOKEN, session_token);
+                }
+                Log.i("TAG123", "response session token " + session_token);
                 return response;
             }
         });

@@ -2,6 +2,7 @@ package in.healthhunt.view.homeScreenView;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +29,35 @@ public class HomeScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_view, parent, false);
-        return IHomePresenter.createArticleHolder(view, mFragmentManager);
+        View view = null;
+        Log.i("TAG11", "type= " + viewType);
+        switch (viewType){
+            case 0:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_view, parent, false);
+                break;
+
+            case 1:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.continue_article_view, parent, false);
+                break;
+
+            case 2:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trending_article_view, parent, false);
+                break;
+        }
+        return IHomePresenter.createArticleHolder(view, mFragmentManager, viewType);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-  }
+    }
 
     @Override
     public int getItemCount() {
         return IHomePresenter.getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 }

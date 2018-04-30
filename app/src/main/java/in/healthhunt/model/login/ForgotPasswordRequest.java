@@ -14,9 +14,6 @@ public class ForgotPasswordRequest {
     @SerializedName("username")
     private String mUsername;
 
-    @SerializedName("newpassword")
-    private String mNewPassword;
-
     public String getmEmail() {
         return mEmail;
     }
@@ -33,11 +30,4 @@ public class ForgotPasswordRequest {
         this.mUsername = mUsername;
     }
 
-    public String getmNewPassword() {
-        return mNewPassword;
-    }
-
-    public void setmNewPassword(String mNewPassword) {
-        this.mNewPassword = mNewPassword;
-    }
 }

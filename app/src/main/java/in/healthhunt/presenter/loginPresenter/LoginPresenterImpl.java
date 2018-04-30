@@ -14,6 +14,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
+import java.util.EnumMap;
+
 import framework.retrofit.RestError;
 import in.healthhunt.R;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -80,21 +82,11 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     }
 
     @Override
-    public void validateNewPassword(String newPassword, String repeatPassword, String email, String username) {
-        Log.i("TAG", "password "+ newPassword);
-        if(!newPassword.isEmpty() && !repeatPassword.isEmpty()) {
-            if (newPassword.equals(repeatPassword)) {
+    public void forgotPassword(String email, String username) {
                 ILoginView.onShowProgress();
-                ForgotPasswordRequest request = createForgotPasswordRequest(email, username, newPassword);
+                ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
                 ILoginInteractor.resetLoginPassword(request, this);
             }
-            else {
-                // show alert box for wrong passwords
-                String str = mContext.getResources().getString(R.string.new_password_incorrect);
-                ILoginView.showToast(str);
-            }
-        }
-    }
 
     private boolean validateGoogleServerClientID(Context context) {
         String serverClientId = context.getString(R.string.server_client_id);
@@ -201,9 +193,9 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     private SignUpRequest createSignUpRequest(String email, String password) {
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setmEmail("charlene@test.com");
-        signUpRequest.setmPassword("123456");
-        signUpRequest.setmUserName("charlene@test.com");
+        signUpRequest.setmEmail(email);
+        signUpRequest.setmPassword(password);
+        signUpRequest.setmUserName(email); //email as username
         return signUpRequest;
     }
 
@@ -216,10 +208,9 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
         return loginRequest;
     }
 
-    private ForgotPasswordRequest createForgotPasswordRequest(String email, String userName, String password) {
+    private ForgotPasswordRequest createForgotPasswordRequest(String email, String userName) {
         ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
         forgotPasswordRequest.setmEmail(email);
-        forgotPasswordRequest.setmNewPassword(password);
         forgotPasswordRequest.setmUsername(userName);
         return forgotPasswordRequest;
     }

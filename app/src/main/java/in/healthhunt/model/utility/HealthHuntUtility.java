@@ -1,7 +1,9 @@
 package in.healthhunt.model.utility;
 
+import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -63,5 +65,27 @@ public class HealthHuntUtility {
         SpannableString content = new SpannableString(str);
         content.setSpan(new UnderlineSpan(), 0, str.length(), 0);
         return content.toString();
+    }
+
+    //Convert dp into device specific pixels
+    public static int dpToPx(int dp, Context context)
+    {
+        if(context != null)
+        {
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        }
+        return dp;
+    }
+
+    //Convert device pixels into device independent units
+    public static int pxToDp(int px, Context context)
+    {
+        if(context != null)
+        {
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        }
+        return px;
     }
 }

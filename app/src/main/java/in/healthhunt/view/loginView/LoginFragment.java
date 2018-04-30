@@ -86,9 +86,10 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.forgot_password)
     void onForgotPassword(){
-        Bundle bundle = new Bundle();
+        IPresenter.forgotPassword(mEmail.getText().toString(), mEmail.getText().toString());
+        /*Bundle bundle = new Bundle();
         bundle.putString(Constants.EMAIL, mEmail.getText().toString());
-        IPresenter.loadFragment(ForgotPasswordFragment.class.getSimpleName(), bundle);
+        IPresenter.loadFragment(ForgotPasswordFragment.class.getSimpleName(), bundle);*/
     }
 
     @OnClick(R.id.facebook)

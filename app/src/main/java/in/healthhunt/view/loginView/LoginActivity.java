@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -125,6 +126,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void showPasswordChangeAlert(Spannable  spannable) {
         final Dialog dialog = new Dialog(this);
+        
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alertdialog_view);
 
         TextView message = dialog.findViewById(R.id.alert_message);
@@ -146,6 +149,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void showLoginAlert(String msg) {
         final Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alertdialog_view);
         //dialog.
 
