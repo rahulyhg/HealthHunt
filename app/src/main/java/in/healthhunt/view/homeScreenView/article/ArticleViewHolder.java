@@ -1,4 +1,4 @@
-package in.healthhunt.view.homeScreenView;
+package in.healthhunt.view.homeScreenView.article;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,14 +13,13 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.ArticlePresenterImp;
-import in.healthhunt.presenter.homeScreenPresenter.IArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.ArticlePresenterImp;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArticleView{
+public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArticleView {
 
     @BindView(R.id.view_all)
     LinearLayout mViewAll;

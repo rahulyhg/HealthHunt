@@ -48,7 +48,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 //            if(true){
 //                ILoginView.showLoginAlert();
 //            }
-            ILoginInteractor.login(mContext, createLoginRequest(username,password,null, null), this);
+            ILoginInteractor.login(mContext, createLoginRequest("charlene@test.com","123456",null, null), this);
 
         }
         else {
@@ -127,14 +127,14 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     public void loginFacebook(Context context) {
         ILoginView.onShowProgress();
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        /*AccessToken accessToken = AccessToken.getCurrentAccessToken();
         String token;
         if(accessToken != null && accessToken.getToken() != null) {
             token = accessToken.getToken();
             LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
             ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
         }
-        else {
+        else*/ {
             ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -142,6 +142,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
                     String token = loginResult.getAccessToken().getToken();
                     Log.i("TAG1", "Result " + token);
                     LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
+                    //ILoginView.onHideProgress();
                     ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
                 }
 
@@ -172,6 +173,12 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     }
 
     @Override
+    public void onNewUserSuccess(String msg) {
+        ILoginView.onHideProgress();
+        ILoginView.showLoginAlert(msg);
+    }
+
+    @Override
     public void loginGoogle(String social_token) {
         LoginRequest loginRequest = createLoginRequest(null,null, "google", social_token);
         ILoginInteractor.login(mContext, loginRequest, this);
@@ -194,9 +201,9 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     private SignUpRequest createSignUpRequest(String email, String password) {
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setmEmail("abhibansal0955@gmail.com");
+        signUpRequest.setmEmail("charlene@test.com");
         signUpRequest.setmPassword("123456");
-        signUpRequest.setmUserName("abhibansal0955@gmail.com");
+        signUpRequest.setmUserName("charlene@test.com");
         return signUpRequest;
     }
 

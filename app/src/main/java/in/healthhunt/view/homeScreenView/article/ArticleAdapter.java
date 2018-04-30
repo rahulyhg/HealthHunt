@@ -1,9 +1,9 @@
-package in.healthhunt.view.homeScreenView;
+package in.healthhunt.view.homeScreenView.article;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import in.healthhunt.presenter.homeScreenPresenter.IArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.IArticlePresenter;
 
 
 /**

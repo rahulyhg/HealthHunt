@@ -147,6 +147,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     public void showLoginAlert(String msg) {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alertdialog_view);
+        //dialog.
 
         TextView message = dialog.findViewById(R.id.alert_message);
         message.setText(msg);
@@ -178,9 +179,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
         Facebook.getInstance(
                 getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
         Log.i("TAGActivity", "Facebook token " + requestCode);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

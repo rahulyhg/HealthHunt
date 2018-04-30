@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "https://www.healthhunt.in/wp-json/sd2/v0.1/";
+    private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
 
     private final String authUrl = "/wp-json/sd2/v0.1/";
 

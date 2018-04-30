@@ -2,14 +2,9 @@ package in.healthhunt.presenter.homeScreenPresenter;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import in.healthhunt.model.beans.Tag;
-import in.healthhunt.view.homeScreenView.ArticleViewHolder;
+import in.healthhunt.view.homeScreenView.article.ArticleViewHolder;
 import in.healthhunt.view.homeScreenView.IHomeView;
 
 /**

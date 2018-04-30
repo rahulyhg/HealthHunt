@@ -15,7 +15,7 @@ public class SignUpRequest {
     private String mPassword;
 
     @SerializedName("username")
-    private String mUserName = "charlene777";
+    private String mUserName;
 
     @SerializedName("name")
     private String mName ="charlene";
