@@ -9,6 +9,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.facebook.AccessToken;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
@@ -47,7 +48,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 //            if(true){
 //                ILoginView.showLoginAlert();
 //            }
-            ILoginInteractor.login(mContext, createLoginRequest(username,password,"", ""), this);
+            ILoginInteractor.login(mContext, createLoginRequest(username,password,null, null), this);
 
         }
         else {
@@ -125,28 +126,38 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     @Override
     public void loginFacebook(Context context) {
         ILoginView.onShowProgress();
-        ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // here write code When Login successfully
-                String token = loginResult.getAccessToken().getToken();
-                Log.i("TAG1","Result " + token);
-                LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
-                ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
-            }
 
-            @Override
-            public void onCancel() {
-                Log.i("TAG1","onCancel ");
-                ILoginView.onHideProgress();
-            }
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        String token;
+        if(accessToken != null && accessToken.getToken() != null) {
+            token = accessToken.getToken();
+            LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
+            ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
+        }
+        else {
+            ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    // here write code When Login successfully
+                    String token = loginResult.getAccessToken().getToken();
+                    Log.i("TAG1", "Result " + token);
+                    LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
+                    ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
+                }
 
-            @Override
-            public void onError(FacebookException e) {
-                ILoginView.onHideProgress();
-                Log.i("TAG1","Facebook Error " + e);
-            }
-        });
+                @Override
+                public void onCancel() {
+                    Log.i("TAG1", "onCancel ");
+                    ILoginView.onHideProgress();
+                }
+
+                @Override
+                public void onError(FacebookException e) {
+                    ILoginView.onHideProgress();
+                    Log.i("TAG1", "Facebook Error " + e);
+                }
+            });
+        }
     }
 
     @Override

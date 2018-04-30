@@ -63,4 +63,8 @@
     
     <string name="link_sent">A link to reset your password has been sent to  </string>
     <string name="new_password_incorrect">Passwords not same or Password fields empty</string>
+
+    <!-- Home Screen -->
+
+    <string name="view_all">View all</string>
 </resources>

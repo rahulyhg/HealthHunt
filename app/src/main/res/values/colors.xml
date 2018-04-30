@@ -18,4 +18,7 @@
     <color name="hh_onboarding_swip_text_color">#C7111111</color>
     <color name="hh_dot_default_color">#80979797</color>
     <color name="hh_dot_selected_color">#979797</color>
+    <color name="hh_green_light3">#269FCD33</color>
+    <color name="hh_blue_light">#8ED6F9</color>
+    <color name="hh_background_light">#FAFAFA</color>
 </resources>
