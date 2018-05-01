@@ -1,4 +1,4 @@
-package in.healthhunt.view.homeScreenView;
+package in.healthhunt.view.homeScreenView.article;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

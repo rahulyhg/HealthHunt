@@ -1,13 +1,11 @@
-package in.healthhunt.presenter.homeScreenPresenter;
+package in.healthhunt.presenter.homeScreenPresenter.articlePresenter;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.presenter.loginPresenter.ILoginInteractor;
-import in.healthhunt.view.homeScreenView.IArticleView;
-import in.healthhunt.view.loginView.ILoginView;
+import in.healthhunt.view.homeScreenView.article.IArticleView;
 
 /**
  * Created by abhishekkumar on 4/27/18.

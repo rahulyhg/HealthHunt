@@ -20,6 +20,7 @@ public interface ILoginInteractor {
     interface OnLoginFinishListener {
         void onSuccess();
         void onError(RestError errorInfo);
+        void onNewUserSuccess(String msg);
     }
 
     interface OnPasswordChangeListener {

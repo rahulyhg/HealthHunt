@@ -89,7 +89,8 @@ public class LoginInteractorImpl implements ILoginInteractor {
                 @Override
                 public void onSuccess(User user, Response response) {
                     storeSessionToken(context, response);
-                    onLoginFinishListener.onSuccess();
+                    //onLoginFinishListener.onSuccess();
+                    onLoginFinishListener.onNewUserSuccess(response.message());
                 }
 
                 @Override
