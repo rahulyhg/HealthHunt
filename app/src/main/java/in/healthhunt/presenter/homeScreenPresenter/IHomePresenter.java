@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.homeScreenPresenter;
 
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import in.healthhunt.view.homeScreenView.article.ArticleViewHolder;
@@ -11,5 +12,5 @@ import in.healthhunt.view.homeScreenView.article.ArticleViewHolder;
 
 public interface IHomePresenter {
     int getCount();
-    ArticleViewHolder createArticleHolder(View view, FragmentManager fragmentManager);
+    RecyclerView.ViewHolder createArticleHolder(View view, FragmentManager fragmentManager, int type);
 }

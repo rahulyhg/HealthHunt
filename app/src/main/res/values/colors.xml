@@ -21,4 +21,5 @@
     <color name="hh_green_light3">#269FCD33</color>
     <color name="hh_blue_light">#8ED6F9</color>
     <color name="hh_background_light">#FAFAFA</color>
+    <color name="hh_text_color1">#B2FFFFFF</color>
 </resources>

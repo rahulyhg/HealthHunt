@@ -67,7 +67,7 @@ public class ForgotPasswordFragment extends Fragment{
 
     @OnClick(R.id.login)
     void onLogin(){
-        IPresenter.validateNewPassword(mNewPassword.getText().toString(),
-                mRepeatPassword.getText().toString(), mEmail, mEmail);
+        /*IPresenter.validateNewPassword(mNewPassword.getText().toString(),
+                mRepeatPassword.getText().toString(), mEmail, mEmail);*/
     }
 }
