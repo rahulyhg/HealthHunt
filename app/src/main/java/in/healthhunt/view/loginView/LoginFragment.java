@@ -27,7 +27,10 @@ import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.view.homeScreenView.HomeActivity;
+import in.healthhunt.view.socialLogin.GoogleLoginActivity;
 import in.healthhunt.view.tagView.TagActivity;
+
+import static in.healthhunt.view.socialLogin.GoogleLoginActivity.GOOGLE_LOGIN_RESPONSE_OK;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -98,7 +101,7 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.gmail)
     void onGmail() {
-        Intent intent = IPresenter.loginGoogle(getContext());
+        Intent intent = new Intent(getContext(), GoogleLoginActivity.class);
         if(intent != null) {
             startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
         }
@@ -111,18 +114,8 @@ public class LoginFragment extends Fragment{
 
         if (requestCode == Constants.GMAIL_REQUEST_CODE) {
             // [START get_auth_code]
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                String authCode = account.getIdToken();
-                IPresenter.loginGoogle(authCode);
-
-                Log.d(TAG, "AuthCode = " + authCode);
-                // TODO(developer): send code to server and exchange for access/refresh/ID tokens
-            } catch (ApiException e) {
-                ((LoginActivity)getActivity()).onHideProgress();
-                e.printStackTrace();
-                Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            if(resultCode == GOOGLE_LOGIN_RESPONSE_OK) {
+                String authID = data.getStringExtra("authCode");
             }
         }
         // [END get_auth_code]

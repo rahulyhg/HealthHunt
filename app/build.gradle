@@ -4,13 +4,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_debug.jks')
+            storeFile file('/Users/sandeepgoyal/Downloads/healthhunt_debug.jks')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
         }
         release {
-            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_keystore')
+            storeFile file('/Users/sandeepgoyal/Downloads/healthhunt_keystore')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
