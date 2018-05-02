@@ -1,5 +1,6 @@
 package in.healthhunt.view.socialLogin;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,7 @@ import com.google.android.gms.tasks.Task;
 import in.healthhunt.R;
 import in.healthhunt.view.loginView.LoginActivity;
 
-public class GoogleLoginActivity extends AppCompatActivity {
+public class GoogleLoginActivity extends Activity {
     GoogleApiClient mGoogleApiClient = null;
     public static final int GOOGLE_LOGIN_REQUEST_CODE = 1;
     public static final int GOOGLE_LOGIN_RESPONSE_OK = 2;

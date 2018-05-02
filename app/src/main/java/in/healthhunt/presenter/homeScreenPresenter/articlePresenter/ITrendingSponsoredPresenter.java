@@ -8,7 +8,7 @@ import android.view.View;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public interface ITrendingPresenter {
+public interface ITrendingSponsoredPresenter {
     int getCount();
-    RecyclerView.ViewHolder createArticleHolder(View view);
+    //RecyclerView.ViewHolder createArticleHolder(View view);
 }

@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mProgress.dismiss();
     }
 
     @Override
@@ -187,7 +188,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         Facebook.getInstance(
                 getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
-        Log.i("TAGActivity", "Facebook token " + requestCode);
+        //Log.i("TAGActivity", "Facebook token " + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

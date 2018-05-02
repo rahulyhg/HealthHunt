@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
@@ -87,9 +88,12 @@ public class WebServicesWrapper {
                 String session_token = response.header(Constants.SESSION_TOKEN);
                 if(session_token != null) {
                     HealthHuntApplication application = HealthHuntApplication.getHealthHuntApplication();
-                    Context context = application.getApplicationContext();
-                    HealthHuntPreference.putString(context, Constants.SESSION_TOKEN, session_token);
+                    if(application != null) {
+                        Context context = application.getApplicationContext();
+                        HealthHuntPreference.putString(context, Constants.SESSION_TOKEN, session_token);
+                    }
                 }
+                //response.
                 Log.i("TAG123", "response session token " + session_token);
                 return response;
             }
@@ -149,9 +153,9 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<User> login(LoginRequest loginRequest, ResponseResolver<User> responseResponseResolver) {
+    public Call<LoginResponse> login(LoginRequest loginRequest, ResponseResolver<LoginResponse> responseResponseResolver) {
 
-        Call<User> loginResponseCall = webServices.login(loginRequest);
+        Call<LoginResponse> loginResponseCall = webServices.login(loginRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

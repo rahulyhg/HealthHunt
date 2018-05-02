@@ -73,7 +73,9 @@ public class HealthHuntUtility {
         if(context != null)
         {
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            //float logicalDensity = metrics.density;
+            return (int) Math.ceil(dp * displayMetrics.density);
+//Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         }
         return dp;
     }

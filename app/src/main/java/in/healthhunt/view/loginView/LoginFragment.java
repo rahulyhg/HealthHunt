@@ -117,6 +117,8 @@ public class LoginFragment extends Fragment{
             // [START get_auth_code]
             if(resultCode == GOOGLE_LOGIN_RESPONSE_OK) {
                 String authID = data.getStringExtra("authCode");
+                IPresenter.loginGoogle(authID);
+                Log.i("TAG", "authCode = " + authID);
             }
         }
         // [END get_auth_code]

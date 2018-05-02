@@ -16,30 +16,28 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.ArticlePresenterImp;
-import in.healthhunt.view.HealthHuntApplication;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implements IArticleView {
+public class LatestProductViewHolder extends RecyclerView.ViewHolder implements IArticleView {
 
+    @BindView(R.id.view_all)
+    LinearLayout mViewAll;
 
-    @BindView(R.id.article_name)
-    TextView mArticleName;
+    @BindView(R.id.latest_article_name)
+    TextView mLatestArticleName;
 
-    @BindView(R.id.continue_article_pager)
-    ViewPager mArticlePager;
-
-    @BindView(R.id.cross_image)
-    LinearLayout mCrossButton;
+    @BindView(R.id.latest_article_pager)
+    ViewPager mLatestArticlePager;
 
 
     private ArticlePresenterImp mArticlePresenter;
     private Context mContext;
     private FragmentManager mFragmentManager;
 
-    public ContinueArticleViewHolder(View articleView, FragmentManager fragmentManager) {
+    public LatestProductViewHolder(View articleView, FragmentManager fragmentManager) {
         super(articleView);
         mContext = articleView.getContext();
         ButterKnife.bind(this, articleView);
@@ -51,15 +49,15 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     private void setAdapter() {
         ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
-        mArticlePager.setAdapter(articleAdapter);
-        mArticlePager.setClipToPadding(false);
-        mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
-        mArticlePager.setPageMargin(HealthHuntUtility.dpToPx(8, mContext));
+        mLatestArticlePager.setAdapter(articleAdapter);
+        mLatestArticlePager.setClipToPadding(false);
+        mLatestArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
+        mLatestArticlePager.setPageMargin(HealthHuntUtility.dpToPx(8, mContext));
     }
 
     @Override
     public Fragment getArticleItem(int position) {
-        return new ContinueArticleFragment();
+        return new LatestProductFragment();
     }
 
     @Override
@@ -72,7 +70,7 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     }
 
-    @OnClick(R.id.cross_image)
+    @OnClick(R.id.view_all)
     void onViewAll(){
 
     }

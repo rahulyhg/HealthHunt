@@ -12,11 +12,11 @@ import in.healthhunt.R;
  * Created by abhishekkumar on 4/27/18.
  */
 
-public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private int mCount;
 
-    public TrendingAdapter(int count) {
+    public SponsoredAdapter(int count) {
         mCount = count;
     }
 
@@ -24,7 +24,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i("TAg@@","viewType");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trending_sponsored_article_item_view, parent, false);
-        return new TrendingItemViewHolder(view);
+        return new SponsoredItemViewHolder(view);
     }
 
     @Override
@@ -36,9 +36,9 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mCount;
     }
 
-    public class TrendingItemViewHolder extends RecyclerView.ViewHolder {
+    public class SponsoredItemViewHolder extends RecyclerView.ViewHolder {
 
-        public TrendingItemViewHolder(View itemView) {
+        public SponsoredItemViewHolder(View itemView) {
             super(itemView);
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="788dp">
+    android:layout_height="420dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,25 +10,24 @@
         android:layout_marginEnd="16dp">
 
         <TextView
-            android:id="@+id/trending_article_name"
+            android:id="@+id/top_product_article_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:gravity="center"
             android:layout_gravity="left|bottom"
             android:fontFamily="@string/font_family_medium"
-            android:text="Trending"
+            android:text="Top Products"
             android:textColor="@color/hh_edittext_text_color"
-            android:paddingBottom="8dp"
-            />
+            android:paddingBottom="8dp"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/trending_recycler_list"
+        android:id="@+id/top_product_recycler_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        android:layout_marginEnd="8dp"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

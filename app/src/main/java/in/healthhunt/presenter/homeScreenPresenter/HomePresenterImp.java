@@ -8,6 +8,9 @@ import android.view.View;
 import in.healthhunt.view.homeScreenView.article.ArticleViewHolder;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.homeScreenView.article.ContinueArticleViewHolder;
+import in.healthhunt.view.homeScreenView.article.LatestProductViewHolder;
+import in.healthhunt.view.homeScreenView.article.SponsoredArticleViewHolder;
+import in.healthhunt.view.homeScreenView.article.TopProductViewHolder;
 import in.healthhunt.view.homeScreenView.article.TrendingArticleViewHolder;
 
 /**
@@ -38,11 +41,25 @@ public class HomePresenterImp implements IHomePresenter {
             case 0:
                 viewHolder = new ArticleViewHolder(view, fragmentManager);
                 break;
+
             case 1:
                 viewHolder = new ContinueArticleViewHolder(view, fragmentManager);
                 break;
+
             case 2:
                 viewHolder = new TrendingArticleViewHolder(view);
+                break;
+
+            case 3:
+                viewHolder = new SponsoredArticleViewHolder(view);
+                break;
+
+            case 4:
+                viewHolder = new TopProductViewHolder(view);
+                break;
+
+            case 5:
+                viewHolder = new LatestProductViewHolder(view, fragmentManager);
                 break;
         }
         return viewHolder;

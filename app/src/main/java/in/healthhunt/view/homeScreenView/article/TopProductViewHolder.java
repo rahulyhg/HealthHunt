@@ -11,39 +11,41 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.VerticalSpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.TrendingSponsoredPresenterImp;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.TopProductPresenterImp;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implements ITrendingSponsoredView {
+public class TopProductViewHolder extends RecyclerView.ViewHolder implements ITopProductView {
 
 
-    @BindView(R.id.trending_article_name)
+    @BindView(R.id.top_product_article_name)
     TextView mArticleName;
 
-    @BindView(R.id.trending_recycler_list)
-    RecyclerView mTrendingViewer;
+    @BindView(R.id.top_product_recycler_list)
+    RecyclerView mTopProductViewer;
 
-    private TrendingSponsoredPresenterImp mTrendingPresenter;
+
+    private TopProductPresenterImp mTopProductPresenterImp;
     private Context mContext;
 
-    public TrendingArticleViewHolder(View articleView) {
+    public TopProductViewHolder(View articleView) {
         super(articleView);
         mContext = articleView.getContext();
         ButterKnife.bind(this, articleView);
-        mTrendingPresenter = new TrendingSponsoredPresenterImp(mContext, this);
+        mTopProductPresenterImp = new TopProductPresenterImp(mContext, this);
         setAdapter();
 
     }
 
     private void setAdapter() {
-        TrendingAdapter trendingAdapter = new TrendingAdapter(2);
+        TopProductAdapter topProductAdapter = new TopProductAdapter(2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        mTrendingViewer.setLayoutManager(layoutManager);
-        mTrendingViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
-        mTrendingViewer.setAdapter(trendingAdapter);
+        mTopProductViewer.setLayoutManager(layoutManager);
+        mTopProductViewer.addItemDecoration(new VerticalSpaceDecoration
+                (HealthHuntUtility.dpToPx(8, mContext)));
+        mTopProductViewer.setAdapter(topProductAdapter);
     }
 
     @Override

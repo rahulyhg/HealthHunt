@@ -2,6 +2,7 @@ package framework.retrofit;
 
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
+import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
 import retrofit2.Call;
@@ -15,7 +16,7 @@ public interface WebServices {
    //@POST("/api/account-login")
     //Call<LoginResponse> login(@Field("access_token") String token);
     @POST("login")
-    Call<User> login(@Body LoginRequest loginRequest);
+    Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
     @POST("signup")
     Call<User> signUp(@Body SignUpRequest signUpRequest);

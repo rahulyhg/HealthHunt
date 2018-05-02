@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.ArticlePresenterImp;
@@ -53,7 +54,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
         mArticlePager.setAdapter(articleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
-        mArticlePager.setPageMargin(HealthHuntUtility.dpToPx(8, mContext));
+        mArticlePager.setPageMargin(HealthHuntUtility.dpToPx(6, mContext));
     }
 
     @Override
@@ -68,6 +69,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
 
     @Override
     public void showFragment(String tag, Bundle bundle) {
+
+    }
+
+    @OnClick(R.id.view_all)
+    void onViewAll(){
 
     }
 }

@@ -43,6 +43,18 @@ public class HomeScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case 2:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trending_article_view, parent, false);
                 break;
+
+            case 3:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.sponsored_article_view, parent, false);
+                break;
+
+            case 4:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.top_products_article_view, parent, false);
+                break;
+
+            case 5:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.latest_products_article_view, parent, false);
+                break;
         }
         return IHomePresenter.createArticleHolder(view, mFragmentManager, viewType);
     }

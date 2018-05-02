@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.VerticalSpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -17,19 +18,19 @@ import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.TrendingSpon
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implements ITrendingSponsoredView {
+public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implements ITrendingSponsoredView {
 
 
-    @BindView(R.id.trending_article_name)
-    TextView mArticleName;
+    @BindView(R.id.sponsored_article_name)
+    TextView mSponsoredArticleName;
 
-    @BindView(R.id.trending_recycler_list)
-    RecyclerView mTrendingViewer;
+    @BindView(R.id.sponsored_recycler_list)
+    RecyclerView mSponsoredViewer;
 
     private TrendingSponsoredPresenterImp mTrendingPresenter;
     private Context mContext;
 
-    public TrendingArticleViewHolder(View articleView) {
+    public SponsoredArticleViewHolder(View articleView) {
         super(articleView);
         mContext = articleView.getContext();
         ButterKnife.bind(this, articleView);
@@ -41,13 +42,18 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     private void setAdapter() {
         TrendingAdapter trendingAdapter = new TrendingAdapter(2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        mTrendingViewer.setLayoutManager(layoutManager);
-        mTrendingViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
-        mTrendingViewer.setAdapter(trendingAdapter);
+        mSponsoredViewer.setLayoutManager(layoutManager);
+        mSponsoredViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
+        mSponsoredViewer.setAdapter(trendingAdapter);
     }
 
     @Override
     public int getCount() {
         return 2;
+    }
+
+    @OnClick(R.id.cross_image)
+    void onCrossClick() {
+
     }
 }
