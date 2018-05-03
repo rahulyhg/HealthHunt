@@ -1,6 +1,5 @@
-package in.healthhunt.view.homeScreenView;
+package in.healthhunt.view.homeScreenView.article.myfeed;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,29 +8,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+import java.util.Map;
 
 import in.healthhunt.R;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IMyFeedPresenter;
 
 /**
  * Created by abhishekkumar on 4/27/18.
  */
 
-public class HomeScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<String> mHomeItemList;
-    private IHomePresenter IHomePresenter;
-    private FragmentManager mFragmentManager;
+    private IMyFeedPresenter IMyFeedPresenter;
+    private List<Integer> mArticles;
 
-    public HomeScreenAdapter(IHomePresenter homePresenter, FragmentManager fragmentManager) {
-        IHomePresenter = homePresenter;
-        mFragmentManager = fragmentManager;
+    public MyFeedAdapter(IMyFeedPresenter feedPresenter, List<Integer> articles) {
+        IMyFeedPresenter = feedPresenter;
+        mArticles = articles;
     }
 
-    /*@Override
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        Log.i("TAG11", "type= " + viewType);
+        int layout = mArticles.get(viewType);
+        view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+        /*Log.i("TAG11", "type= " + viewType);
+        String article;
         switch (viewType){
             case 0:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_view, parent, false);
@@ -54,32 +58,37 @@ public class HomeScreenAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 break;
 
             case 5:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.latest_products_article_view, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_view, parent, false);
                 break;
-        }
-        return IHomePresenter.createArticleHolder(view, mFragmentManager, viewType);
-    }*/
 
-    @NonNull
-    @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+            case 6:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_view, parent, false);
+                break;
+
+            case 7:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.latest_products_article_view, parent, false);
+                break;*/
+       // }
+        return IMyFeedPresenter.createArticleHolder(view, viewType);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(position == 5){
-            //holder.
-        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mArticles.size();
     }
 
     @Override
     public int getItemViewType(int position) {
         return position;
     }
+
+    public void deleteItem(int index) {
+        mArticles.remove(index);
+        notifyItemRemoved(index);
+    }
+
 }

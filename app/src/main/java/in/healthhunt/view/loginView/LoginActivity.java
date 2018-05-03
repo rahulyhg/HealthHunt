@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mProgress.dismiss();
     }
 
     @Override
@@ -92,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void onHideProgress() {
         if(mProgress != null) {
-            mProgress.cancel();
+            mProgress.dismiss();
         }
     }
 
