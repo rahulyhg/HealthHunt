@@ -10,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.VerticalSpaceDecoration;
+import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.TrendingSponsoredPresenterImp;
 
@@ -49,7 +49,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
         TrendingAdapter trendingAdapter = new TrendingAdapter(2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mSponsoredViewer.setLayoutManager(layoutManager);
-        mSponsoredViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
+        mSponsoredViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
         mSponsoredViewer.setAdapter(trendingAdapter);
     }
 

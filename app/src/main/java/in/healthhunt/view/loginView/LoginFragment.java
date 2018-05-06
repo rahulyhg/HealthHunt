@@ -14,11 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,9 +21,7 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
-import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.socialLogin.GoogleLoginActivity;
-import in.healthhunt.view.tagView.TagActivity;
 
 import static in.healthhunt.view.socialLogin.GoogleLoginActivity.GOOGLE_LOGIN_RESPONSE_OK;
 
@@ -61,6 +54,7 @@ public class LoginFragment extends Fragment{
 
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
+    private int isLoginType;
 
     @Nullable
     @Override
@@ -78,6 +72,7 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.login)
     void onLogin() {
+        isLoginType = LoginActivity.LOGIN_TYPE_NORMAL;
         IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
         //startActivity(new Intent(getActivity(), HomeActivity.class));
     }
@@ -97,11 +92,13 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.facebook)
     void onFacebook() {
-          IPresenter.loginFacebook(getContext());
+        isLoginType = LoginActivity.LOGIN_TYPE_FACEBOOK;
+        IPresenter.loginFacebook(getContext());
     }
 
     @OnClick(R.id.gmail)
     void onGmail() {
+        isLoginType = LoginActivity.LOGIN_TYPE_GMAIL;
         Intent intent = new Intent(getContext(), GoogleLoginActivity.class);
         if(intent != null) {
             startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
@@ -128,5 +125,20 @@ public class LoginFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void tryAgain() {
+        switch (isLoginType){
+            case LoginActivity.LOGIN_TYPE_NORMAL:
+                IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
+                break;
+            case LoginActivity.LOGIN_TYPE_FACEBOOK:
+                IPresenter.loginFacebook(getContext());
+                break;
+            case LoginActivity.LOGIN_TYPE_GMAIL:
+                break;
+
+
+        }
     }
 }

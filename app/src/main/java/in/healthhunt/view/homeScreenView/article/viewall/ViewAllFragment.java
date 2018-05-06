@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.VerticalSpaceDecoration;
+import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.viewallPresenter.ViewAllPresenterImp;
 
@@ -48,7 +48,7 @@ public class ViewAllFragment extends Fragment implements IViewAll{
         ViewAllAdapter viewAllAdapter = new ViewAllAdapter(getContext(), mViewAllPresenterImp);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mViewAllViewer.setLayoutManager(layoutManager);
-        mViewAllViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, getContext())));
+        mViewAllViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext())));
         mViewAllViewer.setAdapter(viewAllAdapter);
     }
 

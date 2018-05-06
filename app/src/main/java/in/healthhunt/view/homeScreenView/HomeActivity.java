@@ -11,10 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
@@ -72,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements IHomeView{
     private void loadFragment(Fragment fragment, String tag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.add(R.id.frame, fragment);
         if(tag.equals(ViewAllFragment.class.getSimpleName())) {
             fragmentTransaction.addToBackStack(tag);
         }

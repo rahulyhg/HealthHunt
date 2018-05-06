@@ -7,29 +7,48 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import in.healthhunt.model.beans.Tag;
+import framework.retrofit.RestError;
+import in.healthhunt.model.tags.TagItem;
+import in.healthhunt.model.tags.TagRequest;
+import in.healthhunt.view.tagView.ITagView;
 import in.healthhunt.view.tagView.TagViewHolder;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class TagPresenterImp implements ITagPresenter {
+public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadFinishListener{
 
     private String TAG = TagPresenterImp.class.getSimpleName();
     private Context mContext;
-    private List<Tag> mTagList;
-    private List<Tag> mSelectedList;
+    private List<TagItem> mTagList;
+    private List<TagItem> mSelectedList;
+    private ITagInteractor ITagInteractor;
+    private int mPageNumber = 1;
+    private final int MAX_TAG_PER_PAGE = 100;
+    private ITagView ITagView;
 
 
-    public TagPresenterImp(Context context) {
+    public TagPresenterImp(Context context, ITagView tagView) {
         mContext =  context;
+        ITagView = tagView;
+        ITagInteractor = new TagInteractorImpl();
+        mTagList = new ArrayList<TagItem>();
+        mSelectedList = new ArrayList<TagItem>();
     }
 
+    public void fetchTags() {
+        ITagView.onShowProgress();
+        mPageNumber = 1;
+        TagRequest tagRequest = createTagRequest(mPageNumber);
+        ITagInteractor.fetchAllTags(mContext, tagRequest, this);
+    }
 
-    @Override
-    public void initTags(List<Tag> list) {
-        mTagList = list;
+    public void fetchMoreTags(){
+        ITagView.onShowProgress();
+        mPageNumber++;
+        TagRequest tagRequest = createTagRequest(mPageNumber);
+        ITagInteractor.fetchAllTags(mContext, tagRequest, this);
     }
 
     @Override
@@ -42,39 +61,52 @@ public class TagPresenterImp implements ITagPresenter {
     }
 
     @Override
-    public List<Tag> getTagList() {
+    public List<TagItem> getTagList() {
         return mTagList;
     }
 
     @Override
-    public List<Tag> getSelectedTagList() {
+    public List<TagItem> getSelectedTagList() {
         return mSelectedList;
     }
 
     @Override
-    public void addTag(Tag tag) {
+    public void addTag(TagItem tag) {
          if(mSelectedList == null) {
-             mSelectedList = new ArrayList<Tag>();
+             mSelectedList = new ArrayList<TagItem>();
          }
         Log.d(TAG, "Select tag");
          mSelectedList.add(tag);
     }
 
     @Override
-    public void removeTag(long tagId) {
+    public void removeTag(TagItem tag) {
         if(mSelectedList == null){
             Log.d(TAG, "Selected list is empty");
             return;
         }
 
-//        for(int i =0; i<mSelectedList.size(); i++) {
-//            Tag tag = mSelectedList.get(i);
-//            if(tag.getmTagId() == tagId){
-//                mSelectedList.remove(i);
-//                Log.d(TAG, "Unselect tag");
-//                break;
-//            }
-//        }
+        int tagId = tag.getId();
+
+        for(int i =0; i<mSelectedList.size(); i++) {
+            TagItem tagItem = mSelectedList.get(i);
+            if(tagItem.getId() == tagId){
+                mSelectedList.remove(i);
+                Log.d(TAG, "Unselect tag");
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void selectAll() {
+        mSelectedList.clear();
+        mSelectedList.addAll(mTagList);
+    }
+
+    @Override
+    public void unSelectAll() {
+        mSelectedList.clear();
     }
 
     @Override
@@ -82,5 +114,33 @@ public class TagPresenterImp implements ITagPresenter {
         return new TagViewHolder(view, tagPresenter);
     }
 
+    private TagRequest createTagRequest(int pageNumber) {
+        TagRequest tagRequest = new TagRequest();
+        tagRequest.setPage(pageNumber);
+        tagRequest.setPerPage(MAX_TAG_PER_PAGE);
+        return tagRequest;
+    }
 
+    @Override
+    public void onSuccess() {
+            ITagView.onHideProgress();
+    }
+
+    @Override
+    public void onError(RestError errorInfo) {
+        ITagView.onHideProgress();
+        ITagView.showAlert(errorInfo.getMessage());
+    }
+
+
+    @Override
+    public void setTags(List<TagItem> tags) {
+        if(tags != null && !tags.isEmpty()) {
+            mTagList.addAll(tags);
+            ITagView.updateAdapter();
+        }
+        else {
+            Log.i("TAG123", "Tag List is null");
+        }
+    }
 }

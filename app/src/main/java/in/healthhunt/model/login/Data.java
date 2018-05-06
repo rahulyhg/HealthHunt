@@ -1,21 +1,28 @@
 package in.healthhunt.model.login;
 
-public class Data{
-	private User user;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-	public void setUser(User user){
-		this.user = user;
+public class Data<T>{
+
+	@SerializedName(value="data")
+	@Expose
+	private T data;
+
+
+	public T getData() {
+		return data;
 	}
 
-	public User getUser(){
-		return user;
+	public void setData(T data) {
+		this.data = data;
 	}
 
 	@Override
  	public String toString(){
 		return 
 			"Data{" + 
-			"user = '" + user + '\'' + 
+			"user = '" + data + '\'' +
 			"}";
 		}
 }

@@ -13,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -125,6 +123,6 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     @Override
     public void onClickCrossView(int index) {
         Log.i("TAG", "Index " + index);
-            mFeedAdapter.deleteItem(index);
-    }
+       mArticleNames.remove(index);
+       mFeedAdapter.deleteItem(index);    }
 }

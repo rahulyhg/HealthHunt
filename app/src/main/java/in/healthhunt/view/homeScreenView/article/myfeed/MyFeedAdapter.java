@@ -1,6 +1,5 @@
 package in.healthhunt.view.homeScreenView.article.myfeed;
 
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,10 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.Map;
 
-import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IMyFeedPresenter;
 
 /**
@@ -32,6 +28,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
+        Log.i("TAG561", "onCreate ViewType " + viewType);
         int layout = mArticles.get(viewType);
         view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         /*Log.i("TAG11", "type= " + viewType);
@@ -83,6 +80,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
+        Log.i("TAG56", "Type Pos " + position);
         return position;
     }
 
@@ -90,5 +88,4 @@ public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         mArticles.remove(index);
         notifyItemRemoved(index);
     }
-
 }

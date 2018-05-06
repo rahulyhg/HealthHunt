@@ -1,14 +1,12 @@
 package in.healthhunt.model.login;
 
-import java.util.Date;
-
 /**
  * Created by abhishekkumar on 5/2/18.
  */
 
 public class LoginResponse {
 
-    private Data data;
+    private Data<User> data;
     private String message;
     private boolean status;
 

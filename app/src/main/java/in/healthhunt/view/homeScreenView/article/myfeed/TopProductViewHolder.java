@@ -9,7 +9,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.VerticalSpaceDecoration;
+import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ITopProductPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.TopProductPresenterImp;
@@ -44,7 +44,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements ITo
         TopProductAdapter topProductAdapter = new TopProductAdapter(2, ITopProductPresenter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mTopProductViewer.setLayoutManager(layoutManager);
-        mTopProductViewer.addItemDecoration(new VerticalSpaceDecoration
+        mTopProductViewer.addItemDecoration(new SpaceDecoration
                 (HealthHuntUtility.dpToPx(8, mContext)));
         mTopProductViewer.setAdapter(topProductAdapter);
     }

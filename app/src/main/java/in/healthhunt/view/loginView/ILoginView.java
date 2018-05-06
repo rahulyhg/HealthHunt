@@ -17,4 +17,5 @@ public interface ILoginView {
     void showPasswordChangeAlert(Spannable spannable);
     void showLoginAlert(String msg);
     void showToast(String message);
+    void startActivity();
 }

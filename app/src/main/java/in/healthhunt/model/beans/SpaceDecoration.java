@@ -1,10 +1,11 @@
 package in.healthhunt.model.beans;
 
 import android.graphics.Rect;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class VerticalSpaceDecoration extends RecyclerView.ItemDecoration {
+public class SpaceDecoration extends RecyclerView.ItemDecoration {
   private final int spacing;
   private int displayMode;
 
@@ -12,11 +13,11 @@ public class VerticalSpaceDecoration extends RecyclerView.ItemDecoration {
   public static final int VERTICAL = 1;
   public static final int GRID = 2;
 
-  public VerticalSpaceDecoration(int spacing) {
+  public SpaceDecoration(int spacing) {
     this(spacing, -1);
   }
 
-  public VerticalSpaceDecoration(int spacing, int displayMode) {
+  public SpaceDecoration(int spacing, int displayMode) {
     this.spacing = spacing;
     this.displayMode = displayMode;
   }
@@ -24,8 +25,40 @@ public class VerticalSpaceDecoration extends RecyclerView.ItemDecoration {
   @Override
   public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                              RecyclerView.State state) {
-    if (parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1) {
-      outRect.bottom = spacing;
+
+    switch (displayMode) {
+
+      case VERTICAL:
+        if (parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1)
+          outRect.bottom = spacing;
+          break;
+
+          case GRID:
+            RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+            int itemCount = state.getItemCount();
+            int position = parent.getChildViewHolder(view).getAdapterPosition();
+
+            if (layoutManager instanceof GridLayoutManager) {
+              GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+              int cols = gridLayoutManager.getSpanCount();
+              int rows = itemCount / cols;
+
+              outRect.left = spacing;
+              outRect.right = position % cols == cols - 1 ? spacing : 0;
+
+              if (position > 1) {
+                outRect.top = spacing;
+              } else {
+                outRect.top = 0;
+              }
+
+              if (position < itemCount - 2) {
+                outRect.bottom = position / cols == rows - 1 ? spacing : 0;
+              } else {
+                outRect.bottom = 0;
+              }
+              break;
+            }
     }
   }
 

@@ -9,7 +9,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.VerticalSpaceDecoration;
+import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.TrendingSponsoredPresenterImp;
 
@@ -44,7 +44,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
         TrendingAdapter trendingAdapter = new TrendingAdapter(2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mTrendingViewer.setLayoutManager(layoutManager);
-        mTrendingViewer.addItemDecoration(new VerticalSpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
+        mTrendingViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
         mTrendingViewer.setAdapter(trendingAdapter);
     }
 

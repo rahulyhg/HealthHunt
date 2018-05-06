@@ -14,8 +14,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
-import java.util.EnumMap;
-
 import framework.retrofit.RestError;
 import in.healthhunt.R;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -119,14 +117,14 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     public void loginFacebook(Context context) {
         ILoginView.onShowProgress();
 
-        /*AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
         String token;
         if(accessToken != null && accessToken.getToken() != null) {
             token = accessToken.getToken();
             LoginRequest loginRequest = createLoginRequest(null, null, "facebook", token);
             ILoginInteractor.login(mContext, loginRequest, LoginPresenterImpl.this);
         }
-        else*/ {
+        else {
             ILoginInteractor.loginWithFacebook(context, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
@@ -156,6 +154,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     @Override
     public void onSuccess() {
         ILoginView.onHideProgress();
+        ILoginView.startActivity();
     }
 
     @Override
