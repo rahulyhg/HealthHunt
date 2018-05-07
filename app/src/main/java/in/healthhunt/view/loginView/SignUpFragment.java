@@ -2,6 +2,7 @@ package in.healthhunt.view.loginView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -10,12 +11,17 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -29,6 +35,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 
 /**
@@ -52,6 +59,12 @@ public class SignUpFragment extends Fragment {
     @BindView(R.id.email)
     EditText mEmail;
 
+    @BindView(R.id.username)
+    EditText mUsername;
+
+    @BindView(R.id.gender)
+    EditText mGender;
+
     @BindView(R.id.password)
     EditText mPassword;
 
@@ -61,9 +74,11 @@ public class SignUpFragment extends Fragment {
     @BindView(R.id.term_and_conditions)
     TextView mTermAndConditions;
 
+    private ListPopupWindow mListPopupWindow;
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
     private int isLoginType;
+    private String[] mGenders = {"Note Specified", "Male", "Female"};
 
     @Nullable
     @Override
@@ -72,7 +87,47 @@ public class SignUpFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         mSkipView.setVisibility(View.GONE);
         addLink();
+        addGenderWindow();
         return view;
+    }
+
+    private void addGenderWindow() {
+
+        mListPopupWindow = new ListPopupWindow(getContext());
+        mListPopupWindow.setAdapter(new ArrayAdapter(getContext(), R.layout.gender_list_item_view, mGenders));
+
+
+        mListPopupWindow.setAnchorView(mGender);
+        mListPopupWindow.setPromptPosition(ListPopupWindow.POSITION_PROMPT_ABOVE);
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+
+        width = width - (HealthHuntUtility.dpToPx(32, getContext()));
+        mListPopupWindow.setWidth(width);
+        mListPopupWindow.setHeight(HealthHuntUtility.dpToPx(144, getContext()));
+
+
+        mListPopupWindow.setModal(true);
+        mListPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                mGender.setText(mGenders[pos]);
+                mListPopupWindow.dismiss();
+            }
+        });
+
+        mGender.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                mListPopupWindow.show();
+                return false;
+            }
+        });
+
+        mGender.setShowSoftInputOnFocus(false);
     }
 
     private void addLink() {
@@ -96,7 +151,7 @@ public class SignUpFragment extends Fragment {
     @OnClick(R.id.sign_up)
     void onSignUp() {
         isLoginType = LoginActivity.LOGIN_TYPE_NORMAL;
-        IPresenter.validateCredentialsSignUp(mEmail.getText().toString(), mPassword.getText().toString());
+        IPresenter.validateCredentialsSignUp(mUsername.getText().toString(), mGender.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString());
     }
 
     @OnClick(R.id.sign_in)

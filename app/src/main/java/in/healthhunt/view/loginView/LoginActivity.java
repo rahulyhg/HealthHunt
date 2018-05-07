@@ -21,10 +21,13 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.Facebook;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginInteractorImpl;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.view.onBoardingView.OnBoardingActivity;
 import in.healthhunt.view.tagView.TagActivity;
 
 /**
@@ -53,10 +56,21 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
         mProgress.setIndeterminate(true);
         mProgress.setMessage(getResources().getString(R.string.please_wait));
 
+
+
         ButterKnife.bind(this);
 
         IPresenter = new LoginPresenterImpl(getApplicationContext(), this, new LoginInteractorImpl());
-        IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
+
+        String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
+        if(session_token != null) {
+            //startActivity();
+            Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
+            startActivity(intent);
+        }
+        else {
+            IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
+        }
 
     }
 
@@ -196,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     public void startActivity() {
         Intent intent = new Intent(this, TagActivity.class);
         startActivity(intent);
-        //finish();
+        finish();
     }
 
     private View getAlertView() {

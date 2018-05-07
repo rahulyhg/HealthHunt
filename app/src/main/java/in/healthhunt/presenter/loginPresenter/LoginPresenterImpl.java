@@ -39,8 +39,8 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     }
 
     @Override
-    public void validateCredentialsLogIn(String username, String password) {
-        if(!username.isEmpty() && !password.isEmpty()) {
+    public void validateCredentialsLogIn(String email, String password) {
+        if(!email.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
             //login  and check for email and password is correct or not
             //ILoginView.onHideProgress();
@@ -48,7 +48,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 //            if(true){
 //                ILoginView.showLoginAlert();
 //            }
-            ILoginInteractor.login(mContext, createLoginRequest("charlene@test.com","123456",null, null), this);
+            ILoginInteractor.login(mContext, createLoginRequest(email,password,null, null), this);
 
         }
         else {
@@ -59,12 +59,20 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     }
 
     @Override
-    public void validateCredentialsSignUp(String username, String password) {
+    public void validateCredentialsSignUp(String username, String gender, String email, String password) {
         if(!username.isEmpty() && !password.isEmpty()) {
             ILoginView.onShowProgress();
             //signup
 
-            SignUpRequest signUpRequest = createSignUpRequest(username, password);
+            if(username == null || username.isEmpty()) {
+                username = email;
+            }
+
+            if(gender == null || gender.isEmpty()) {
+                gender = "Not specified";
+            }
+
+            SignUpRequest signUpRequest = createSignUpRequest(username, gender, username, password);
             ILoginInteractor.signUp(mContext, signUpRequest, this);
 
 
@@ -190,11 +198,12 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
         ILoginView.showPasswordChangeAlert(spannable);
     }
 
-    private SignUpRequest createSignUpRequest(String email, String password) {
+    private SignUpRequest createSignUpRequest(String username, String gender, String email, String password) {
         SignUpRequest signUpRequest = new SignUpRequest();
+        signUpRequest.setmUserName(username);
+        signUpRequest.setmGender(gender);
         signUpRequest.setmEmail(email);
         signUpRequest.setmPassword(password);
-        signUpRequest.setmUserName(email); //email as username
         return signUpRequest;
     }
 
