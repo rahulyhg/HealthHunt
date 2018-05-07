@@ -21,7 +21,7 @@ public class SignUpRequest {
     private String mName ="charlene";
 
     @SerializedName("gender")
-    private String mMale ="male";
+    private String mGender;
 
     public String getmEmail() {
         return mEmail;
@@ -55,11 +55,11 @@ public class SignUpRequest {
         this.mName = mName;
     }
 
-    public String getmMale() {
-        return mMale;
+    public String getmGender() {
+        return mGender;
     }
 
-    public void setmMale(String mMale) {
-        this.mMale = mMale;
+    public void setmGender(String gender) {
+        this.mGender = gender;
     }
 }

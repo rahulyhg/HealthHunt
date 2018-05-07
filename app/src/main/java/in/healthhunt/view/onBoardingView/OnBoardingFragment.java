@@ -1,5 +1,6 @@
 package in.healthhunt.view.onBoardingView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,9 +13,11 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.view.homeScreenView.HomeActivity;
 
 /**
  * Created by abhishekkumar on 4/24/18.
@@ -28,6 +31,9 @@ public class OnBoardingFragment extends Fragment {
     @BindView(R.id.get_started)
     public Button mGetStarted;
 
+    @BindView(R.id.skip)
+    public TextView mSkip;
+
     private Unbinder mUnBinder;
 
     @Nullable
@@ -40,8 +46,8 @@ public class OnBoardingFragment extends Fragment {
         Bundle bundle = getArguments();
         int index = bundle.getInt(Constants.VIEWPAGER_FRAGMENT_NO_KEY);
         if(index == Constants.ON_BOARDING_SCREEN_COUNT - 1) {
-                mOnBoardText.setText(getText(R.string.swipe_right_back));
-                mGetStarted.setVisibility(View.VISIBLE);
+            mOnBoardText.setText(getText(R.string.swipe_right_back));
+            mGetStarted.setVisibility(View.VISIBLE);
         }
         else {
             mOnBoardText.setText(getText(R.string.explore_new_things));
@@ -54,5 +60,20 @@ public class OnBoardingFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mUnBinder.unbind();
+    }
+
+    @OnClick(R.id.get_started)
+    void onGetStarted() {
+        startHomeActivity();
+    }
+
+    @OnClick(R.id.skip)
+    void onSkip() {
+        startHomeActivity();
+    }
+
+    private void startHomeActivity() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
     }
 }

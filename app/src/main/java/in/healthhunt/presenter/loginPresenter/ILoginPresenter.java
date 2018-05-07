@@ -9,8 +9,8 @@ import android.os.Bundle;
  */
 
 public interface ILoginPresenter {
-    void validateCredentialsLogIn(String username, String password);
-    void validateCredentialsSignUp(String username, String password);
+    void validateCredentialsLogIn(String email, String password);
+    void validateCredentialsSignUp(String username, String gender, String email, String password);
     void forgotPassword(String email, String username);
     void loadFragment(String tag, Bundle bundle);
     Intent loginGoogle(Context context);

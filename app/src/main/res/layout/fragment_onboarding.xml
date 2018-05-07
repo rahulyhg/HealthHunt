@@ -37,6 +37,7 @@
                 android:fontFamily="@string/font_family_regular"
                 android:textSize="14sp"
                 android:textAllCaps="true"
+                android:background="?attr/actionBarItemBackground"
                 />
         </FrameLayout>
 
@@ -76,8 +77,8 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
         android:layout_gravity="bottom"
         android:fontFamily="@string/font_family_regular"
         android:layout_alignParentBottom="true"
@@ -85,6 +86,6 @@
         android:text="@string/swipe_left_and_right"
         android:textColor="@color/hh_grey_dark"
         android:textSize="14sp"
-        android:gravity="center"
+        android:gravity="left|top"
         android:layout_marginBottom="20dp"/>
 </RelativeLayout>

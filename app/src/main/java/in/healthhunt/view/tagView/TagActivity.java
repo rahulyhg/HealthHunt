@@ -2,6 +2,7 @@ package in.healthhunt.view.tagView;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +26,7 @@ import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.tagPresenter.TagPresenterImp;
 import in.healthhunt.view.BaseActivity;
+import in.healthhunt.view.onBoardingView.OnBoardingActivity;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -91,7 +93,11 @@ public class TagActivity extends BaseActivity implements ITagView{
          if(itemList.size() < 5) {
              Toast.makeText(getApplicationContext(), getString(R.string.select_at_least_5_tags),
                      Toast.LENGTH_SHORT).show();
+             return;
          }
+
+        Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
+        startActivity(intent);
     }
 
 

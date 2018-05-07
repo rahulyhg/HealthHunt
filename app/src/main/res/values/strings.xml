@@ -41,6 +41,8 @@
     <string name="email_password_incorrect">Email or password was incorrect</string>
     <string name="try_again">Try again</string>
     <string name="email_password_blank">Email and password fields are empty</string>
+    <string name="username">Username</string>
+    <string name="gender">Gender</string>
 
 
 
