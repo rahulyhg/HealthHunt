@@ -4,7 +4,7 @@ import android.view.View;
 
 import java.util.List;
 
-import in.healthhunt.model.beans.Tag;
+import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.view.tagView.TagViewHolder;
 
 /**
@@ -12,11 +12,12 @@ import in.healthhunt.view.tagView.TagViewHolder;
  */
 
 public interface ITagPresenter {
-    void initTags(List<Tag> list);
     int getTagCount();
-    List<Tag> getTagList();
-    List<Tag> getSelectedTagList();
-    void addTag(Tag tag);
-    void removeTag(long tagId);
+    List<TagItem> getTagList();
+    List<TagItem> getSelectedTagList();
+    void addTag(TagItem tag);
+    void removeTag(TagItem tag);
+    void selectAll();
+    void unSelectAll();
     TagViewHolder createTagViewHolder(View view, ITagPresenter tagPresenter);
 }

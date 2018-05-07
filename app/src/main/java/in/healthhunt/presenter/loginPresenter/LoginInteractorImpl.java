@@ -20,6 +20,7 @@ import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
+import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
@@ -33,12 +34,12 @@ import retrofit2.Response;
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
     public void login(final Context context, LoginRequest loginRequest, final OnLoginFinishListener loginFinishListener) {
-        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<User>() {
+        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<LoginResponse>() {
             @Override
-            public void onSuccess(User user, Response response) {
+            public void onSuccess(LoginResponse loginResponse, Response response) {
                 storeSessionToken(context, response);
                 loginFinishListener.onSuccess();
-                Log.i("TAGLoginInte", "response " + user + "Response " + response);
+                Log.i("TAGLoginInte", "response " + loginResponse + "Response " + response);
             }
 
             @Override

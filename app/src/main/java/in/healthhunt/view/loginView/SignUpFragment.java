@@ -63,6 +63,7 @@ public class SignUpFragment extends Fragment {
 
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
+    private int isLoginType;
 
     @Nullable
     @Override
@@ -94,6 +95,7 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.sign_up)
     void onSignUp() {
+        isLoginType = LoginActivity.LOGIN_TYPE_NORMAL;
         IPresenter.validateCredentialsSignUp(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
@@ -104,11 +106,13 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.facebook)
     void onFacebook() {
+        isLoginType = LoginActivity.LOGIN_TYPE_FACEBOOK;
         IPresenter.loginFacebook(getContext());
     }
 
     @OnClick(R.id.gmail)
     void onGmail() {
+        isLoginType = LoginActivity.LOGIN_TYPE_GMAIL;
         Intent intent = IPresenter.loginGoogle(getContext());
         if(intent != null) {
             startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
@@ -143,5 +147,20 @@ public class SignUpFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    public void tryAgain() {
+        switch (isLoginType){
+            case LoginActivity.LOGIN_TYPE_NORMAL:
+                IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
+                break;
+            case LoginActivity.LOGIN_TYPE_FACEBOOK:
+                IPresenter.loginFacebook(getContext());
+                break;
+            case LoginActivity.LOGIN_TYPE_GMAIL:
+                break;
+
+
+        }
     }
 }

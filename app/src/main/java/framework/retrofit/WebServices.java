@@ -2,11 +2,15 @@ package framework.retrofit;
 
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
+import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
+import in.healthhunt.model.tags.TagResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 
 public interface WebServices {
@@ -15,13 +19,16 @@ public interface WebServices {
    //@POST("/api/account-login")
     //Call<LoginResponse> login(@Field("access_token") String token);
     @POST("login")
-    Call<User> login(@Body LoginRequest loginRequest);
+    Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
     @POST("signup")
     Call<User> signUp(@Body SignUpRequest signUpRequest);
 
     @POST("forgot_password")
     Call<String> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
+
+    @GET("tags")
+    Call<TagResponse> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
 
     /*@Header("authToken") String token,*/
 

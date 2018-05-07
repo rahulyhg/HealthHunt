@@ -3,19 +3,21 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="48dp"
     android:layout_marginTop="24dp"
-    android:background="@drawable/search_view_bg"
+    android:background="@mipmap/ic_search_bg"
     >
 
 
     <ImageView
         android:id="@+id/search_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="17dp"
+        android:layout_height="17dp"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:src="@mipmap/ic_search" />
+        android:src="@mipmap/ic_search"
+        android:backgroundTint="#000000"
+        android:alpha="54"/>
 
 
     <EditText
@@ -25,9 +27,13 @@
         android:layout_toRightOf="@+id/search_icon"
         android:layout_toLeftOf="@id/record"
         android:layout_centerInParent="true"
+        android:gravity="left|center"
         android:paddingStart="10dp"
         android:background="@null"
-        android:hint="@string/search_by_tags" />
+        android:textSize="16sp"
+        android:hint="@string/search_by_tags"
+        android:fontFamily="@string/font_family_regular"
+        android:textColor="@color/hh_grey_dark"/>
 
 
     <ImageView
@@ -39,5 +45,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:src="@mipmap/ic_record"
+        android:alpha="54"
+        android:backgroundTint="#000000"
         />
 </RelativeLayout>

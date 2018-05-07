@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -22,10 +21,11 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.presenter.loginPresenter.Facebook;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginInteractorImpl;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
-import in.healthhunt.presenter.loginPresenter.Facebook;
+import in.healthhunt.view.tagView.TagActivity;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -36,6 +36,10 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     private final String TAG = LoginActivity.class.getSimpleName();
     private ILoginPresenter IPresenter;
     private ProgressDialog mProgress;
+
+    public static final int LOGIN_TYPE_NORMAL = 0;
+    public static final int LOGIN_TYPE_FACEBOOK = 1;
+    public static final int LOGIN_TYPE_GMAIL = 2;
 
 
     private Map<String,Fragment> fragmentMap = new HashMap<String, Fragment>();
@@ -91,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void onHideProgress() {
         if(mProgress != null) {
-            mProgress.cancel();
+            mProgress.dismiss();
         }
     }
 
@@ -126,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void showPasswordChangeAlert(Spannable  spannable) {
         final Dialog dialog = new Dialog(this);
-        
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.alertdialog_view);
 
@@ -168,6 +172,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+                if(fragment instanceof LoginFragment){
+                    LoginFragment loginFragment = (LoginFragment) fragment;
+                    loginFragment.tryAgain();
+
+                }
+                else if(fragment instanceof SignUpFragment){
+                    SignUpFragment signUpFragment = (SignUpFragment) fragment;
+                    signUpFragment.tryAgain();
+                }
             }
         });
         dialog.show();
@@ -176,6 +190,13 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     public void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void startActivity() {
+        Intent intent = new Intent(this, TagActivity.class);
+        startActivity(intent);
+        //finish();
     }
 
     private View getAlertView() {
@@ -187,7 +208,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         Facebook.getInstance(
                 getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
-        Log.i("TAGActivity", "Facebook token " + requestCode);
+        //Log.i("TAGActivity", "Facebook token " + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

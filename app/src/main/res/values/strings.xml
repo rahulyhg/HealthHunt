@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">HealthHunt</string>
     <string name="server_client_id">473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com</string>
-    <string name="facebook_app_id">231251037455551</string>
-    <string name="fb_login_protocol_scheme">fb231251037455551</string>
+    <string name="facebook_app_id">2014330465547457</string>
+    <string name="fb_login_protocol_scheme">fb2014330465547457</string>
     <string name="private_key">Bd6723sXcVBg12Fe</string>
 
     <!--473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com-->

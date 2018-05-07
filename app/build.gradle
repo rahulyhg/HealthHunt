@@ -4,13 +4,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/sandeepgoyal/Downloads/healthhunt_debug.jks')
+            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_debug.jks')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
         }
         release {
-            storeFile file('/Users/sandeepgoyal/Downloads/healthhunt_keystore')
+            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_keystore')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
@@ -39,7 +39,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
     implementation 'com.android.support:recyclerview-v7:27.1.0'
     implementation 'com.google.android.gms:play-services-auth:11.6.0'
     implementation 'com.android.support:design:27.1.0'
@@ -51,9 +51,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
-    compile "javax.annotation:jsr250-api:1.0"
-
-
+    compile 'javax.annotation:jsr250-api:1.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
     //implementation 'com.jakewharton:butterknife:8.0.1'
     //compile 'com.jakewharton:butterknife:8.0.1'
     //apt 'com.jakewharton:butterknife-compiler:8.0.1'
