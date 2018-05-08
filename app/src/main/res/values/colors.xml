@@ -25,4 +25,6 @@
     <color name="hh_text_color1">#B2FFFFFF</color>
     <color name="hh_image_bg_grey_light">#DADADA</color>
     <color name="hh_grey_dark1">#33000000</color>
+    <color name="hh_edit_profile_text">#B2FFFFFF</color>
+    <color name="hh_drawer_list_item_text">#C7000000</color>
 </resources>

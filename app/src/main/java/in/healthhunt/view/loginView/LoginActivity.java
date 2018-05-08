@@ -27,7 +27,6 @@ import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginInteractorImpl;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
-import in.healthhunt.view.onBoardingView.OnBoardingActivity;
 import in.healthhunt.view.tagView.TagActivity;
 
 /**
@@ -64,9 +63,9 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
         if(session_token != null) {
-            //startActivity();
-            Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
-            startActivity(intent);
+            startActivity();
+            //Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+            //startActivity(intent);
         }
         else {
             IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
