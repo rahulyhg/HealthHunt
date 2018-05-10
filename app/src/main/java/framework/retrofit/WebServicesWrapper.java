@@ -20,7 +20,6 @@ import in.healthhunt.model.tags.TagRequest;
 import in.healthhunt.model.tags.TagResponse;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
-import in.healthhunt.view.HealthHuntApplication;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -51,8 +50,12 @@ public class WebServicesWrapper {
 
     private Gson gson;
 
+    private Context mContext;
 
-    private WebServicesWrapper(String baseUrl) {
+
+    private WebServicesWrapper(String baseUrl, Context context) {
+
+        mContext = context;
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 
@@ -89,15 +92,18 @@ public class WebServicesWrapper {
 
                 //String session_token = response.header(Constants.SESSION_TOKEN);
                 //if(session_token != null) {
-                    HealthHuntApplication application = HealthHuntApplication.getHealthHuntApplication();
-                    if(application != null) {
-                        Context context = application.getApplicationContext();
-                        String session_token = HealthHuntPreference.getString(context, Constants.SESSION_TOKEN);
-                        request.addHeader(Constants.SESSION_TOKEN, session_token);
-                    }
+                //Context context = HealthHuntApplication.getHealthHuntApplication();
+                Log.i("TAG123", "Context = " +mContext);
+
+                //Context context = application.getApplicationContext();
+                String session_token = HealthHuntPreference.getString(mContext, Constants.SESSION_TOKEN);
+                if(session_token != null) {
+                    request.addHeader(Constants.SESSION_TOKEN, session_token);
+                    Log.i("TAG123", "response session token " + session_token);
+                }
                 //}
                 //response.
-               // Log.i("TAG123", "response session token " + session_token);
+
                 return response;
             }
         });
@@ -123,11 +129,11 @@ public class WebServicesWrapper {
     }
 
 
-    public static WebServicesWrapper getInstance() {
+    public static WebServicesWrapper getInstance(Context context) {
 
-        if (wrapper == null)
-
-            wrapper = new WebServicesWrapper(BASE_URL);
+        if (wrapper == null) {
+            wrapper = new WebServicesWrapper(BASE_URL, context);
+        }
 
         return wrapper;
 

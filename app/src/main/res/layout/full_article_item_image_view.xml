@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="272dp"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_gravity="top">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:scaleType="centerCrop"
+            android:background="@drawable/artical"
+            android:layout_gravity="center"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="40dp"
+            android:weightSum="3"
+            android:gravity="center">
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left|top|center"
+                android:gravity="left|top|center">
+
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/ic_article_watch"
+                    android:scaleType="center"
+                    />
+
+                <TextView
+                    android:id="@+id/full_article_read_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textSize="14sp"
+                    android:gravity="left|center"
+                    android:textColor="@android:color/white"
+                    android:text="3 min kjghkj"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="right|top"
+                android:gravity="right|top">
+
+
+                <ImageView
+                    android:id="@+id/article_download"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/ic_download"
+                    android:scaleType="center"
+                    android:layout_marginStart="10dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/full_article_bookmark"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/ic_bookmark"
+                    android:scaleType="center"
+                    android:layout_marginStart="10dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/full_article_like"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@mipmap/ic_full_article_heart"
+                    android:scaleType="center"
+                    android:layout_marginStart="10dp"
+                    />
+
+
+                <TextView
+                    android:id="@+id/full_article_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textSize="14sp"
+                    android:gravity="left"
+                    android:textColor="@android:color/white"
+                    android:text="3 min kjghkj"
+                    android:layout_marginStart="8dp"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@color/hh_green_light3">
+
+        <ImageView
+            android:id="@+id/full_article_tag_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@mipmap/ic_exercise"
+            android:layout_gravity="left|center"
+            android:tint="@color/hh_blue_light"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_gravity="left|center"
+            android:text="kgghgk"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/hh_blue_light"/>
+
+
+    </LinearLayout>
+</LinearLayout>

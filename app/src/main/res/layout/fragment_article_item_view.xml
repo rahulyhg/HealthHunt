@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="392dp"
+    android:layout_height="310dp"
     android:background="@mipmap/ic_article_bg">
 
 
@@ -46,7 +46,7 @@
                 android:layout_width="21dp"
                 android:layout_height="12dp"
                 android:layout_gravity="left|center"
-                android:background="@mipmap/ic_tag_item_icon"
+                android:background="@mipmap/ic_exercise"
                 android:backgroundTint="@color/hh_blue_light" />
 
             <TextView
@@ -79,7 +79,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@mipmap/ic_tag_item_icon" />
+                    android:src="@mipmap/ic_exercise" />
 
                 <TextView
                     android:id="@+id/name"
@@ -104,7 +104,7 @@
                 android:maxLines="3"
                 android:text="HH JJ  vv  nbvbnvbvbv nvn vnvnvn bvnvv  n nn H JJ  vv  nbvbnvbvbv nvn vnvnvn bvnvv  n nn "
                 android:textColor="@color/hh_edittext_text_color"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
 
             <!-- <TextView

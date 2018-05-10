@@ -5,11 +5,15 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import framework.retrofit.RestError;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.tags.TagRequest;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.tagView.ITagView;
 import in.healthhunt.view.tagView.TagViewHolder;
 
@@ -107,6 +111,15 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     @Override
     public void unSelectAll() {
         mSelectedList.clear();
+    }
+
+    @Override
+    public void storeSelectedTags() {
+        Set<String> tags = new HashSet<String>();
+        for(TagItem tagItem: mSelectedList){
+            tags.add(String.valueOf(tagItem.getId()));
+        }
+        HealthHuntPreference.putSet(mContext, Constants.SELECTED_TAGS_KEY, tags);
     }
 
     @Override

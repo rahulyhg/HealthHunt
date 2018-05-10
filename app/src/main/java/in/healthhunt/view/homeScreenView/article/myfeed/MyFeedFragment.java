@@ -45,6 +45,8 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_feed, container, false);
         ButterKnife.bind(this, view);
+
+        Log.i("TagFrag", "MyFeed Fragment");
         mFragmentManager = getFragmentManager();
         IMyFeedPresenter = new MyFeedPresenterImp(getContext(), this);
 
@@ -72,10 +74,11 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     private void setAdapter() {
-        mFeedAdapter = new MyFeedAdapter(IMyFeedPresenter, mArticles);
+        mFeedAdapter = new MyFeedAdapter(IMyFeedPresenter, mArticles, mArticleNames);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mFeedViewer.setLayoutManager(layoutManager);
         mFeedViewer.setAdapter(mFeedAdapter);
+        mFeedAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -125,4 +128,13 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         Log.i("TAG", "Index " + index);
        mArticleNames.remove(index);
        mFeedAdapter.deleteItem(index);    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.i("TagFrag", "onDestroyView");
+
+        mFeedViewer = null;
+        mFeedAdapter = null;
+    }
 }

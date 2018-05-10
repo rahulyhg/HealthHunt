@@ -16,13 +16,15 @@ import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresen
 
 public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<String> mHomeItemList;
     private IMyFeedPresenter IMyFeedPresenter;
     private List<Integer> mArticles;
+    private List<String> mArticleNames;
 
-    public MyFeedAdapter(IMyFeedPresenter feedPresenter, List<Integer> articles) {
+
+    public MyFeedAdapter(IMyFeedPresenter feedPresenter, List<Integer> articles, List<String> artiname) {
         IMyFeedPresenter = feedPresenter;
         mArticles = articles;
+        mArticleNames = artiname;
     }
 
     @Override
@@ -86,6 +88,7 @@ public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void deleteItem(int index) {
         mArticles.remove(index);
+        //notifyDataSetChanged();
         notifyItemRemoved(index);
     }
 }

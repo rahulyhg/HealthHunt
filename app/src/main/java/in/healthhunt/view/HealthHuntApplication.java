@@ -1,6 +1,7 @@
 package in.healthhunt.view;
 
 import android.app.Application;
+import android.content.Context;
 
 /**
  * Created by abhishekkumar on 4/30/18.
@@ -8,15 +9,16 @@ import android.app.Application;
 
 public class HealthHuntApplication extends Application {
 
-    private static HealthHuntApplication mApplication;
+    private static Context mContext;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mApplication = this;
+        mContext = getApplicationContext();
     }
 
-    public static HealthHuntApplication getHealthHuntApplication() {
-        return mApplication;
+    public static Context getHealthHuntApplication() {
+        return mContext;
     }
 }

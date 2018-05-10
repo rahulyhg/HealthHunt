@@ -3,14 +3,11 @@ package in.healthhunt.view.socialLogin;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,7 +15,6 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import in.healthhunt.R;
-import in.healthhunt.view.loginView.LoginActivity;
 
 public class GoogleLoginActivity extends Activity {
     GoogleApiClient mGoogleApiClient = null;
@@ -36,6 +32,13 @@ public class GoogleLoginActivity extends Activity {
 
 
     private void initializeGoogleLogin() {
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .requestIdToken(getResources().getString(R.string.server_client_id))
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .build();*/
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
@@ -47,6 +50,9 @@ public class GoogleLoginActivity extends Activity {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+
+
 
     }
 
@@ -72,8 +78,25 @@ public class GoogleLoginActivity extends Activity {
         }
     }
 
-
     private String handleSignInResult(Intent data) {
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        if (task.isSuccessful()) {
+            // Signed in successfully, show authenticated UI.
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                return account.getServerAuthCode();
+
+
+            } catch (ApiException e) {
+                return null;
+            }
+            //checking if photo is not null
+        }
+        return null;
+    }
+
+    /*private String handleSignInResult(Intent data) {
         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
         if (task.isSuccessful()) {
             // Signed in successfully, show authenticated UI.
@@ -89,6 +112,6 @@ public class GoogleLoginActivity extends Activity {
             //checking if photo is not null
         }
         return null;
-    }
+    }*/
 }
 

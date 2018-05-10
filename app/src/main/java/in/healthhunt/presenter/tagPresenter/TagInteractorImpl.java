@@ -17,7 +17,7 @@ import retrofit2.Response;
 public class TagInteractorImpl implements ITagInteractor {
     @Override
     public void fetchAllTags(Context context, TagRequest tagRequest, final OnTagLoadFinishListener tagLoadFinishListener) {
-        WebServicesWrapper.getInstance().fetchTags(tagRequest, new ResponseResolver<TagResponse>() {
+        WebServicesWrapper.getInstance(context).fetchTags(tagRequest, new ResponseResolver<TagResponse>() {
             @Override
             public void onSuccess(TagResponse tagResponse, Response response) {
                 tagLoadFinishListener.onSuccess();

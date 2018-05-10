@@ -96,6 +96,7 @@ public class TagActivity extends BaseActivity implements ITagView{
              return;
          }
 
+        mTagPresenterImp.storeSelectedTags();
         Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
         startActivity(intent);
     }

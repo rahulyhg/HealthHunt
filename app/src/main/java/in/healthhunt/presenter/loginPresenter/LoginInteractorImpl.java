@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
     public void login(final Context context, LoginRequest loginRequest, final OnLoginFinishListener loginFinishListener) {
-        WebServicesWrapper.getInstance().login(loginRequest, new ResponseResolver<LoginResponse>() {
+        WebServicesWrapper.getInstance(context).login(loginRequest, new ResponseResolver<LoginResponse>() {
             @Override
             public void onSuccess(LoginResponse loginResponse, Response response) {
                 storeSessionToken(context, response);
@@ -86,7 +86,7 @@ public class LoginInteractorImpl implements ILoginInteractor {
 
     @Override
     public void signUp(final Context context, SignUpRequest signUpRequest, final OnLoginFinishListener onLoginFinishListener) {
-            WebServicesWrapper.getInstance().signUp(signUpRequest, new ResponseResolver<User>() {
+            WebServicesWrapper.getInstance(context).signUp(signUpRequest, new ResponseResolver<User>() {
                 @Override
                 public void onSuccess(User user, Response response) {
                     storeSessionToken(context, response);
@@ -102,8 +102,8 @@ public class LoginInteractorImpl implements ILoginInteractor {
     }
 
     @Override
-    public void resetLoginPassword(final ForgotPasswordRequest forgotPasswordRequest, final OnPasswordChangeListener passwordChangeListener) {
-            WebServicesWrapper.getInstance().forgotPassword(forgotPasswordRequest, new ResponseResolver<String>() {
+    public void resetLoginPassword(final Context context, final ForgotPasswordRequest forgotPasswordRequest, final OnPasswordChangeListener passwordChangeListener) {
+            WebServicesWrapper.getInstance(context).forgotPassword(forgotPasswordRequest, new ResponseResolver<String>() {
                 @Override
                 public void onSuccess(String s, Response response) {
                     passwordChangeListener.onChangePassword(true, forgotPasswordRequest.getmEmail(), response.message());

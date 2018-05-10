@@ -61,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
 
         IPresenter = new LoginPresenterImpl(getApplicationContext(), this, new LoginInteractorImpl());
 
+        //Intent intent = new Intent(getApplicationContext(), FullViewActivity.class);
+        //startActivity(intent);
         String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
         if(session_token != null) {
             startActivity();
@@ -96,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mProgress.dismiss();
     }
 
     @Override

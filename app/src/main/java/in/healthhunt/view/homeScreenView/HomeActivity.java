@@ -25,12 +25,15 @@ import android.view.MenuItem;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.homeScreenView.article.DrawerFragment;
 import in.healthhunt.view.homeScreenView.article.myfeed.MyFeedFragment;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -75,6 +78,10 @@ public class HomeActivity extends AppCompatActivity implements IHomeView{
         s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, tile.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mToolbar.setTitle(s);
 
+        Set<String> set = HealthHuntPreference.getSet(this, Constants.SELECTED_TAGS_KEY);
+        for (String str: set){
+            Log.i("TAGID" , "ID = " + str);
+        }
 
         IHomePresenter = new HomePresenterImp(getApplicationContext(), this);
         IHomePresenter.loadFragment(MyFeedFragment.class.getSimpleName(), null);

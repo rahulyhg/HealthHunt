@@ -79,4 +79,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
+    <!-- Full article Screen -->
+
+    <string name="about">About</string>
+    <string name="show_all_content">"The app will remotely observe the vital signs of the patient—such as blood pressure, heart rate, and weight—and will send notifications to both the doctor and the patient in case changes in the patient’s data indicate a possibility of heart failure."</string>
+    <string name="read_more">See more</string>
+    <string name="read_less">See less</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat, nunc eget volutpat viverra, lacus ligula venenatis nulla, in accumsan eros eros nec ipsum. Fusce eget massa id lorem blandit lobortis. Donec lacus ligula, commodo quis eleifend ac, rhoncus sed mi. Curabitur luctus justo vel consequat fermentum. Donec facilisis elit in sem suscipit pharetra. Curabitur porta et dolor eget pretium. Mauris quam augue, interdum nec tempor vitae, consectetur at erat.</string>
+
+
 </resources>

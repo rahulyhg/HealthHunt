@@ -92,7 +92,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
         if(!email.isEmpty() || !username.isEmpty()) {
             ILoginView.onShowProgress();
             ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
-            ILoginInteractor.resetLoginPassword(request, this);
+            ILoginInteractor.resetLoginPassword(mContext, request, this);
         }
         else {
             ILoginView.showToast("Enter the email");

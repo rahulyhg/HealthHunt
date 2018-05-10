@@ -17,5 +17,6 @@ public interface Constants {
     String SESSION_TOKEN = "sessionToken";
     String EMAIL = "email";
     String USER_NAME = "username";
+    String SELECTED_TAGS_KEY = "selected_tags_key";
 
 }
