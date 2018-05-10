@@ -70,4 +70,13 @@
     <!-- Home Screen -->
 
     <string name="view_all">View all</string>
+    <string name="my_feed">My feed</string>
+    <string name="my_hunts">My hunts</string>
+    <string name="watch">Watch</string>
+    <string name="shop">Shop</string>
+    <string name="choose_category">Choose categories to show</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
 </resources>

@@ -2,7 +2,8 @@ package in.healthhunt.view.homeScreenView.article.myfeed;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IArticlePresenter;
 
 
@@ -10,7 +11,7 @@ import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresen
  * Created by abhishekkumar on 4/24/18.
  */
 
-public class ArticleAdapter extends FragmentPagerAdapter {
+public class ArticleAdapter extends FragmentStatePagerAdapter {
 
     private IArticlePresenter IArticlePresenter;
 

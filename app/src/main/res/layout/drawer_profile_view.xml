@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="148dp"
+    android:background="@mipmap/ic_profile_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/profile_pic_view"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/profile_oval_shape"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="19dp">
+        <ImageView
+            android:id="@+id/profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/avatar"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@string/font_family_medium"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_pic_view"
+        android:text="HHHHHH"
+        />
+
+    <TextView
+        android:id="@+id/edit_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@string/font_family_regular"
+        android:textSize="14sp"
+        android:gravity="left|center"
+        android:textColor="@color/hh_edit_profile_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_name"
+        android:text="HHHHHH"
+        />
+
+
+
+</android.support.constraint.ConstraintLayout>

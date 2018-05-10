@@ -89,10 +89,15 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     @Override
     public void forgotPassword(String email, String username) {
-                ILoginView.onShowProgress();
-                ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
-                ILoginInteractor.resetLoginPassword(request, this);
-            }
+        if(!email.isEmpty() || !username.isEmpty()) {
+            ILoginView.onShowProgress();
+            ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
+            ILoginInteractor.resetLoginPassword(request, this);
+        }
+        else {
+            ILoginView.showToast("Enter the email");
+        }
+    }
 
     private boolean validateGoogleServerClientID(Context context) {
         String serverClientId = context.getString(R.string.server_client_id);
@@ -167,8 +172,8 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     @Override
     public void onError(RestError errorInfo) {
-            ILoginView.onHideProgress();
-            ILoginView.showLoginAlert(errorInfo.getMessage());
+        ILoginView.onHideProgress();
+        ILoginView.showLoginAlert(errorInfo.getMessage());
     }
 
     @Override
