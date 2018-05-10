@@ -39,6 +39,7 @@ public class GoogleLoginActivity extends Activity {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
+                .requestServerAuthCode(getResources().getString(R.string.server_client_id))
                 .requestIdToken(getResources().getString(R.string.server_client_id))
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .build();
@@ -79,7 +80,7 @@ public class GoogleLoginActivity extends Activity {
 
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-               return account.getIdToken();
+               return account.getServerAuthCode();
 
 
             } catch (ApiException e) {
