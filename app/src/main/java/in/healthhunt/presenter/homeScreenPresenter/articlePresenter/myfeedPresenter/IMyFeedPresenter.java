@@ -3,6 +3,10 @@ package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPrese
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.List;
+
+import in.healthhunt.model.articles.articleResponse.PostsItem;
+
 /**
  * Created by abhishekkumar on 4/23/18.
  */
@@ -10,4 +14,9 @@ import android.view.View;
 public interface IMyFeedPresenter {
     int getCount();
     RecyclerView.ViewHolder createArticleHolder(View view, int type);
+    void fetchTagsArticle(int offset, int limit);
+    void fetchTrendingArticle(int offset, int limit);
+    List<PostsItem> getTagArticles();
+    List<PostsItem> getTrendingArticles();
+    void fetchData();
 }

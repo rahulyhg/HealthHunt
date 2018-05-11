@@ -15,15 +15,15 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/artccal_image"
+                android:id="@+id/article_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/artical"
+                android:layout_height="100dp"
                 android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"/>
+                android:layout_marginEnd="2dp"
+                android:scaleType="fitXY"/>
 
             <ImageView
-                android:id="@+id/bookmark"
+                android:id="@+id/article_bookmark"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="top|right"
@@ -43,6 +43,7 @@
             android:layout_marginEnd="1dp">
 
             <ImageView
+                android:id="@+id/category_image"
                 android:layout_width="21dp"
                 android:layout_height="12dp"
                 android:layout_gravity="left|center"
@@ -50,6 +51,7 @@
                 android:backgroundTint="@color/hh_blue_light" />
 
             <TextView
+                android:id="@+id/category_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -82,7 +84,7 @@
                     android:src="@mipmap/ic_exercise" />
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/author_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -93,7 +95,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/artical_content"
+                android:id="@+id/article_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -125,7 +127,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/hash_tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -135,6 +136,7 @@
         android:layout_alignParentBottom="true">
 
         <TextView
+            android:id="@+id/hash_tags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_family_regular"
@@ -163,7 +165,7 @@
                 android:layout_weight="1"/>
 
             <TextView
-                android:id="@+id/artical_date"
+                android:id="@+id/article_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"

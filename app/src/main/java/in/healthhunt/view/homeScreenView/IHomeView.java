@@ -8,5 +8,9 @@ import android.os.Bundle;
 
 public interface IHomeView {
     void showFragment(String tag, Bundle bundle);
-
+    void showHomeAlert(String msg);
+    void finishActivity();
+    void updateNavigation();
+    void setNavigation();
+    void updateTitle(String msg);
 }

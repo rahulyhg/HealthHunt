@@ -142,7 +142,9 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     @Override
     public void onError(RestError errorInfo) {
         ITagView.onHideProgress();
-        ITagView.showAlert(errorInfo.getMessage());
+        if(errorInfo != null) {
+            ITagView.showAlert(errorInfo.getMessage());
+        }
     }
 
 

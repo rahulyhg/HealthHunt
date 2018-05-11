@@ -1,7 +1,6 @@
 package in.healthhunt.view.tagView;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,8 +49,6 @@ public class TagActivity extends BaseActivity implements ITagView{
 
     private TagPresenterImp mTagPresenterImp;
 
-    private ProgressDialog mProgress;
-
     private TagAdapter mTagAdapter;
 
     private boolean isSelectAll;
@@ -61,10 +58,6 @@ public class TagActivity extends BaseActivity implements ITagView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tags);
         ButterKnife.bind(this);
-
-        mProgress = new ProgressDialog(this);
-        mProgress.setIndeterminate(true);
-        mProgress.setMessage(getResources().getString(R.string.please_wait));
 
         addSpinnerAdapter();
         mTagPresenterImp = new TagPresenterImp(getApplicationContext(), this);
@@ -99,6 +92,7 @@ public class TagActivity extends BaseActivity implements ITagView{
         mTagPresenterImp.storeSelectedTags();
         Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
         startActivity(intent);
+        finish();
     }
 
 

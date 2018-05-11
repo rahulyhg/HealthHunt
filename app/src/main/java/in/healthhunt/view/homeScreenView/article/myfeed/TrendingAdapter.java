@@ -1,12 +1,29 @@
 package in.healthhunt.view.homeScreenView.article.myfeed;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.articleResponse.Author;
+import in.healthhunt.model.articles.articleResponse.CategoriesItem;
+import in.healthhunt.model.articles.articleResponse.MediaItem;
+import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.TagsItem;
+import in.healthhunt.model.articles.articleResponse.Title;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ITrendingSponsoredPresenter;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by abhishekkumar on 4/27/18.
@@ -14,10 +31,12 @@ import in.healthhunt.R;
 
 public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private int mCount;
+    private ITrendingSponsoredPresenter mPresenter;
+    private Context mContext;
 
-    public TrendingAdapter(int count) {
-        mCount = count;
+    public TrendingAdapter(Context context, ITrendingSponsoredPresenter presenter) {
+        mPresenter = presenter;
+        mContext = context;
     }
 
     @Override
@@ -29,17 +48,128 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        setContent(((TrendingItemViewHolder)holder), position);
     }
+
+    private void setContent(TrendingItemViewHolder holder, int pos) {
+
+        PostsItem postsItem = mPresenter.getTrendingArticles(pos);
+        if(postsItem != null) {
+            String url = null;
+            List<MediaItem> mediaItems = postsItem.getMedia();
+            if(mediaItems != null && !mediaItems.isEmpty()) {
+                MediaItem media = mediaItems.get(0);
+                if("image".equals(media.getMedia_type())) {
+                    url = media.getUrl();
+
+                }
+            }
+            if(url != null) {
+                Log.i("TAG11", "url " + url);
+                Glide.with(mContext).load(url).override(300,100).placeholder(R.drawable.artical).into(holder.mArticleImage);
+            }
+            else {
+                holder.mArticleImage.setBackgroundResource(R.drawable.artical);
+            }
+
+
+            String categoryName = null;
+            List<CategoriesItem> categories = postsItem.getCategories();
+            if(categories != null && !categories.isEmpty()){
+                categoryName = categories.get(0).getName();
+            }
+
+            holder.mCategoryName.setText(categoryName);
+
+            Author author = postsItem.getAuthor();
+            if(author != null){
+                holder.mAuthorName.setText(author.getName());
+
+                String authorUrl = author.getUrl();
+                authorUrl = authorUrl.replace("\n", "");
+                Glide.with(mContext)
+                        .load(authorUrl)
+                        .bitmapTransform(new CropCircleTransformation(mContext)).placeholder(R.mipmap.default_profile)
+                        .into(holder.mAuthorImage);
+
+            }
+
+            Title title = postsItem.getTitle();
+            String articleTitle = null;
+            if(title != null) {
+                articleTitle = title.getRendered();
+            }
+            holder.mArticleTitle.setText(articleTitle);
+
+
+            String tagsName = "";
+            List<TagsItem> tagItems = postsItem.getTags();
+            if(tagItems != null && !tagItems.isEmpty()) {
+                for(TagsItem  tagItem: tagItems) {
+                    tagsName = tagsName + "#" + tagItem.getName() + "  ";
+                }
+            }
+
+            holder.mHashTags.setText(tagsName);
+
+
+            String readingTime = postsItem.getRead_time();
+            readingTime = readingTime + " min read";
+            holder.mReadingTime.setText(readingTime);
+
+            String date = postsItem.getDate();
+            /*if(date != null) {
+                date = HealthHuntUtility.getDateWithFormat("dd-MMM-yyyy", date);
+            }*/
+            holder.mArticleDate.setText(date);
+        }
+    }
+
 
     @Override
     public int getItemCount() {
-        return mCount;
+        return mPresenter.getCount();
     }
 
     public class TrendingItemViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.article_image)
+        ImageView mArticleImage;
+
+        @BindView(R.id.article_bookmark)
+        ImageView mArticleBookMark;
+
+        @BindView(R.id.category_image)
+        ImageView mCategoryImage;
+
+        @BindView(R.id.category_name)
+        TextView mCategoryName;
+
+        @BindView(R.id.author_pic)
+        ImageView mAuthorImage;
+
+        @BindView(R.id.author_name)
+        TextView mAuthorName;
+
+        @BindView(R.id.article_content)
+        TextView mArticleTitle;
+
+        @BindView(R.id.hash_tags)
+        TextView mHashTags;
+
+        @BindView(R.id.reading_time)
+        TextView mReadingTime;
+
+        @BindView(R.id.article_date)
+        TextView mArticleDate;
+
         public TrendingItemViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void notifyDataChanged() {
+            notifyDataSetChanged();
         }
     }
 }

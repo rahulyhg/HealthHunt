@@ -10,6 +10,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.IOException;
 import java.util.Map;
 
+import in.healthhunt.model.articles.articleResponse.ArticleResponse;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
@@ -201,6 +202,17 @@ public class WebServicesWrapper {
         return loginResponseCall;
 
     }
+
+    public Call<ArticleResponse> fetchArticles(Map<String, String> params, ResponseResolver<ArticleResponse> responseResponseResolver) {
+
+        Call<ArticleResponse> loginResponseCall = webServices.fetchArticles(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
 
 /*
     public Call<UserInfo> getMyProfile(ResponseResolver<UserInfo> responseResponseResolver) {

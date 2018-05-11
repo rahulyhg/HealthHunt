@@ -1,15 +1,14 @@
 package in.healthhunt.view.loginView;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -27,17 +26,20 @@ import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginInteractorImpl;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.view.BaseActivity;
+import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.tagView.TagActivity;
+
+import static in.healthhunt.view.socialLogin.GoogleLoginActivity.GOOGLE_LOGIN_RESPONSE_OK;
 
 /**
  * Created by abhishekkumar on 4/9/18.
  */
 
-public class LoginActivity extends AppCompatActivity implements ILoginView{
+public class LoginActivity extends BaseActivity implements ILoginView{
 
     private final String TAG = LoginActivity.class.getSimpleName();
     private ILoginPresenter IPresenter;
-    private ProgressDialog mProgress;
 
     public static final int LOGIN_TYPE_NORMAL = 0;
     public static final int LOGIN_TYPE_FACEBOOK = 1;
@@ -50,24 +52,16 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        mProgress = new ProgressDialog(this);
-        mProgress.setIndeterminate(true);
-        mProgress.setMessage(getResources().getString(R.string.please_wait));
-
-
-
         ButterKnife.bind(this);
 
-        IPresenter = new LoginPresenterImpl(getApplicationContext(), this, new LoginInteractorImpl());
+        IPresenter = new LoginPresenterImpl(this, new LoginInteractorImpl());
 
         //Intent intent = new Intent(getApplicationContext(), FullViewActivity.class);
         //startActivity(intent);
-        String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
-        if(session_token != null) {
-            startActivity();
-            //Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            //startActivity(intent);
+        //isNeedLogin();
+        //String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
+        if(isNeedLogin()) {
+            IPresenter.alreadyLogin();
         }
         else {
             IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
@@ -209,8 +203,15 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     }
 
     @Override
-    public void startActivity() {
+    public void startTagActivity() {
         Intent intent = new Intent(this, TagActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void startHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         finish();
     }
@@ -222,9 +223,24 @@ public class LoginActivity extends AppCompatActivity implements ILoginView{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Facebook.getInstance(
-                getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
         //Log.i("TAGActivity", "Facebook token " + requestCode);
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constants.GMAIL_REQUEST_CODE) {
+            if(resultCode == GOOGLE_LOGIN_RESPONSE_OK) {
+                String authID = data.getStringExtra(Constants.AUTHCODE);
+                IPresenter.loginGoogle(authID);
+                Log.i("TAG", "authCode = " + authID);
+            }
+        }
+        else {
+            Facebook.getInstance(
+                    getApplicationContext()).getCallbackManager().onActivityResult(requestCode, resultCode, data);
+
+        }
+    }
+
+    public boolean isNeedLogin() {
+        return HealthHuntPreference.getBoolean(this, Constants.IS_LOGIN_FIRST_KEY);
     }
 }

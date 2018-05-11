@@ -8,6 +8,8 @@ import android.view.View;
  */
 
 public interface IViewAll {
-    int getCount();
     RecyclerView.ViewHolder onCreateViewHolder(View view);
+    void showProgress();
+    void hideProgress();
+    void updateAdapter(int type);
 }

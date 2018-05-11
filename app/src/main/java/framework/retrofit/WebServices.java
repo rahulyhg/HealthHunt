@@ -1,5 +1,8 @@
 package framework.retrofit;
 
+import java.util.Map;
+
+import in.healthhunt.model.articles.articleResponse.ArticleResponse;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.LoginResponse;
@@ -11,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 
 public interface WebServices {
@@ -29,6 +33,9 @@ public interface WebServices {
 
     @GET("tags")
     Call<TagResponse> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
+
+    @GET("posts")
+    Call<ArticleResponse> fetchArticles(@QueryMap Map<String, String> params);
 
     /*@Header("authToken") String token,*/
 

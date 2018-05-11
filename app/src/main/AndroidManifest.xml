@@ -42,7 +42,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.socialLogin.GoogleLoginActivity"/>
+        <activity android:name=".view.socialLogin.GoogleLoginActivity"
+             android:theme="@style/GoogleTransparent"/>
 
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"

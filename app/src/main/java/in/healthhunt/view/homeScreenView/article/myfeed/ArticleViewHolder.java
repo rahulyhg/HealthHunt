@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -40,6 +44,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     private IMyFeedView IMyFeedView;
     private Context mContext;
     private FragmentManager mFragmentManager;
+    private ArticleAdapter mArticleAdapter;
 
     public ArticleViewHolder(View articleView, FragmentManager fragmentManager, IMyFeedView feedView) {
         super(articleView);
@@ -53,21 +58,26 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
-        mArticlePager.setAdapter(articleAdapter);
+        mArticleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        mArticlePager.setAdapter(mArticleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
         mArticlePager.setPageMargin(HealthHuntUtility.dpToPx(6, mContext));
     }
 
     @Override
-    public Fragment getArticleItem(int position) {
+    public Fragment getFragmentArticleItem(int position) {
         return new ArticleFragment();
     }
 
     @Override
     public int getArticleCount() {
-        return 5;
+        List<PostsItem> list = IMyFeedView.getTagArticles();
+        int count = 0;
+        if(list != null) {
+            count = list.size();
+        }
+        return count;
     }
 
     @Override
@@ -75,14 +85,34 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
 
     }
 
-    public void setImage() {
+    @Override
+    public PostsItem getTagArticle(int pos) {
+        List<PostsItem> list = IMyFeedView.getTagArticles();
+        PostsItem postItem = null;
+        if(list != null) {
+            postItem = list.get(pos);
+        }
+        return postItem;
+    }
 
+    private void openViewAllFragment() {
+        IMyFeedView.updateNavigation();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.BASED_ON_TAGS);
+        IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
     @OnClick(R.id.view_all)
     void onViewAll(){
-        Bundle bundle = new Bundle();
-        bundle.putString("article_name", "Based on tags");
-        IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);
+        openViewAllFragment();
     }
+
+    public void notifyDataChanged() {
+        /*for(int i=0; i<mArticlePager.getChildCount(); i++) {
+            Log.i("TAG11234", " view = " + mArticlePager.getAdapter().)
+        }*/
+
+        mArticleAdapter.notifyDataSetChanged();
+    }
+
 }

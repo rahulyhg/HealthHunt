@@ -4,9 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import in.healthhunt.view.homeScreenView.article.myfeed.IMyFeedView;
 import in.healthhunt.view.homeScreenView.article.myfeed.ITopProductView;
-import in.healthhunt.view.homeScreenView.article.myfeed.TopProductViewHolder;
 
 /**
  * Created by abhishekkumar on 4/23/18.

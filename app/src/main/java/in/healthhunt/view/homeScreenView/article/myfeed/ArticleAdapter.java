@@ -1,5 +1,6 @@
 package in.healthhunt.view.homeScreenView.article.myfeed;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -27,5 +28,10 @@ public class ArticleAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return IArticlePresenter.getCount();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
     }
 }

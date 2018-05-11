@@ -1,8 +1,9 @@
 package in.healthhunt.view.socialLogin;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -16,17 +17,22 @@ import com.google.android.gms.tasks.Task;
 
 import in.healthhunt.R;
 
-public class GoogleLoginActivity extends Activity {
+public class GoogleLoginActivity extends AppCompatActivity {
     GoogleApiClient mGoogleApiClient = null;
     public static final int GOOGLE_LOGIN_REQUEST_CODE = 1;
     public static final int GOOGLE_LOGIN_RESPONSE_OK = 2;
     public static final int GOOGLE_LOGIN_RESPONSE_FAIL = 3;
 
+    private ProgressDialog mProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeGoogleLogin();
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        mProgress = new ProgressDialog(this);
+        mProgress.setIndeterminate(true);
+        mProgress.setMessage(getResources().getString(R.string.please_wait));
+        mProgress.show();
         startActivityForResult(signInIntent, GOOGLE_LOGIN_REQUEST_CODE);
     }
 
@@ -58,7 +64,9 @@ public class GoogleLoginActivity extends Activity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mProgress.dismiss();
         if (data == null) {
+            finish();
             return;
         }
 
@@ -72,10 +80,10 @@ public class GoogleLoginActivity extends Activity {
                 Intent userIntent = new Intent();
                 userIntent.putExtra("authCode", authCode);
                 setResult(GOOGLE_LOGIN_RESPONSE_OK,userIntent);
-                finish();
             }
 
         }
+        finish();
     }
 
     private String handleSignInResult(Intent data) {

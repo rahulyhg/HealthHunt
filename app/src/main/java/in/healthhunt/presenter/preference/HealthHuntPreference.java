@@ -50,4 +50,16 @@ public class HealthHuntPreference {
         editor.clear();
         editor.commit();
     }
+
+    public static void putBoolean(Context context, String key, boolean value) {
+        SharedPreferences sharedPref = context.getSharedPreferences(pref,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    public static boolean getBoolean(Context context, String key) {
+        SharedPreferences sharedPref = context.getSharedPreferences(pref,Context.MODE_PRIVATE);
+        return sharedPref.getBoolean(key, false);
+    }
 }

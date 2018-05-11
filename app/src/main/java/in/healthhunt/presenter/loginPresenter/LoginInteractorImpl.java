@@ -61,7 +61,6 @@ public class LoginInteractorImpl implements ILoginInteractor {
         }
     }
 
-
     @Override
     public String loginWithFacebook(Context context, FacebookCallback<LoginResult> facebookCallback) {
         Facebook facebook = Facebook.getInstance(context);

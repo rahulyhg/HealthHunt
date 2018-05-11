@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import in.healthhunt.R;
 
 /**
@@ -29,6 +32,7 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((SponsoredItemViewHolder)holder).mArticleImage.setBackgroundResource(R.drawable.artical);
     }
 
     @Override
@@ -38,8 +42,12 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class SponsoredItemViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.article_image)
+        ImageView mArticleImage;
+
         public SponsoredItemViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

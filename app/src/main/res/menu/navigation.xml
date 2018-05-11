@@ -5,24 +5,28 @@
     <item
         android:id="@+id/navigation_my_feed"
         android:icon="@mipmap/ic_my_feed"
-        android:title="@string/my_feed" />
+        android:title="@string/my_feed"
+        android:checkable="false"/>
 
     <item
         android:id="@+id/navigation_my_hunts"
         android:icon="@mipmap/ic_my_hunts"
         android:title="@string/my_hunts"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
 
     <item
         android:id="@+id/navigation_watch"
         android:icon="@mipmap/ic_watch"
         android:title="@string/watch"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
 
     <item
         android:id="@+id/navigation_shop"
         android:icon="@mipmap/ic_shop"
         android:title="@string/shop"
-        app:showAsAction="always|withText"/>
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
 
 </menu>

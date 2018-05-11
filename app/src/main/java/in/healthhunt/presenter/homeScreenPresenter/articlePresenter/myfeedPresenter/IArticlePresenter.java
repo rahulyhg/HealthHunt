@@ -1,7 +1,5 @@
 package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -13,4 +11,5 @@ public interface IArticlePresenter {
     void loadFragment(String tag, Bundle bundle);
     int getCount();
     Fragment getItem(int position);
+    void openViewAll();
 }

@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,5 +96,16 @@ public class HealthHuntUtility {
             return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         }
         return px;
+    }
+
+    public static String getDateWithFormat(String format, String strDate) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        try {
+            Date date = simpleDateFormat.parse(strDate);
+            date.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

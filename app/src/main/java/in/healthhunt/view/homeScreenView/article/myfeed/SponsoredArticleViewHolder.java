@@ -10,8 +10,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ITrendingSponsoredPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.TrendingSponsoredPresenterImp;
 
 /**
@@ -27,7 +29,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     @BindView(R.id.sponsored_recycler_list)
     RecyclerView mSponsoredViewer;
 
-    private TrendingSponsoredPresenterImp mTrendingPresenter;
+    private ITrendingSponsoredPresenter ITrendingPresenter;
     private IMyFeedView IMyFeedView;
     private Context mContext;
     private int mIndex;
@@ -40,26 +42,36 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
         IMyFeedView = feedView;
         mIndex = index;
         ButterKnife.bind(this, articleView);
-        mTrendingPresenter = new TrendingSponsoredPresenterImp(mContext, this);
+        ITrendingPresenter = new TrendingSponsoredPresenterImp(mContext, this);
         setAdapter();
 
     }
 
     private void setAdapter() {
-        TrendingAdapter trendingAdapter = new TrendingAdapter(2);
+        SponsoredAdapter sponsoredAdapter = new SponsoredAdapter(2);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mSponsoredViewer.setLayoutManager(layoutManager);
         mSponsoredViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
-        mSponsoredViewer.setAdapter(trendingAdapter);
-    }
-
-    @Override
-    public int getCount() {
-        return 2;
+        mSponsoredViewer.setAdapter(sponsoredAdapter);
     }
 
     @OnClick(R.id.cross_image)
     void onCrossClick() {
         IMyFeedView.onClickCrossView(mIndex);
+    }
+
+    @Override
+    public int getArticleCount() {
+        return 2;
+    }
+
+    @Override
+    public PostsItem getTrendingArticle(int pos) {
+        return null;
+    }
+
+    @Override
+    public PostsItem getSponsoredArticle(int pos) {
+        return null;
     }
 }

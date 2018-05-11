@@ -1,5 +1,6 @@
 package in.healthhunt.presenter.loginPresenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,12 +15,17 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
+import java.util.Set;
+
 import framework.retrofit.RestError;
 import in.healthhunt.R;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.loginView.ILoginView;
+import in.healthhunt.view.socialLogin.GoogleLoginActivity;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -31,32 +37,30 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     in.healthhunt.view.loginView.ILoginView ILoginView;
     ILoginInteractor ILoginInteractor;
     private Context mContext;
+    private Activity mActivity;
 
-    public LoginPresenterImpl(Context context, ILoginView loginView, ILoginInteractor loginInteractor) {
-        mContext = context;
-        ILoginView = loginView;
+    public LoginPresenterImpl(Activity activity, ILoginInteractor loginInteractor) {
+        mActivity = activity;
+        mContext = activity.getApplicationContext();
+        ILoginView = (ILoginView) activity;
         ILoginInteractor = loginInteractor;
     }
 
     @Override
     public void validateCredentialsLogIn(String email, String password) {
         if(!email.isEmpty() && !password.isEmpty()) {
+            HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, true);
+            HealthHuntPreference.putString(mContext, Constants.EMAIL, email);
+            HealthHuntPreference.putString(mContext, Constants.PASSWORD, password);
             ILoginView.onShowProgress();
-            //login  and check for email and password is correct or not
-            //ILoginView.onHideProgress();
-
-//            if(true){
-//                ILoginView.showLoginAlert();
-//            }
             ILoginInteractor.login(mContext, createLoginRequest(email,password,null, null), this);
-
         }
         else {
             String str = mContext.getResources().getString(R.string.email_password_blank);
             ILoginView.showToast(str);
         }
-        //ILoginView.onHideProgress();
     }
+
 
     @Override
     public void validateCredentialsSignUp(String username, String gender, String email, String password) {
@@ -74,11 +78,6 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
             SignUpRequest signUpRequest = createSignUpRequest(username, gender, username, password);
             ILoginInteractor.signUp(mContext, signUpRequest, this);
-
-
-//            if(true){
-//                ILoginView.onEmailError();
-//            }
         }
         else {
             String str = mContext.getResources().getString(R.string.email_password_blank);
@@ -128,6 +127,8 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     @Override
     public void loginFacebook(Context context) {
+        HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, false);
+        HealthHuntPreference.putString(mContext, Constants.SOCIAL_LOGIN, Constants.FACEBOOK);
         ILoginView.onShowProgress();
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -167,13 +168,23 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     @Override
     public void onSuccess() {
         ILoginView.onHideProgress();
-        ILoginView.startActivity();
+
+        Set<String> tags = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
+        if(tags != null && !tags.isEmpty()) {
+            HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_FIRST_KEY, true);
+            ILoginView.startHomeActivity();
+        }
+        else {
+            ILoginView.startTagActivity();
+        }
     }
 
     @Override
     public void onError(RestError errorInfo) {
         ILoginView.onHideProgress();
-        ILoginView.showLoginAlert(errorInfo.getMessage());
+        if(errorInfo != null) {
+            ILoginView.showLoginAlert(errorInfo.getMessage());
+        }
     }
 
     @Override
@@ -184,9 +195,37 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
 
     @Override
     public void loginGoogle(String social_token) {
+        HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, false);
+        HealthHuntPreference.putString(mContext, Constants.SOCIAL_LOGIN, Constants.GOOGLE);
+        ILoginView.onShowProgress();
         LoginRequest loginRequest = createLoginRequest(null,null, "google", social_token);
         ILoginInteractor.login(mContext, loginRequest, this);
     }
+
+    @Override
+    public void alreadyLogin() {
+
+        boolean isNormalLogin = HealthHuntPreference.getBoolean(mContext, Constants.IS_LOGIN_NORMAL);
+
+        if(isNormalLogin) {
+            String email = HealthHuntPreference.getString(mContext, Constants.EMAIL);
+            String password = HealthHuntPreference.getString(mContext, Constants.PASSWORD);
+            validateCredentialsLogIn(email, password);
+        }
+        else {
+            String socialLogin = HealthHuntPreference.getString(mContext, Constants.SOCIAL_LOGIN);
+            if(Constants.FACEBOOK.equalsIgnoreCase(socialLogin)){
+                loginFacebook(mContext);
+            }
+            else {
+                Intent intent = new Intent(mContext, GoogleLoginActivity.class);
+                if(intent != null) {
+                    mActivity.startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onChangePassword(boolean status, String email, String msg) {
