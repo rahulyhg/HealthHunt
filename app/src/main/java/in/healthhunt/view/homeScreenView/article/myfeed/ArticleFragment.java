@@ -23,7 +23,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IArticlePresenter;
 import in.healthhunt.view.fullView.FullViewActivity;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -33,7 +32,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  * Created by abhishekkumar on 4/27/18.
  */
 
-public class ArticleFragment extends Fragment implements View.OnClickListener {
+public class ArticleFragment extends Fragment {
 
     private Unbinder mUnBinder;
 
@@ -74,7 +73,7 @@ public class ArticleFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.article_date)
     TextView mArticleDate;
 
-    private IArticlePresenter IArticlePresenter;
+    int mType;
 
     @Nullable
     @Override
@@ -86,6 +85,7 @@ public class ArticleFragment extends Fragment implements View.OnClickListener {
 
         if(bundle != null) {
             boolean isLast = bundle.getBoolean(ArticleParams.IS_LAST_PAGE);
+            mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
 
             if(!isLast) {
                 mTagItemView.setVisibility(View.VISIBLE);
@@ -115,7 +115,7 @@ public class ArticleFragment extends Fragment implements View.OnClickListener {
     @OnClick(R.id.last_page_view_all)
     void onViewAll(){
         Bundle bundle = new Bundle();
-        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.BASED_ON_TAGS);
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, mType);
         ((HomeActivity)getActivity()).updateNavigation();
         ((HomeActivity)getActivity()).getHomePresenter().loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
@@ -150,9 +150,12 @@ public class ArticleFragment extends Fragment implements View.OnClickListener {
 
         ArrayList<String> arrayList = bundle.getStringArrayList(ArticleParams.ARTICLE_TAGS_NAME_LIST);
         String tags = "";
-        for(String tag: arrayList) {
-            tags = "#" + tag + "  ";
+        if(tags != null && !tags.isEmpty()) {
+            for (String tag : arrayList) {
+                tags = "#" + tag + "  ";
+            }
         }
+
         mHashTags.setText(tags);
 
         String readingTime = bundle.getString(ArticleParams.ARTICLE_READ_TIME);
@@ -186,10 +189,5 @@ public class ArticleFragment extends Fragment implements View.OnClickListener {
         else {
             mAuthorImage.setBackgroundResource(R.mipmap.default_profile);
         }
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 }

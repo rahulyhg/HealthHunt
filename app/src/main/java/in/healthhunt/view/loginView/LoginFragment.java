@@ -21,7 +21,6 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.socialLogin.GoogleLoginActivity;
 
 /**
@@ -129,9 +128,7 @@ public class LoginFragment extends Fragment{
     public void tryAgain() {
         switch (isLoginType){
             case LoginActivity.LOGIN_TYPE_NORMAL:
-                String email = HealthHuntPreference.getString(getContext(), Constants.EMAIL);
-                String password = HealthHuntPreference.getString(getContext(), Constants.PASSWORD);
-                IPresenter.validateCredentialsLogIn(email, password);
+                IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
                 break;
             case LoginActivity.LOGIN_TYPE_FACEBOOK:
                 IPresenter.loginFacebook(getContext());

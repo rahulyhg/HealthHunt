@@ -14,5 +14,5 @@ public interface IArticleView {
     Fragment getFragmentArticleItem(int position);
     int getArticleCount();
     void showFragment(String tag, Bundle bundle);
-    PostsItem getTagArticle(int pos);
+    PostsItem getArticle(int pos);
 }

@@ -4,19 +4,24 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ViewAllHolder extends RecyclerView.ViewHolder {
+public class ViewAllHolder extends RecyclerView.ViewHolder{
 
     private Context mContext;
+
+    @BindView(R.id.view_all_item_view)
+    RelativeLayout mItemView;
 
     @BindView(R.id.view_all_article_image)
     ImageView mArticleImage;
@@ -48,9 +53,18 @@ public class ViewAllHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.view_all_article_date)
     TextView mArticleDate;
 
-    public ViewAllHolder(View articleView) {
+    private ViewAllAdapter.ClickListener mClickListener;
+    public ViewAllHolder(View articleView, ViewAllAdapter.ClickListener clickListener) {
         super(articleView);
         ButterKnife.bind(this, articleView);
         mContext = articleView.getContext();
+        mClickListener = clickListener;
+    }
+
+    @OnClick(R.id.view_all_item_view)
+    void onClick(View view) {
+        if(mClickListener != null) {
+            mClickListener.ItemClicked(view, getAdapterPosition());
+        }
     }
 }

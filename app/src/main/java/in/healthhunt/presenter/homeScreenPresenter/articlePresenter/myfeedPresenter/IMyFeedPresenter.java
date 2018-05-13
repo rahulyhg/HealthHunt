@@ -16,7 +16,9 @@ public interface IMyFeedPresenter {
     RecyclerView.ViewHolder createArticleHolder(View view, int type);
     void fetchTagsArticle(int offset, int limit);
     void fetchTrendingArticle(int offset, int limit);
+    void fetchLatestArticle(int offset, int limit);
     List<PostsItem> getTagArticles();
     List<PostsItem> getTrendingArticles();
+    List<PostsItem> getLatestArticles();
     void fetchData();
 }

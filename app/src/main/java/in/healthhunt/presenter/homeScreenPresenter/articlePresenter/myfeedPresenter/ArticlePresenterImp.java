@@ -42,10 +42,10 @@ public class ArticlePresenterImp implements IArticlePresenter {
     }
 
     @Override
-    public Fragment getItem(int position) {
+    public Fragment getItem(int position, int type) {
         Fragment fragment = IArticleView.getFragmentArticleItem(position);
-
         Bundle bundle = createBundle(position);
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, type);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -56,7 +56,7 @@ public class ArticlePresenterImp implements IArticlePresenter {
     }
 
     private Bundle createBundle(int pos) {
-        PostsItem postItem = IArticleView.getTagArticle(pos);
+        PostsItem postItem = IArticleView.getArticle(pos);
 
         Bundle bundle = new Bundle();
 

@@ -36,8 +36,6 @@ public interface ArticleParams {
     String TAGS = "tags";
     String OFFSET = "offset";
     String LIMIT = "limit";
-
-
     String ID = "id";
     String ARTICLE_URL = "article_url";
     String CATEGORY_NAME = "categoryName";
@@ -47,6 +45,12 @@ public interface ArticleParams {
     String ARTICLE_TAGS_NAME_LIST = "article_related_tags_list";
     String ARTICLE_READ_TIME = "article_read_time";
     String ARTICLE_DATE = "article_date";
+    String SECTION = "section";
+    String LATEST_BY_RECENT = "recent";
+    String LATEST_BY_WEEK = "week";
+    String LATEST_BY_MONTH = "month";
+
+
     String IS_LAST_PAGE = "is_last_page";
 
     String TRENDING = "trending";

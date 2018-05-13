@@ -20,6 +20,7 @@ public interface IMyFeedView {
     void onLoadComplete();
     List<PostsItem> getTagArticles();
     List<PostsItem> getTrendingArticles();
+    List<PostsItem> getLatestArticles();
     void updateAdapter();
     void updateNavigation();
     void setNavigation();

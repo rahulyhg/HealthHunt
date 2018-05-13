@@ -10,6 +10,6 @@ import android.support.v4.app.Fragment;
 public interface IArticlePresenter {
     void loadFragment(String tag, Bundle bundle);
     int getCount();
-    Fragment getItem(int position);
+    Fragment getItem(int position, int type);
     void openViewAll();
 }

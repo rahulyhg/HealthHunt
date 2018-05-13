@@ -117,8 +117,9 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         else if(mArticleNames.get(type).equals("Top Products"))
             viewHolder = new TopProductViewHolder(view);
 
-        else if(mArticleNames.get(type).equals("Latest articles"))
+        else if(mArticleNames.get(type).equals("Latest articles")) {
             viewHolder = new LatestArticleViewHolder(view, mFragmentManager, this);
+        }
 
         else if(mArticleNames.get(type).equals("Webinars"))
             viewHolder = new WebinarsArticleViewHolder(view, mFragmentManager, this);
@@ -156,6 +157,11 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
+    public List<PostsItem> getLatestArticles() {
+        return IMyFeedPresenter.getLatestArticles();
+    }
+
+    @Override
     public void updateAdapter() {
         if(mFeedAdapter != null) {
             mFeedAdapter.notifyDataSetChanged();
@@ -168,7 +174,10 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
                 else if(viewHolder instanceof TrendingAdapter.TrendingItemViewHolder) {
                     ((TrendingAdapter.TrendingItemViewHolder) viewHolder).notifyDataChanged();
                 }
-
+                else if(viewHolder instanceof LatestArticleViewHolder) {
+                    Log.i("TAG", "LatestArticleViewHolder");
+                    ((LatestArticleViewHolder) viewHolder).notifyDataChanged();
+                }
             }
         }
     }
@@ -196,6 +205,4 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         mFeedViewer = null;
         mFeedAdapter = null;
     }
-
-
 }

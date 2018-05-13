@@ -10,13 +10,17 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IArticlePresenter;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
 
 /**
@@ -37,7 +41,7 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
 
     boolean isClicked;
 
-    private ArticlePresenterImp mArticlePresenter;
+    private IArticlePresenter IArticlePresenter;
     private IMyFeedView IMyFeedView;
     private Context mContext;
     private FragmentManager mFragmentManager;
@@ -48,12 +52,12 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
         ButterKnife.bind(this, articleView);
         mFragmentManager = fragmentManager;
         IMyFeedView = feedView;
-        mArticlePresenter = new ArticlePresenterImp(mContext, this);
+        IArticlePresenter = new ArticlePresenterImp(mContext, this);
         setAdapter();
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  IArticlePresenter, ArticleParams.LATEST_ARTICLES);
         mArticlePager.setAdapter(articleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
@@ -62,12 +66,17 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public Fragment getFragmentArticleItem(int position) {
-        return new LatestArticleFragment();
+        return new ArticleFragment();
     }
 
     @Override
     public int getArticleCount() {
-        return 5;
+        List<PostsItem> list = IMyFeedView.getLatestArticles();
+        int count = 0;
+        if(list != null) {
+            count = list.size();
+        }
+        return count;
     }
 
     @Override
@@ -76,14 +85,28 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public PostsItem getTagArticle(int pos) {
-        return null;
+    public PostsItem getArticle(int pos) {
+        List<PostsItem> list = IMyFeedView.getLatestArticles();
+        PostsItem postItem = null;
+        if(list != null) {
+            postItem = list.get(pos);
+        }
+        return postItem;
     }
 
     @OnClick(R.id.latest_view_all)
     void onViewAll(){
+        openViewAllFragment();
+    }
+
+    private void openViewAllFragment() {
+        IMyFeedView.updateNavigation();
         Bundle bundle = new Bundle();
-        bundle.putString("article_name", "Latest articles");
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.LATEST_ARTICLES);
         IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);
+    }
+
+    public void notifyDataChanged() {
+        mArticlePager.getAdapter().notifyDataSetChanged();
     }
 }

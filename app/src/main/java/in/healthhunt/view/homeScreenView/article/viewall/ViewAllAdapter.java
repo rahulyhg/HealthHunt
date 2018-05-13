@@ -31,6 +31,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private IViewAllPresenter IViewAllPresenter;
     private Context mContext;
     private int mType;
+    private ClickListener mClickListener;
 
     public ViewAllAdapter(Context context, IViewAllPresenter viewAllPresenter, int type) {
         mContext = context;
@@ -48,18 +49,15 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (mType) {
-            case ArticleParams.TAGS_VIEW_ALL_TYPE:{
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:{
                 List<PostsItem> list = IViewAllPresenter.getAllArticles();
                 PostsItem tagsItem = list.get(position);
                 setContent(((ViewAllHolder)holder), tagsItem);
                 break;
             }
 
-            case ArticleParams.LATEST_VIEW_ALL_TYPE:{
-                break;
-            }
-
-            case ArticleParams.LATEST_PRODUCT_VIEW_ALL_TYPE:{
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:{
                 break;
             }
         }
@@ -140,6 +138,14 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return IViewAllPresenter.getCount();
+    }
+
+    public void setClickListener(ClickListener clickListener) {
+        this.mClickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void ItemClicked(View v, int position);
     }
 
 }

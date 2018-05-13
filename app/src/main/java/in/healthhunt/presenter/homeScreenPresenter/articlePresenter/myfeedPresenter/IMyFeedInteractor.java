@@ -20,4 +20,5 @@ public interface IMyFeedInteractor {
     }
     void fetchArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
     void fetchTrendingArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
+    void fetchLatestArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
 }

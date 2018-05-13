@@ -38,8 +38,6 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     ViewPager mArticlePager;
 
 
-    boolean isClicked;
-
     private ArticlePresenterImp mArticlePresenter;
     private IMyFeedView IMyFeedView;
     private Context mContext;
@@ -58,7 +56,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     }
 
     private void setAdapter() {
-        mArticleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        mArticleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter, ArticleParams.BASED_ON_TAGS);
         mArticlePager.setAdapter(mArticleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
@@ -86,7 +84,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     }
 
     @Override
-    public PostsItem getTagArticle(int pos) {
+    public PostsItem getArticle(int pos) {
         List<PostsItem> list = IMyFeedView.getTagArticles();
         PostsItem postItem = null;
         if(list != null) {

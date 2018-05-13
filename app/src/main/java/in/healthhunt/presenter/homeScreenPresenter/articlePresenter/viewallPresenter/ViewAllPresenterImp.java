@@ -80,7 +80,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteracto
     public void onSuccess(List<PostsItem> items, int type) {
         IViewAll.hideProgress();
         switch (type) {
-            case 0:
+            case ArticleParams.BASED_ON_TAGS:
                 mPosts = items;
                 break;
         }

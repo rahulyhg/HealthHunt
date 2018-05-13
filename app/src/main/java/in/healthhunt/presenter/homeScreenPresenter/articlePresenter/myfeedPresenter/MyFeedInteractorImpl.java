@@ -8,6 +8,7 @@ import java.util.Map;
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
 import in.healthhunt.model.articles.articleResponse.MediaItem;
 import retrofit2.Response;
@@ -24,7 +25,7 @@ public class MyFeedInteractorImpl implements IMyFeedInteractor {
             public void onSuccess(ArticleResponse articleResponse, Response response) {
                 MediaItem media = articleResponse.getData().getPosts().get(0).getMedia().get(0);
                 Log.i("TAGMEDIA", "Media Item = " + media);
-                    articleFinishListener.onSuccess(articleResponse.getData().getPosts(), 0);
+                    articleFinishListener.onSuccess(articleResponse.getData().getPosts(), ArticleParams.BASED_ON_TAGS);
             }
 
             @Override
@@ -39,7 +40,22 @@ public class MyFeedInteractorImpl implements IMyFeedInteractor {
         WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<ArticleResponse>() {
             @Override
             public void onSuccess(ArticleResponse articleResponse, Response response) {
-                articleFinishListener.onSuccess(articleResponse.getData().getPosts(), 1);
+                articleFinishListener.onSuccess(articleResponse.getData().getPosts(), ArticleParams.TRENDING_ARTICLES);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                articleFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void fetchLatestArticle(Context context, Map<String, String> queryMap, final OnArticleFinishListener articleFinishListener) {
+        WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<ArticleResponse>() {
+            @Override
+            public void onSuccess(ArticleResponse articleResponse, Response response) {
+                articleFinishListener.onSuccess(articleResponse.getData().getPosts(), ArticleParams.LATEST_ARTICLES);
             }
 
             @Override

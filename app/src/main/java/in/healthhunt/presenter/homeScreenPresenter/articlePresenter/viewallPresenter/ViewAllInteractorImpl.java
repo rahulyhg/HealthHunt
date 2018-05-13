@@ -7,6 +7,7 @@ import java.util.Map;
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
 import retrofit2.Response;
 
@@ -20,7 +21,7 @@ public class ViewAllInteractorImpl implements IViewAllInteractor {
         WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<ArticleResponse>() {
             @Override
             public void onSuccess(ArticleResponse response, Response response2) {
-                articleFinishListener.onSuccess(response.getData().getPosts(), 0);
+                articleFinishListener.onSuccess(response.getData().getPosts(), ArticleParams.BASED_ON_TAGS);
             }
 
             @Override

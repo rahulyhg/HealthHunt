@@ -30,6 +30,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
     private IMyFeedInteractor IMyFeedInteractor;
     private List<PostsItem> mTagArticles;
     private List<PostsItem> mTrendingArticles;
+    private List<PostsItem> mLatestArticles;
 
     public MyFeedPresenterImp(Context context, IMyFeedView feedView) {
         mContext =  context;
@@ -79,6 +80,15 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
     }
 
     @Override
+    public void fetchLatestArticle(int offset, int limit) {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
+        map.put(ArticleParams.OFFSET, String.valueOf(offset));
+        map.put(ArticleParams.LIMIT, String.valueOf(limit));
+        IMyFeedInteractor.fetchLatestArticle(mContext, map, this);
+    }
+
+    @Override
     public List<PostsItem> getTagArticles() {
         return mTagArticles;
     }
@@ -89,25 +99,35 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
     }
 
     @Override
+    public List<PostsItem> getLatestArticles() {
+        return mLatestArticles;
+    }
+
+    @Override
     public void fetchData() {
         fetchTagsArticle(0, 5);
         fetchTrendingArticle(0, 2);
+        fetchLatestArticle(0, 5);
     }
 
     @Override
     public void onSuccess(List<PostsItem> items, int type) {
 
         switch (type) {
-            case 0:
+            case ArticleParams.BASED_ON_TAGS:
                 mTagArticles = items;
                 break;
 
-            case 1:
+            case ArticleParams.TRENDING_ARTICLES:
                 mTrendingArticles = items;
+                break;
+
+            case ArticleParams.LATEST_ARTICLES:
+                mLatestArticles = items;
                 break;
         }
 
-        if(type == 1) {
+        if(type == ArticleParams.LATEST_ARTICLES) {
             IMyFeedView.onLoadComplete();
         }
         IMyFeedView.updateAdapter();

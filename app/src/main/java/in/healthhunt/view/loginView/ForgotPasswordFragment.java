@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 
 /**
@@ -44,12 +42,6 @@ public class ForgotPasswordFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_forgotpassword, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        Bundle bundle = getArguments();
-        if(bundle != null) {
-            mEmail = bundle.getString(Constants.EMAIL);
-        }
-        Log.i("TAGFRAG", "Email " + mEmail);
         return view;
     }
 

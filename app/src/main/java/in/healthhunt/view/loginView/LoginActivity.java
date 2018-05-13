@@ -61,7 +61,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         //isNeedLogin();
         //String session_token = HealthHuntPreference.getString(this, Constants.SESSION_TOKEN);
         if(isNeedLogin()) {
-            IPresenter.alreadyLogin();
+            startHomeActivity();
         }
         else {
             IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);

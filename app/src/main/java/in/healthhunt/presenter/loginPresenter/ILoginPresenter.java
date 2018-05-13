@@ -16,5 +16,4 @@ public interface ILoginPresenter {
     Intent loginGoogle(Context context);
     void loginFacebook(Context context);
     void loginGoogle(String social_token);
-    void alreadyLogin();
 }

@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
@@ -52,7 +53,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter, ArticleParams.LATEST_PRODUCTS_ARTICLES);
         mLatestArticlePager.setAdapter(articleAdapter);
         mLatestArticlePager.setClipToPadding(false);
         mLatestArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
@@ -75,7 +76,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public PostsItem getTagArticle(int pos) {
+    public PostsItem getArticle(int pos) {
         return null;
     }
 

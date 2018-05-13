@@ -15,8 +15,6 @@ public interface Constants {
     String TIME_STAMP = "timestamp";
     String CONTENT_TYPE = "Content-Type";
     String SESSION_TOKEN = "sessionToken";
-    String EMAIL = "email";
-    String PASSWORD = "password";
     String USER_NAME = "username";
     String SELECTED_TAGS_KEY = "selected_tags_key";
     String IS_LOGIN_FIRST_KEY = "is_login_first_key";

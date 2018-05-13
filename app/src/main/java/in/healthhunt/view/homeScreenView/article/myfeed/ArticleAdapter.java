@@ -15,14 +15,16 @@ import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresen
 public class ArticleAdapter extends FragmentStatePagerAdapter {
 
     private IArticlePresenter IArticlePresenter;
+    private int mType;
 
-    public ArticleAdapter(FragmentManager fragmentManager, IArticlePresenter articlePresenter) {
+    public ArticleAdapter(FragmentManager fragmentManager, IArticlePresenter articlePresenter, int type) {
         super(fragmentManager);
         IArticlePresenter = articlePresenter;
+        mType = type;
     }
     @Override
     public Fragment getItem(int position) {
-        return IArticlePresenter.getItem(position);
+        return IArticlePresenter.getItem(position, mType);
     }
 
     @Override

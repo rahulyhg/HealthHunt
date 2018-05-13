@@ -25,23 +25,20 @@ import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.loginView.ILoginView;
-import in.healthhunt.view.socialLogin.GoogleLoginActivity;
 
 /**
  * Created by abhishekkumar on 4/9/18.
  */
 
-public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presenter.loginPresenter.ILoginInteractor.OnLoginFinishListener, ILoginInteractor.OnPasswordChangeListener {
+public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnLoginFinishListener, ILoginInteractor.OnPasswordChangeListener {
 
     private final String TAG = LoginPresenterImpl.class.getSimpleName();
     in.healthhunt.view.loginView.ILoginView ILoginView;
     ILoginInteractor ILoginInteractor;
     private Context mContext;
-    private Activity mActivity;
 
     public LoginPresenterImpl(Activity activity, ILoginInteractor loginInteractor) {
-        mActivity = activity;
-        mContext = activity.getApplicationContext();
+         mContext = activity.getApplicationContext();
         ILoginView = (ILoginView) activity;
         ILoginInteractor = loginInteractor;
     }
@@ -50,8 +47,6 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
     public void validateCredentialsLogIn(String email, String password) {
         if(!email.isEmpty() && !password.isEmpty()) {
             HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, true);
-            HealthHuntPreference.putString(mContext, Constants.EMAIL, email);
-            HealthHuntPreference.putString(mContext, Constants.PASSWORD, password);
             ILoginView.onShowProgress();
             ILoginInteractor.login(mContext, createLoginRequest(email,password,null, null), this);
         }
@@ -202,7 +197,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
         ILoginInteractor.login(mContext, loginRequest, this);
     }
 
-    @Override
+    /*@Override
     public void alreadyLogin() {
 
         boolean isNormalLogin = HealthHuntPreference.getBoolean(mContext, Constants.IS_LOGIN_NORMAL);
@@ -224,7 +219,7 @@ public class LoginPresenterImpl implements ILoginPresenter, in.healthhunt.presen
                 }
             }
         }
-    }
+    }*/
 
 
     @Override
