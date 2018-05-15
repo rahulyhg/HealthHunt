@@ -3,6 +3,7 @@ package framework.retrofit;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.productResponse.ProductResponse;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.LoginResponse;
@@ -20,27 +21,30 @@ import retrofit2.http.QueryMap;
 public interface WebServices {
 
 
-   //@POST("/api/account-login")
-    //Call<LoginResponse> login(@Field("access_token") String token);
-    @POST("login")
-    Call<LoginResponse> login(@Body LoginRequest loginRequest);
+ //@POST("/api/account-login")
+ //Call<LoginResponse> login(@Field("access_token") String token);
+ @POST("login")
+ Call<LoginResponse> login(@Body LoginRequest loginRequest);
 
-    @POST("signup")
-    Call<User> signUp(@Body SignUpRequest signUpRequest);
+ @POST("signup")
+ Call<User> signUp(@Body SignUpRequest signUpRequest);
 
-    @POST("forgot_password")
-    Call<String> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
+ @POST("forgot_password")
+ Call<String> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
 
-    @GET("tags")
-    Call<TagResponse> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
+ @GET("tags")
+ Call<TagResponse> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
 
-    @GET("posts")
-    Call<ArticleResponse> fetchArticles(@QueryMap Map<String, String> params);
+ @GET("posts")
+ Call<ArticleResponse> fetchArticles(@QueryMap Map<String, String> params);
+
+ @GET("posts")
+ Call<ProductResponse> fetchProducts(@QueryMap Map<String, String> params);
 
     /*@Header("authToken") String token,*/
 
 
-    //Same api for sitter and parent with type difference
+ //Same api for sitter and parent with type difference
 
 //    @POST("api/profiles/")
 //    Call<UserInfo> createProfile(@LoginHeader("Authorization") String authToken, @Body UserType userType);

@@ -12,13 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IMyFeedPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.MyFeedPresenterImp;
 import in.healthhunt.view.homeScreenView.HomeActivity;
@@ -36,37 +37,13 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     private IMyFeedPresenter IMyFeedPresenter;
     private FragmentManager mFragmentManager;
     private MyFeedAdapter mFeedAdapter;
-    private List<String> mArticleNames = new ArrayList<String>();
     private IHomeView IHomeView;
-    private String[] mArticleNames1= {"Based on tags", "continue reading", "Trending", "Sponsored", "Top Products", "Latest articles",
-            "Webinars", "Latest products"};
-
-    private List<Integer> mArticles = new ArrayList<Integer>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IMyFeedPresenter = new MyFeedPresenterImp(getContext(), this);
         IHomeView = (IHomeView) getActivity();
-
-        mArticleNames.add("Based on tags");
-        mArticleNames.add("continue reading");
-        mArticleNames.add("Trending");
-        mArticleNames.add("Sponsored");
-        mArticleNames.add("Top Products");
-        mArticleNames.add("Latest articles");
-        mArticleNames.add("Webinars");
-        mArticleNames.add("Latest products");
-
-
-        mArticles.add(R.layout.article_view);
-        mArticles.add(R.layout.continue_article_view);
-        mArticles.add(R.layout.trending_article_view);
-        mArticles.add(R.layout.sponsored_article_view);
-        mArticles.add(R.layout.top_products_article_view);
-        mArticles.add(R.layout.latest_article_view);
-        mArticles.add(R.layout.webinars_article_view);
-        mArticles.add(R.layout.latest_products_article_view);
         IMyFeedPresenter.fetchData();
     }
 
@@ -85,48 +62,50 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     private void setAdapter() {
-        mFeedAdapter = new MyFeedAdapter(IMyFeedPresenter, mArticles, mArticleNames);
+        mFeedAdapter = new MyFeedAdapter(IMyFeedPresenter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mFeedViewer.setLayoutManager(layoutManager);
         mFeedViewer.setAdapter(mFeedAdapter);
-        mFeedAdapter.notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mArticles.size();
+        return IMyFeedPresenter.getArticlesType().size();
     }
 
     @Override
     public RecyclerView.ViewHolder createArticleHolder(View view, int type) {
 
         RecyclerView.ViewHolder viewHolder = null;
-        // switch (type) {
-        if(mArticleNames.get(type).equals("Based on tags"))
-            viewHolder = new ArticleViewHolder(view, mFragmentManager, this);
+        switch (type) {
+            case ArticleParams.BASED_ON_TAGS:
+                viewHolder = new ArticleViewHolder(view, mFragmentManager, this);
+                break;
 
-        else if(mArticleNames.get(type).equals("continue reading"))
-            viewHolder = new ContinueArticleViewHolder(view, mFragmentManager, this, type);
+            case ArticleParams.CONTINUE_ARTICLES:
+                viewHolder = new ContinueArticleViewHolder(view, mFragmentManager, this, type);
+                break;
 
-        else if(mArticleNames.get(type).equals("Trending"))
-            viewHolder = new TrendingArticleViewHolder(view, this);
+            case ArticleParams.TRENDING_ARTICLES:
+                viewHolder = new TrendingArticleViewHolder(view, this);
+                break;
 
-        else if(mArticleNames.get(type).equals("Sponsored"))
-            viewHolder = new SponsoredArticleViewHolder(view, this, type);
+            case ArticleParams.SPONSORED_ARTICLES:
+                viewHolder = new SponsoredArticleViewHolder(view, this, type);
+                break;
 
-        else if(mArticleNames.get(type).equals("Top Products"))
-            viewHolder = new TopProductViewHolder(view);
+            case ArticleParams.TOP_PRODUCTS_ARTICLES:
+                viewHolder = new TopProductViewHolder(view, this);
+                break;
 
-        else if(mArticleNames.get(type).equals("Latest articles")) {
-            viewHolder = new LatestArticleViewHolder(view, mFragmentManager, this);
+            case ArticleParams.LATEST_ARTICLES:
+                viewHolder = new LatestArticleViewHolder(view, mFragmentManager, this);
+                break;
+
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                viewHolder = new LatestProductViewHolder(view, mFragmentManager, this);
+                break;
         }
-
-        else if(mArticleNames.get(type).equals("Webinars"))
-            viewHolder = new WebinarsArticleViewHolder(view, mFragmentManager, this);
-
-        else if(mArticleNames.get(type).equals("Latest products"))
-            viewHolder = new LatestProductViewHolder(view, mFragmentManager, this);
-
         return viewHolder;
     }
 
@@ -136,10 +115,12 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
-    public void onClickCrossView(int index) {
-        Log.i("TAG", "Index " + index);
-        mArticleNames.remove(index);
-        mFeedAdapter.deleteItem(index);    }
+    public void onClickCrossView(int pos) {
+        IMyFeedPresenter.deleteArticleType(pos);
+        Log.i("TAG1111", "pos " + pos);
+        Log.i("TAG1111", "size " + IMyFeedPresenter.getArticlesType().size());
+        mFeedAdapter.deleteItem(pos);
+    }
 
     @Override
     public void onLoadComplete() {
@@ -147,18 +128,33 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
-    public List<PostsItem> getTagArticles() {
+    public List<ArticlePostItem> getTagArticles() {
         return IMyFeedPresenter.getTagArticles();
     }
 
     @Override
-    public List<PostsItem> getTrendingArticles() {
+    public List<ArticlePostItem> getTrendingArticles() {
         return IMyFeedPresenter.getTrendingArticles();
     }
 
     @Override
-    public List<PostsItem> getLatestArticles() {
+    public List<ArticlePostItem> getLatestArticles() {
         return IMyFeedPresenter.getLatestArticles();
+    }
+
+    @Override
+    public List<ArticlePostItem> getSponsoredArticles() {
+        return IMyFeedPresenter.getSponsoredArticles();
+    }
+
+    @Override
+    public List<ProductPostItem> getTopProductArticles() {
+        return IMyFeedPresenter.getTopProductArticles();
+    }
+
+    @Override
+    public List<ProductPostItem> getLatestProductArticles() {
+        return IMyFeedPresenter.getLatestProductArticles();
     }
 
     @Override
@@ -175,8 +171,16 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
                     ((TrendingAdapter.TrendingItemViewHolder) viewHolder).notifyDataChanged();
                 }
                 else if(viewHolder instanceof LatestArticleViewHolder) {
-                    Log.i("TAG", "LatestArticleViewHolder");
                     ((LatestArticleViewHolder) viewHolder).notifyDataChanged();
+                }
+                else if(viewHolder instanceof SponsoredAdapter.SponsoredItemViewHolder) {
+                    ((SponsoredAdapter.SponsoredItemViewHolder) viewHolder).notifyDataChanged();
+                }
+                else if(viewHolder instanceof TopProductAdapter.TopProductItemViewHolder) {
+                    ((TopProductAdapter.TopProductItemViewHolder) viewHolder).notifyDataChanged();
+                }
+                else if(viewHolder instanceof LatestProductViewHolder) {
+                    ((LatestProductViewHolder) viewHolder).notifyDataChanged();
                 }
             }
         }
@@ -198,10 +202,43 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
+    public int getView(int type) {
+        int layout = 0;
+        switch (type){
+            case ArticleParams.BASED_ON_TAGS:
+                layout = R.layout.article_view;
+                break;
+
+            case ArticleParams.CONTINUE_ARTICLES:
+                layout = R.layout.continue_article_view;
+                break;
+
+            case ArticleParams.TRENDING_ARTICLES:
+                layout = R.layout.trending_article_view;
+                break;
+
+            case ArticleParams.SPONSORED_ARTICLES:
+                layout = R.layout.sponsored_article_view;
+                break;
+
+            case ArticleParams.TOP_PRODUCTS_ARTICLES:
+                layout = R.layout.top_products_article_view;
+                break;
+
+            case ArticleParams.LATEST_ARTICLES:
+                layout = R.layout.latest_article_view;
+                break;
+
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                layout = R.layout.latest_products_article_view;
+                break;
+        }
+        return layout;
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.i("TagFrag", "onDestroyView");
-
         mFeedViewer = null;
         mFeedAdapter = null;
     }

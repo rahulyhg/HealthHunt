@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".view.tagView.TagActivity"></activity>
+        <activity android:name=".view.tagView.TagActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".view.onBoardingView.OnBoardingActivity"></activity>
         <activity android:name=".view.homeScreenView.HomeActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".view.fullView.FullViewActivity"></activity>

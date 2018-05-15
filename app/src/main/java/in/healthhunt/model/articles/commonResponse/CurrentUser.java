@@ -1,4 +1,4 @@
-package in.healthhunt.model.articles.articleResponse;
+package in.healthhunt.model.articles.commonResponse;
 
 import java.util.List;
 

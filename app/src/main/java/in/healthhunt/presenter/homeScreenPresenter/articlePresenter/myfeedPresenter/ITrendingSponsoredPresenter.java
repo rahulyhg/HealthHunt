@@ -1,6 +1,6 @@
 package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter;
 
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -8,8 +8,8 @@ import in.healthhunt.model.articles.articleResponse.PostsItem;
 
 public interface ITrendingSponsoredPresenter {
     int getCount();
-    PostsItem getTrendingArticles(int pos);
-    PostsItem getSponsoredArticles(int pos);
+    ArticlePostItem getTrendingArticles(int pos);
+    ArticlePostItem getSponsoredArticles(int pos);
 
     //RecyclerView.ViewHolder createArticleHolder(View view);
 }

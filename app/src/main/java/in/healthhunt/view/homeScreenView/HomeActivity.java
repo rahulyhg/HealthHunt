@@ -254,4 +254,9 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void onComplete() {
         mProgress.dismiss();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

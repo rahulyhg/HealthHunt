@@ -8,17 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.viewallPresenter.IViewAllPresenter;
@@ -50,7 +48,14 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         mProgress.setCancelable(false);
         mProgress.setMessage(getResources().getString(R.string.please_wait));
         IViewAllPresenter = new ViewAllPresenterImp(getContext(), this);
-        IViewAllPresenter.fetchTagsArticle();
+
+        Bundle bundle = getArguments();
+        if(bundle != null) {
+            mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
+        }
+
+        Log.i("TAGTYPE " , "TYPE " + mType);
+        IViewAllPresenter.fetchAll(mType);
     }
 
     @Nullable
@@ -74,17 +79,28 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         ViewAllAdapter viewAllAdapter = new ViewAllAdapter(getContext(), IViewAllPresenter, mType);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mViewAllViewer.setLayoutManager(layoutManager);
-        mViewAllViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext())));
+        mViewAllViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mViewAllViewer.setAdapter(viewAllAdapter);
     }
 
     public int getCount() {
-        return IViewAllPresenter.getCount();
+        return IViewAllPresenter.getCount(mType);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(View view) {
-        return new ViewAllHolder(view, this);
+
+        RecyclerView.ViewHolder  viewHolder = null;
+        switch (mType){
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:
+                viewHolder = new ViewAllArticleHolder(view, this);
+                break;
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                viewHolder = new ViewAllProductHolder(view, this);
+                break;
+        }
+        return viewHolder;
     }
 
     @Override
@@ -98,16 +114,27 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     }
 
     @Override
-    public void updateAdapter(int type) {
+    public void updateAdapter() {
         mViewAllViewer.getAdapter().notifyDataSetChanged();;
-        /*switch (type) {
-            case 0: {
-                List<PostsItem> postsItems = IViewAllPresenter.getAllArticles();
-
-                        break;
-            }
-        }*/
     }
+
+    @Override
+    public int getViewLayout() {
+        int layout = 0;
+        switch (mType) {
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:
+                layout = R.layout.view_all_article_item_view;
+                break;
+
+
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                layout = R.layout.view_all_product_item_view;
+                break;
+        }
+
+        return layout;
+        }
 
     private String getArticleName() {
         String name = "";
@@ -121,7 +148,6 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
             case ArticleParams.LATEST_PRODUCTS_ARTICLES:
                 name = ArticleParams.TEXT_LATEST_PRODUCTS_ARTICLES;
                 break;
-
         }
 
         return name;
@@ -129,17 +155,23 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
 
     @Override
     public void ItemClicked(View v, int position) {
-        List<PostsItem> list = IViewAllPresenter.getAllArticles();
-        if(list != null && !list.isEmpty()) {
-            PostsItem postsItem = list.get(position);
-            if(postsItem != null) {
-                Bundle bundle = getArguments();
-                Intent intent = new Intent(getContext(), FullViewActivity.class);
-                if(bundle != null) {
-                    intent.putExtra(ArticleParams.ID, postsItem.getId());
-                }
-                startActivity(intent);
-            }
+        String id = null;
+        switch (mType){
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:
+                id = String.valueOf(IViewAllPresenter.getArticle(position).getId());
+                break;
+
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                id = IViewAllPresenter.getProduct(position).getId();
+                break;
         }
+
+        Bundle bundle = getArguments();
+        Intent intent = new Intent(getContext(), FullViewActivity.class);
+        if(bundle != null) {
+            intent.putExtra(ArticleParams.ID, id);
+        }
+        startActivity(intent);
     }
 }

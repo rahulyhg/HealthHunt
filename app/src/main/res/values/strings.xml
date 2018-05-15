@@ -86,6 +86,11 @@
     <string name="read_more">See more</string>
     <string name="read_less">See less</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat, nunc eget volutpat viverra, lacus ligula venenatis nulla, in accumsan eros eros nec ipsum. Fusce eget massa id lorem blandit lobortis. Donec lacus ligula, commodo quis eleifend ac, rhoncus sed mi. Curabitur luctus justo vel consequat fermentum. Donec facilisis elit in sem suscipit pharetra. Curabitur porta et dolor eget pretium. Mauris quam augue, interdum nec tempor vitae, consectetur at erat.</string>
-
+    <string name="comments">Comments</string>
+    <string name="write_comments_here">Write your comment here</string>
+    <string name="send">Send</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="rs">\u20B9</string>
 
 </resources>

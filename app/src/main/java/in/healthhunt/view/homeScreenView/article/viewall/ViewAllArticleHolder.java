@@ -16,7 +16,7 @@ import in.healthhunt.R;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ViewAllHolder extends RecyclerView.ViewHolder{
+public class ViewAllArticleHolder extends RecyclerView.ViewHolder{
 
     private Context mContext;
 
@@ -54,7 +54,7 @@ public class ViewAllHolder extends RecyclerView.ViewHolder{
     TextView mArticleDate;
 
     private ViewAllAdapter.ClickListener mClickListener;
-    public ViewAllHolder(View articleView, ViewAllAdapter.ClickListener clickListener) {
+    public ViewAllArticleHolder(View articleView, ViewAllAdapter.ClickListener clickListener) {
         super(articleView);
         ButterKnife.bind(this, articleView);
         mContext = articleView.getContext();

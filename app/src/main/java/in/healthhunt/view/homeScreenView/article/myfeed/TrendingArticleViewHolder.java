@@ -1,6 +1,7 @@
 package in.healthhunt.view.homeScreenView.article.myfeed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,17 +12,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ITrendingSponsoredPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.TrendingSponsoredPresenterImp;
+import in.healthhunt.view.fullView.FullViewActivity;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implements ITrendingSponsoredView {
+public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implements ITrendingSponsoredView, TrendingAdapter.ClickListener {
 
 
     @BindView(R.id.trending_article_name)
@@ -46,15 +49,16 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
 
     private void setAdapter() {
         TrendingAdapter trendingAdapter = new TrendingAdapter(mContext, ITrendingPresenter);
+        trendingAdapter.setClickListener(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         mTrendingViewer.setLayoutManager(layoutManager);
-        mTrendingViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext)));
+        mTrendingViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTrendingViewer.setAdapter(trendingAdapter);
     }
 
     @Override
     public int getArticleCount() {
-        List<PostsItem> list = IMyFeedView.getTrendingArticles();
+        List<ArticlePostItem> list = IMyFeedView.getTrendingArticles();
         int count = 0;
         if(list != null && !list.isEmpty()) {
             count = list.size();
@@ -63,9 +67,9 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public PostsItem getTrendingArticle(int pos) {
-        List<PostsItem> list = IMyFeedView.getTrendingArticles();
-        PostsItem postsItem = null;
+    public ArticlePostItem getTrendingArticle(int pos) {
+        List<ArticlePostItem> list = IMyFeedView.getTrendingArticles();
+        ArticlePostItem postsItem = null;
         if(list != null && !list.isEmpty()){
             postsItem = list.get(pos);
         }
@@ -73,9 +77,18 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public PostsItem getSponsoredArticle(int pos) {
+    public ArticlePostItem getSponsoredArticle(int pos) {
         return null;
     }
 
 
+    @Override
+    public void ItemClicked(View v, int position) {
+        ArticlePostItem postsItem = ITrendingPresenter.getTrendingArticles(position);
+        if(postsItem != null) {
+            Intent intent = new Intent(mContext, FullViewActivity.class);
+            intent.putExtra(ArticleParams.ID, postsItem.getId());
+            mContext.startActivity(intent);
+        }
+    }
 }

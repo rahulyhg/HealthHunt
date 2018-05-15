@@ -2,7 +2,7 @@ package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPrese
 
 import android.content.Context;
 
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.view.homeScreenView.article.myfeed.ITrendingSponsoredView;
 
 /**
@@ -26,12 +26,12 @@ public class TrendingSponsoredPresenterImp implements ITrendingSponsoredPresente
     }
 
     @Override
-    public PostsItem getTrendingArticles(int pos) {
+    public ArticlePostItem getTrendingArticles(int pos) {
         return ITrendingSponsoredView.getTrendingArticle(pos);
     }
 
     @Override
-    public PostsItem getSponsoredArticles(int pos) {
+    public ArticlePostItem getSponsoredArticles(int pos) {
         return ITrendingSponsoredView.getSponsoredArticle(pos);
     }
 

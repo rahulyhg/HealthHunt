@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.IArticlePresenter;
@@ -71,7 +71,7 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public int getArticleCount() {
-        List<PostsItem> list = IMyFeedView.getLatestArticles();
+        List<ArticlePostItem> list = IMyFeedView.getLatestArticles();
         int count = 0;
         if(list != null) {
             count = list.size();
@@ -85,9 +85,9 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public PostsItem getArticle(int pos) {
-        List<PostsItem> list = IMyFeedView.getLatestArticles();
-        PostsItem postItem = null;
+    public ArticlePostItem getArticle(int pos) {
+        List<ArticlePostItem> list = IMyFeedView.getLatestArticles();
+        ArticlePostItem postItem = null;
         if(list != null) {
             postItem = list.get(pos);
         }

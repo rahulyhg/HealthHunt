@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -75,7 +75,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public PostsItem getArticle(int pos) {
+    public ArticlePostItem getArticle(int pos) {
         return null;
     }
 

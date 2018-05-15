@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 
@@ -34,6 +34,9 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     @BindView(R.id.continue_cross_image)
     LinearLayout mCrossButton;
+
+    @BindView(R.id.continue_view)
+    LinearLayout mContinueView;
 
 
     private ArticlePresenterImp mArticlePresenter;
@@ -80,12 +83,20 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public PostsItem getArticle(int pos) {
+    public ArticlePostItem getArticle(int pos) {
         return null;
     }
 
     @OnClick(R.id.continue_cross_image)
     void onCrossClick() {
         IMyFeedView.onClickCrossView(mIndex);
+    }
+
+    public void hideContinueView(){
+        mContinueView.setVisibility(View.GONE);
+    }
+
+    public void showContinueView(){
+        mContinueView.setVisibility(View.VISIBLE);
     }
  }

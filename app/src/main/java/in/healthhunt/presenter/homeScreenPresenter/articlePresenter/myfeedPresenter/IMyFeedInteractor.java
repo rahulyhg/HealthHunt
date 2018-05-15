@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import framework.retrofit.RestError;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -15,10 +16,15 @@ import in.healthhunt.model.articles.articleResponse.PostsItem;
 public interface IMyFeedInteractor {
 
     interface OnArticleFinishListener {
-        void onSuccess(List<PostsItem> items, int type);
+        void onArticleSuccess(List<ArticlePostItem> items, int type);
         void onError(RestError errorInfo);
     }
-    void fetchArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
-    void fetchTrendingArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
-    void fetchLatestArticle(Context context, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
+
+    interface OnProductFinishListener {
+        void onProductSuccess(List<ProductPostItem> items, int type);
+        void onError(RestError errorInfo);
+    }
+
+    void fetchArticle(Context context, int type, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
+    void fetchProduct(Context context, int type, Map<String, String> queryMap, OnProductFinishListener productFinishListener);
 }

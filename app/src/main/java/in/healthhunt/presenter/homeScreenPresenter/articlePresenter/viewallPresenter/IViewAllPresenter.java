@@ -5,15 +5,20 @@ import android.view.View;
 
 import java.util.List;
 
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
 public interface IViewAllPresenter {
-    int getCount();
-    RecyclerView.ViewHolder createArticleHolder(View view);
-    void fetchTagsArticle();
-    List<PostsItem> getAllArticles();
+    int getCount(int type);
+    RecyclerView.ViewHolder createViewHolder(View view);
+    List<ArticlePostItem> getAllArticles();
+    List<ProductPostItem> getAllProduct();
+    ArticlePostItem getArticle(int pos);
+    ProductPostItem getProduct(int pos);
+    void fetchAll(int type);
+    int getView();
 }

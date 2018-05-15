@@ -14,6 +14,7 @@
         <include layout="@layout/related_article_view"/>
         <include layout="@layout/related_products_article_view"/>
         <include layout="@layout/full_article_about_view"/>
+        <include layout="@layout/full_article_comment_view" />
 
     </LinearLayout>
 </ScrollView>

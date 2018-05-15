@@ -2,7 +2,12 @@ package in.healthhunt.model.articles.articleResponse;
 
 import java.util.List;
 
-public class PostsItem{
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Likes;
+import in.healthhunt.model.articles.commonResponse.MediaItem;
+
+public class ArticlePostItem {
 	private String date;
 	private int trending;
 	private String link;
@@ -295,7 +300,7 @@ public class PostsItem{
 	@Override
  	public String toString(){
 		return 
-			"PostsItem{" + 
+			"ProductPostItem{" +
 			"date = '" + date + '\'' + 
 			",trending = '" + trending + '\'' + 
 			",link = '" + link + '\'' + 

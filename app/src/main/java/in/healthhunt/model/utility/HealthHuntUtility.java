@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -98,11 +99,16 @@ public class HealthHuntUtility {
         return px;
     }
 
-    public static String getDateWithFormat(String format, String strDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    public static String getDateWithFormat(String strDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            Date date = simpleDateFormat.parse(strDate);
-            date.toString();
+            Date date = format.parse(strDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            format = new SimpleDateFormat("d MMM yyyy");
+            String currentDate = format.format(calendar.getTime());
+            Log.i("TAG12222", "cure " + currentDate);
+            return currentDate;
         } catch (ParseException e) {
             e.printStackTrace();
         }

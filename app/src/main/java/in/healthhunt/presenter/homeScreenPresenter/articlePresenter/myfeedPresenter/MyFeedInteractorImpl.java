@@ -1,16 +1,14 @@
 package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.Map;
 
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
-import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
-import in.healthhunt.model.articles.articleResponse.MediaItem;
+import in.healthhunt.model.articles.productResponse.ProductResponse;
 import retrofit2.Response;
 
 /**
@@ -19,13 +17,11 @@ import retrofit2.Response;
 
 public class MyFeedInteractorImpl implements IMyFeedInteractor {
     @Override
-    public void fetchArticle(Context context, Map<String, String> queryMap, final OnArticleFinishListener articleFinishListener) {
+    public void fetchArticle(Context context, final int type, Map<String, String> queryMap, final OnArticleFinishListener articleFinishListener) {
         WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<ArticleResponse>() {
             @Override
             public void onSuccess(ArticleResponse articleResponse, Response response) {
-                MediaItem media = articleResponse.getData().getPosts().get(0).getMedia().get(0);
-                Log.i("TAGMEDIA", "Media Item = " + media);
-                    articleFinishListener.onSuccess(articleResponse.getData().getPosts(), ArticleParams.BASED_ON_TAGS);
+                    articleFinishListener.onArticleSuccess(articleResponse.getData().getPosts(), type);
             }
 
             @Override
@@ -36,6 +32,21 @@ public class MyFeedInteractorImpl implements IMyFeedInteractor {
     }
 
     @Override
+    public void fetchProduct(Context context, final int type, Map<String, String> queryMap, final OnProductFinishListener productFinishListener) {
+        WebServicesWrapper.getInstance(context).fetchProducts(queryMap, new ResponseResolver<ProductResponse>() {
+            @Override
+            public void onSuccess(ProductResponse productResponse, Response response) {
+                productFinishListener.onProductSuccess(productResponse.getData().getPosts(), type);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                productFinishListener.onError(error);
+            }
+        });
+    }
+
+    /*@Override
     public void fetchTrendingArticle(Context context, Map<String, String> queryMap, final OnArticleFinishListener articleFinishListener) {
         WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<ArticleResponse>() {
             @Override
@@ -63,5 +74,5 @@ public class MyFeedInteractorImpl implements IMyFeedInteractor {
                 articleFinishListener.onError(error);
             }
         });
-    }
+    }*/
 }

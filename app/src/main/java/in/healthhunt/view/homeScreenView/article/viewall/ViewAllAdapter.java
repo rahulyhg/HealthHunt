@@ -13,12 +13,14 @@ import java.util.List;
 
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.Author;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.MediaItem;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.viewallPresenter.IViewAllPresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -42,28 +44,29 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.i("TAg@@","viewType");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_all_article_item_view, parent, false);
-        return IViewAllPresenter.createArticleHolder(view);
+
+        int layout = IViewAllPresenter.getView();
+        View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+        return IViewAllPresenter.createViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (mType) {
             case ArticleParams.BASED_ON_TAGS:
-            case ArticleParams.LATEST_ARTICLES:{
-                List<PostsItem> list = IViewAllPresenter.getAllArticles();
-                PostsItem tagsItem = list.get(position);
-                setContent(((ViewAllHolder)holder), tagsItem);
+            case ArticleParams.LATEST_ARTICLES:
+                ArticlePostItem tagsItem = IViewAllPresenter.getArticle(position);
+                setArticleContent(((ViewAllArticleHolder) holder), tagsItem);
                 break;
-            }
 
-            case ArticleParams.LATEST_PRODUCTS_ARTICLES:{
+            case ArticleParams.LATEST_PRODUCTS_ARTICLES:
+                ProductPostItem postItem =  IViewAllPresenter.getProduct(position);
+                setProductContent(((ViewAllProductHolder) holder), postItem);
                 break;
-            }
         }
     }
 
-    private void setContent(ViewAllHolder holder, PostsItem postsItem) {
+    private void setArticleContent(ViewAllArticleHolder holder, ArticlePostItem postsItem) {
         if(postsItem != null) {
             String url = null;
             List<MediaItem> mediaItems = postsItem.getMedia();
@@ -76,7 +79,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             if(url != null) {
                 Log.i("TAG11", "url " + url);
-                Glide.with(mContext).load(url).override(300, 100).placeholder(R.drawable.artical).into(holder.mArticleImage);
+                Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
             }
             else {
                 holder.mArticleImage.setBackgroundResource(R.drawable.artical);
@@ -128,16 +131,60 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.mReadingTime.setText(readingTime);
 
             String date = postsItem.getDate();
-            /*if(date != null) {
-                date = HealthHuntUtility.getDateWithFormat("dd-MMM-yyyy", date);
-            }*/
+            if(date != null) {
+                date = HealthHuntUtility.getDateWithFormat(date);
+            }
             holder.mArticleDate.setText(date);
+        }
+    }
+
+    private void setProductContent(ViewAllProductHolder holder, ProductPostItem postsItem) {
+
+        if(postsItem != null) {
+            String productName = postsItem.getProduct_type_other_name();
+            if (productName != null) {
+                holder.mProductName.setText(productName);
+            }
+
+
+            String price = postsItem.getPost_price();
+            if (price != null) {
+                String postQuantity = postsItem.getPost_quantity();
+                String rs = mContext.getString(R.string.rs);
+                rs = rs + " " + price + "/" + postQuantity;
+                holder.mProductPrice.setText(rs);
+            }
+
+
+            String postUnit = postsItem.getPost_unit();
+            if (postUnit != null) {
+                holder.mProductUnit.setText(postUnit);
+            }
+
+
+            String url = null;
+            List<MediaItem> mediaItems = postsItem.getMedia();
+            if(mediaItems != null && !mediaItems.isEmpty()) {
+                MediaItem media = mediaItems.get(0);
+                Log.i("TAGMedia", "media "+ media);
+                if("image".equals(media.getMedia_type())) {
+                    url = media.getUrl();
+                    Log.i("TAGMedia", "URL "+ url);
+
+                }
+            }
+            if (url != null) {
+                Log.i("TAG11", "productUrl " + url);
+                Glide.with(mContext).load(url).placeholder(R.drawable.top_products).into(holder.mProductImage);
+            } else {
+                holder.mProductImage.setBackgroundResource(R.drawable.top_products);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return IViewAllPresenter.getCount();
+        return IViewAllPresenter.getCount(mType);
     }
 
     public void setClickListener(ClickListener clickListener) {

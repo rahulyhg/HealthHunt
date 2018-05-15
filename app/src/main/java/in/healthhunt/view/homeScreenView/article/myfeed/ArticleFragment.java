@@ -23,6 +23,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.view.fullView.FullViewActivity;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -164,6 +165,7 @@ public class ArticleFragment extends Fragment {
         }
 
         String date = bundle.getString(ArticleParams.ARTICLE_DATE);
+        date = HealthHuntUtility.getDateWithFormat(date);
         if(date != null) {
             mArticleDate.setText(date);
         }
@@ -172,7 +174,7 @@ public class ArticleFragment extends Fragment {
         String articleUrl = bundle.getString(ArticleParams.ARTICLE_URL);
         if(articleUrl != null) {
             Log.i("TAG11", "articleUrl " + articleUrl);
-            Glide.with(this).load(articleUrl).placeholder(R.drawable.artical).override(300,100).into(mArticleImage);
+            Glide.with(this).load(articleUrl).placeholder(R.drawable.artical).into(mArticleImage);
         }
         else {
             mArticleImage.setBackgroundResource(R.drawable.artical);

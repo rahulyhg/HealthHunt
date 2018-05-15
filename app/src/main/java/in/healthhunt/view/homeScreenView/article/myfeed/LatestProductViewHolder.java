@@ -10,21 +10,24 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ILatestProductPresenter;
+import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.LatestProductPresenterImp;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class LatestProductViewHolder extends RecyclerView.ViewHolder implements IArticleView {
+public class LatestProductViewHolder extends RecyclerView.ViewHolder implements ILatestProductView {
 
     @BindView(R.id.view_all)
     LinearLayout mViewAll;
@@ -36,7 +39,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     ViewPager mLatestArticlePager;
 
 
-    private ArticlePresenterImp mArticlePresenter;
+    private ILatestProductPresenter ILatestProductPresenter;
     private IMyFeedView IMyFeedView;
     private Context mContext;
     private FragmentManager mFragmentManager;
@@ -47,14 +50,14 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
         IMyFeedView = feedView;
         ButterKnife.bind(this, articleView);
         mFragmentManager = fragmentManager;
-        mArticlePresenter = new ArticlePresenterImp(mContext, this);
+        ILatestProductPresenter = new LatestProductPresenterImp(mContext, this);
         setAdapter();
 
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter, ArticleParams.LATEST_PRODUCTS_ARTICLES);
-        mLatestArticlePager.setAdapter(articleAdapter);
+        LatestProductAdapter productAdapter = new LatestProductAdapter(mFragmentManager,  ILatestProductPresenter, ArticleParams.LATEST_PRODUCTS_ARTICLES);
+        mLatestArticlePager.setAdapter(productAdapter);
         mLatestArticlePager.setClipToPadding(false);
         mLatestArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
         mLatestArticlePager.setPageMargin(HealthHuntUtility.dpToPx(8, mContext));
@@ -66,18 +69,23 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public int getArticleCount() {
-        return 5;
+    public int getProductCount() {
+        List<ProductPostItem> list = IMyFeedView.getLatestProductArticles();
+        int count = 0;
+        if(list != null) {
+            count = list.size();
+        }
+        return count;
     }
 
     @Override
-    public void showFragment(String tag, Bundle bundle) {
-
-    }
-
-    @Override
-    public PostsItem getArticle(int pos) {
-        return null;
+    public ProductPostItem getProduct(int pos) {
+        List<ProductPostItem> list = IMyFeedView.getLatestProductArticles();
+        ProductPostItem postItem = null;
+        if(list != null) {
+            postItem = list.get(pos);
+        }
+        return postItem;
     }
 
     @OnClick(R.id.view_all)
@@ -85,5 +93,16 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
         Bundle bundle = new Bundle();
         bundle.putString("article_name", "Latest products");
         IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);
+    }
+
+    private void openViewAllFragment() {
+        IMyFeedView.updateNavigation();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.LATEST_PRODUCTS_ARTICLES);
+        IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);
+    }
+
+    public void notifyDataChanged() {
+        mLatestArticlePager.getAdapter().notifyDataSetChanged();
     }
 }

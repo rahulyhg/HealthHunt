@@ -23,7 +23,7 @@ public interface ArticleParams {
 
     String ARTICLE_TYPE = "article_type";
 
-    String TEXT_BASED_ON_TAGS = "Based_on_tags";
+    String TEXT_BASED_ON_TAGS = "Based on tags";
     String TEXT_CONTINUE_ARTICLES = "Continue reading";
     String TEXT_TRENDING_ARTICLES = "Trending";
     String TEXT_SPONSORED_ARTICLES = "Sponsored";
@@ -49,6 +49,18 @@ public interface ArticleParams {
     String LATEST_BY_RECENT = "recent";
     String LATEST_BY_WEEK = "week";
     String LATEST_BY_MONTH = "month";
+    String SPONSORED = "sponsored";
+    String POST_FORMAT_IMAGE = "post-format-image";
+    String POST_FORMAT_VIDEO = "post-format-video";
+    String TYPE = "type";
+    String MARKET = "market";
+    String MARKT_TYPE = "markt_type";
+    String PRODUCT_NAME = "product_name";
+    String PRODUCT_TYPE = "product_type";
+    String PRODUCT_PRICE = "product_price";
+    String PRODUCT_QUANTITY = "product_quantity";
+    String PRODUCT_UNIT = "product_unit";
+    String BRAND_NAME = "brand_name";
 
 
     String IS_LAST_PAGE = "is_last_page";

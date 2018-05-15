@@ -7,7 +7,7 @@ public class Data{
 	private int offset;
 	private int limit;
 	private String elastic_token;
-	private List<PostsItem> posts;
+	private List<ArticlePostItem> posts;
 	private String date_healthlet;
 
 	public void setTotal(String total){
@@ -42,11 +42,11 @@ public class Data{
 		return elastic_token;
 	}
 
-	public void setPosts(List<PostsItem> posts){
+	public void setPosts(List<ArticlePostItem> posts){
 		this.posts = posts;
 	}
 
-	public List<PostsItem> getPosts(){
+	public List<ArticlePostItem> getPosts(){
 		return posts;
 	}
 

@@ -1,9 +1,8 @@
 package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.view.homeScreenView.article.myfeed.ITopProductView;
 
 /**
@@ -22,12 +21,13 @@ public class TopProductPresenterImp implements ITopProductPresenter {
     }
 
     @Override
-    public int getCount() {
-        return ITopProductView.getCount();
+    public int getProductCount() {
+        return ITopProductView.getProductCount();
     }
 
     @Override
-    public RecyclerView.ViewHolder createArticleHolder(View view) {
-        return ITopProductView.createArticleHolder(view);
+    public ProductPostItem getTopProduct(int pos) {
+        return ITopProductView.getProduct(pos);
     }
+
 }

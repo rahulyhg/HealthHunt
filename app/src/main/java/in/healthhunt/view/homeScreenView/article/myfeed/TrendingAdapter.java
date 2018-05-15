@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,13 +16,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.model.articles.articleResponse.Author;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.MediaItem;
-import in.healthhunt.model.articles.articleResponse.PostsItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ITrendingSponsoredPresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -33,6 +36,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private ITrendingSponsoredPresenter mPresenter;
     private Context mContext;
+    private ClickListener mClickListener;
 
     public TrendingAdapter(Context context, ITrendingSponsoredPresenter presenter) {
         mPresenter = presenter;
@@ -53,7 +57,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void setContent(TrendingItemViewHolder holder, int pos) {
 
-        PostsItem postsItem = mPresenter.getTrendingArticles(pos);
+        ArticlePostItem postsItem = mPresenter.getTrendingArticles(pos);
         if(postsItem != null) {
             String url = null;
             List<MediaItem> mediaItems = postsItem.getMedia();
@@ -66,7 +70,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             if(url != null) {
                 Log.i("TAG11", "url " + url);
-                Glide.with(mContext).load(url).override(300,100).placeholder(R.drawable.artical).into(holder.mArticleImage);
+                Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
             }
             else {
                 holder.mArticleImage.setBackgroundResource(R.drawable.artical);
@@ -118,9 +122,9 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.mReadingTime.setText(readingTime);
 
             String date = postsItem.getDate();
-            /*if(date != null) {
-                date = HealthHuntUtility.getDateWithFormat("dd-MMM-yyyy", date);
-            }*/
+            if(date != null) {
+                date = HealthHuntUtility.getDateWithFormat(date);
+            }
             holder.mArticleDate.setText(date);
         }
     }
@@ -131,7 +135,18 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mPresenter.getCount();
     }
 
+    public void setClickListener(ClickListener clickListener) {
+        this.mClickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void ItemClicked(View v, int position);
+    }
+
     public class TrendingItemViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.article_item_view)
+        RelativeLayout mArticleView;
 
         @BindView(R.id.article_image)
         ImageView mArticleImage;
@@ -170,6 +185,13 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public void notifyDataChanged() {
             notifyDataSetChanged();
+        }
+
+        @OnClick(R.id.article_item_view)
+        void onClick(View view) {
+            if(mClickListener != null) {
+                mClickListener.ItemClicked(view, getAdapterPosition());
+            }
         }
     }
 }

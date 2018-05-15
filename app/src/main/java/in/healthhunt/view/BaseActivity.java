@@ -24,4 +24,12 @@ public class BaseActivity extends AppCompatActivity {
         mProgress.setMessage(getResources().getString(R.string.please_wait));
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mProgress != null) {
+            mProgress.dismiss();
+        }
+    }
 }
