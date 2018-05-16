@@ -5,19 +5,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.onBoardingPresenter.OnBoardingPresenter;
+import in.healthhunt.view.BaseActivity;
 
 /**
  * Created by abhishekkumar on 4/24/18.
  */
 
-public class OnBoardingActivity extends AppCompatActivity implements IOnBoardingView {
+public class OnBoardingActivity extends BaseActivity implements IOnBoardingView {
 
     @BindView(R.id.on_boarding_pager)
     public ViewPager mViewPager;

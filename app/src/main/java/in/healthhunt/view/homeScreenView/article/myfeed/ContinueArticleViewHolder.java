@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 
@@ -32,6 +34,9 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     @BindView(R.id.continue_cross_image)
     LinearLayout mCrossButton;
+
+    @BindView(R.id.continue_view)
+    LinearLayout mContinueView;
 
 
     private ArticlePresenterImp mArticlePresenter;
@@ -55,7 +60,7 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter, ArticleParams.CONTINUE_ARTICLES);
         mArticlePager.setAdapter(articleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
@@ -63,7 +68,7 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public Fragment getArticleItem(int position) {
+    public Fragment getFragmentArticleItem(int position) {
         return new ContinueArticleFragment();
     }
 
@@ -77,8 +82,21 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     }
 
+    @Override
+    public ArticlePostItem getArticle(int pos) {
+        return null;
+    }
+
     @OnClick(R.id.continue_cross_image)
     void onCrossClick() {
         IMyFeedView.onClickCrossView(mIndex);
+    }
+
+    public void hideContinueView(){
+        mContinueView.setVisibility(View.GONE);
+    }
+
+    public void showContinueView(){
+        mContinueView.setVisibility(View.VISIBLE);
     }
  }

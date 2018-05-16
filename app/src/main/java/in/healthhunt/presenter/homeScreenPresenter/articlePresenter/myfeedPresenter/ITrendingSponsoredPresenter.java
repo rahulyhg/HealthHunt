@@ -1,8 +1,6 @@
 package in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -10,5 +8,8 @@ import android.view.View;
 
 public interface ITrendingSponsoredPresenter {
     int getCount();
+    ArticlePostItem getTrendingArticles(int pos);
+    ArticlePostItem getSponsoredArticles(int pos);
+
     //RecyclerView.ViewHolder createArticleHolder(View view);
 }

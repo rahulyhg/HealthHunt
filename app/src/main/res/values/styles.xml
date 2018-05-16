@@ -21,6 +21,14 @@
         <item name="android:progressBarStyle">@style/InvisibleProgress</item>
     </style>
 
+    <style name="GoogleTransparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+
+    </style>
+
     <style name="InvisibleProgress">
         <item name="android:visibility">gone</item>
     </style>

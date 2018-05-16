@@ -17,7 +17,7 @@
             android:id="@+id/tag_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_tag_item_icon"
+            android:src="@mipmap/ic_exercise"
             android:layout_marginEnd="8dp"
             android:layout_gravity="left|center"
             android:backgroundTint="@color/hh_green_light2"

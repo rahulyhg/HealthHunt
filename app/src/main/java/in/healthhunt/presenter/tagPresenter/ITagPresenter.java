@@ -19,5 +19,6 @@ public interface ITagPresenter {
     void removeTag(TagItem tag);
     void selectAll();
     void unSelectAll();
+    void storeSelectedTags();
     TagViewHolder createTagViewHolder(View view, ITagPresenter tagPresenter);
 }

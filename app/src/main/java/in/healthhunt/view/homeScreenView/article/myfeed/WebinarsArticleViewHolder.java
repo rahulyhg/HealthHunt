@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.articlePresenter.myfeedPresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
@@ -50,7 +52,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     private void setAdapter() {
-        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter);
+        ArticleAdapter articleAdapter = new ArticleAdapter(mFragmentManager,  mArticlePresenter, ArticleParams.WEBINARS_ARTICLES);
         mArticlePager.setAdapter(articleAdapter);
         mArticlePager.setClipToPadding(false);
         mArticlePager.setPadding(0, 0, HealthHuntUtility.dpToPx(100, mContext),0);
@@ -58,7 +60,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public Fragment getArticleItem(int position) {
+    public Fragment getFragmentArticleItem(int position) {
         return new WebinarsArticleFragment();
     }
 
@@ -70,6 +72,11 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     @Override
     public void showFragment(String tag, Bundle bundle) {
 
+    }
+
+    @Override
+    public ArticlePostItem getArticle(int pos) {
+        return null;
     }
 
     @OnClick(R.id.webinars_view_all)

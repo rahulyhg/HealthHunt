@@ -31,5 +31,5 @@ public interface ILoginInteractor {
     String loginWithFacebook(Context context, FacebookCallback<LoginResult> facebookCallback);
     Intent loginWithGmail(Context context);
     void signUp(Context context, SignUpRequest signUpRequest, OnLoginFinishListener onLoginFinishListener);
-    void resetLoginPassword(ForgotPasswordRequest forgotPasswordRequest, OnPasswordChangeListener onPasswordChangeListener);
+    void resetLoginPassword(Context context, ForgotPasswordRequest forgotPasswordRequest, OnPasswordChangeListener onPasswordChangeListener);
 }

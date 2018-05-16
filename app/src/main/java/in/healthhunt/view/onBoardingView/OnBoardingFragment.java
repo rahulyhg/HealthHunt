@@ -17,6 +17,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 
 /**
@@ -73,7 +74,9 @@ public class OnBoardingFragment extends Fragment {
     }
 
     private void startHomeActivity() {
+        HealthHuntPreference.putBoolean(getContext(), Constants.IS_LOGIN_FIRST_KEY, true);
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         startActivity(intent);
+        getActivity().finish();
     }
 }

@@ -14,10 +14,11 @@ import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLHandshakeException;
 
-//import frameworks.appsession.AppBaseApplication;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+//import frameworks.appsession.AppBaseApplication;
 
 public abstract class ResponseResolver<T> implements Callback<T> {
 
@@ -127,7 +128,12 @@ public abstract class ResponseResolver<T> implements Callback<T> {
             if (showFailureDialog) {
                 displayErrorDialog(errorMessage);
             }
-            onFailure(body, body.getMessage());
+
+            String msg = null;
+            if(body != null) {
+                msg = body.getMessage();
+            }
+            onFailure(body, msg);
         }
     }
 

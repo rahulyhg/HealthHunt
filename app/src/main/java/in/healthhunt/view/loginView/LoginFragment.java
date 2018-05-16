@@ -23,8 +23,6 @@ import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.view.socialLogin.GoogleLoginActivity;
 
-import static in.healthhunt.view.socialLogin.GoogleLoginActivity.GOOGLE_LOGIN_RESPONSE_OK;
-
 /**
  * Created by abhishekkumar on 4/9/18.
  */
@@ -101,7 +99,7 @@ public class LoginFragment extends Fragment{
         isLoginType = LoginActivity.LOGIN_TYPE_GMAIL;
         Intent intent = new Intent(getContext(), GoogleLoginActivity.class);
         if(intent != null) {
-            startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
+            getActivity().startActivityForResult(intent, Constants.GMAIL_REQUEST_CODE);
         }
 
     }
@@ -110,14 +108,14 @@ public class LoginFragment extends Fragment{
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("TAG", "requestCode " + requestCode);
 
-        if (requestCode == Constants.GMAIL_REQUEST_CODE) {
+        /*if (requestCode == Constants.GMAIL_REQUEST_CODE) {
             // [START get_auth_code]
             if(resultCode == GOOGLE_LOGIN_RESPONSE_OK) {
                 String authID = data.getStringExtra("authCode");
                 IPresenter.loginGoogle(authID);
                 Log.i("TAG", "authCode = " + authID);
             }
-        }
+        }*/
         // [END get_auth_code]
     }
 
