@@ -77,6 +77,7 @@
                     android:gravity="right|center"
                     android:textColor="@color/hh_green_light2"
                     android:textSize="14sp"
+                    android:layout_marginStart="2dp"
                     android:maxLines="1"/>
             </LinearLayout>
 

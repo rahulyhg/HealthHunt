@@ -3,6 +3,7 @@ package framework.retrofit;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
@@ -14,8 +15,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 
 public interface WebServices {
@@ -40,6 +43,13 @@ public interface WebServices {
 
  @GET("posts")
  Call<ProductResponse> fetchProducts(@QueryMap Map<String, String> params);
+
+ @GET("posts/{id}")
+ Call<PostResponse> fetchFullArticle(@Path("id") String id);
+
+ @POST
+ Call<String> bookmark(@Url String url);
+
 
     /*@Header("authToken") String token,*/
 

@@ -16,10 +16,10 @@ public interface ArticleParams {
     int CONTINUE_ARTICLES = 1002;
     int TRENDING_ARTICLES = 1003;
     int SPONSORED_ARTICLES = 1004;
-    int TOP_PRODUCTS_ARTICLES = 1005;
+    int TOP_PRODUCTS = 1005;
     int LATEST_ARTICLES = 1006;
     int WEBINARS_ARTICLES = 1007;
-    int LATEST_PRODUCTS_ARTICLES = 1008;
+    int LATEST_PRODUCTS = 1008;
 
     String ARTICLE_TYPE = "article_type";
 
@@ -61,10 +61,13 @@ public interface ArticleParams {
     String PRODUCT_QUANTITY = "product_quantity";
     String PRODUCT_UNIT = "product_unit";
     String BRAND_NAME = "brand_name";
+    String IS_BOOKMARK = "is_bookmark";
 
 
     String IS_LAST_PAGE = "is_last_page";
 
     String TRENDING = "trending";
+
+    String POSITION = "position";
 
 }

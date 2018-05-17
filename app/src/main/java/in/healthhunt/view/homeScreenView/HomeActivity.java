@@ -32,9 +32,8 @@ import in.healthhunt.R;
 import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.BaseActivity;
-import in.healthhunt.view.homeScreenView.article.DrawerFragment;
-import in.healthhunt.view.homeScreenView.article.myfeed.MyFeedFragment;
-import in.healthhunt.view.homeScreenView.article.viewall.ViewAllFragment;
+import in.healthhunt.view.homeScreenView.myFeedView.MyFeedFragment;
+import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
  * Created by abhishekkumar on 4/27/18.
@@ -251,12 +250,20 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         //mToolbar.setT
     }
 
-    public void onComplete() {
+    @Override
+    public void showProgress(){
+        mProgress.show();;
+    }
+
+    @Override
+    public void hideProgress(){
         mProgress.dismiss();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mProgress.dismiss();
+        mAlertDialog.dismiss();
     }
 }

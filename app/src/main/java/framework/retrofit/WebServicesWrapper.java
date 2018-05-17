@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -68,7 +69,7 @@ public class WebServicesWrapper {
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder request = chain.request().newBuilder();
 
-
+                Log.i("TAGHHHHHH", " hjh " + request.build().url());
                 String timeStamp = HealthHuntUtility.getUTCTimeStamp();
 
                 String url = request.build().url().toString();
@@ -90,6 +91,7 @@ public class WebServicesWrapper {
                 Log.i("TAG123", "URL " + request.build().url().toString());
 
 
+
                 Response response = chain.proceed(request.build());
 
                 //String session_token = response.header(Constants.SESSION_TOKEN);
@@ -105,6 +107,7 @@ public class WebServicesWrapper {
                 }
                 //}
                 //response.
+
 
                 return response;
             }
@@ -217,6 +220,27 @@ public class WebServicesWrapper {
     public Call<ProductResponse> fetchProducts(Map<String, String> params, ResponseResolver<ProductResponse> responseResponseResolver) {
 
         Call<ProductResponse> loginResponseCall = webServices.fetchProducts(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<String> bookmark(String id, ResponseResolver<String> responseResponseResolver) {
+
+        String url = BASE_URL  + "posts" + "/" + id + "/" + "save";
+        Call<String> loginResponseCall = webServices.bookmark(url);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<PostResponse> fetchFullArticle(String id, ResponseResolver<PostResponse> responseResponseResolver) {
+
+        Call<PostResponse> loginResponseCall = webServices.fetchFullArticle(id);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

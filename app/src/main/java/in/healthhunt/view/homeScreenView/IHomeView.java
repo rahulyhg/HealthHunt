@@ -13,4 +13,6 @@ public interface IHomeView {
     void updateNavigation();
     void setNavigation();
     void updateTitle(String msg);
+    void showProgress();
+    void hideProgress();
 }

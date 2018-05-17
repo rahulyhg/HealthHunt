@@ -3,7 +3,6 @@
     <string name="server_client_id">473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com</string>
     <string name="facebook_app_id">2014330465547457</string>
     <string name="fb_login_protocol_scheme">fb2014330465547457</string>
-    <string name="private_key">Bd6723sXcVBg12Fe</string>
 
     <!--473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com-->
     <!-- Font family -->
@@ -11,9 +10,6 @@
     <string name="font_family_light">sans-serif-light</string>
     <string name="font_family_medium">sans-serif-medium</string>
     <string name="font_family_regular">sans-serif</string>
-    <string name="font_family_condensed">sans-serif-condensed</string>
-    <string name="font_family_black">sans-serif-black</string>
-    <string name="font_family_thin">sans-serif-thin</string>
 
     <!-- Login and sign up screen string values -->
 
@@ -38,7 +34,6 @@
     <string name="new_password">New password</string>
     <string name="repeat_password">Repeat password</string>
     <string name="could_not_log_in">Could not log in</string>
-    <string name="email_password_incorrect">Email or password was incorrect</string>
     <string name="try_again">Try again</string>
     <string name="email_password_blank">Email and password fields are empty</string>
     <string name="username">Username</string>
@@ -65,7 +60,6 @@
     <!-- Alert Screen message for email sent -->
     
     <string name="link_sent">A link to reset your password has been sent to  </string>
-    <string name="new_password_incorrect">Passwords not same or Password fields empty</string>
 
     <!-- Home Screen -->
 
@@ -82,15 +76,20 @@
     <!-- Full article Screen -->
 
     <string name="about">About</string>
-    <string name="show_all_content">"The app will remotely observe the vital signs of the patient—such as blood pressure, heart rate, and weight—and will send notifications to both the doctor and the patient in case changes in the patient’s data indicate a possibility of heart failure."</string>
     <string name="read_more">See more</string>
     <string name="read_less">See less</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat, nunc eget volutpat viverra, lacus ligula venenatis nulla, in accumsan eros eros nec ipsum. Fusce eget massa id lorem blandit lobortis. Donec lacus ligula, commodo quis eleifend ac, rhoncus sed mi. Curabitur luctus justo vel consequat fermentum. Donec facilisis elit in sem suscipit pharetra. Curabitur porta et dolor eget pretium. Mauris quam augue, interdum nec tempor vitae, consectetur at erat.</string>
     <string name="comments">Comments</string>
     <string name="write_comments_here">Write your comment here</string>
     <string name="send">Send</string>
+    <string name="rs">\u20B9</string>
+    <string name="read_time">%s min read</string>
+    <string name="close_all">Close all</string>
+
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="rs">\u20B9</string>
+    
+    <string name="share">Share</string>
+    <string name="download_this_article">Download this article</string>
 
 </resources>

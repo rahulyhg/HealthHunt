@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="112dp"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:weightSum="2">
+
+
+    <LinearLayout
+        android:id="@+id/share_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="left|center"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/ic_share"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/share"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="16sp"
+            android:gravity="left"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/hh_edittext_text_color"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/download_article_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="left|center"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/ic_upload"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_this_article"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="16sp"
+            android:gravity="left"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/hh_edittext_text_color"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
