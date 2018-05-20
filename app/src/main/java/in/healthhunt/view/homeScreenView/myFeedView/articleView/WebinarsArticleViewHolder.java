@@ -13,6 +13,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
@@ -63,7 +64,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public int getArticleCount() {
+    public int getCount() {
         return 5;
     }
 
@@ -83,7 +84,17 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void updateBookMark(String id, int type, boolean isBookMark) {
+    public void updateBottomNavigation() {
+        IMyFeedView.updateBottomNavigation();
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IMyFeedView.loadFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateBookMark(BookMarkResponse markResponse) {
 
     }
 

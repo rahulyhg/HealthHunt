@@ -92,4 +92,9 @@
     <string name="share">Share</string>
     <string name="download_this_article">Download this article</string>
 
+
+    <!-- shop -->
+    <string name="healthhunt_shop">Healthhunt shop</string>
+    <string name="filter">Filter</string>
+
 </resources>

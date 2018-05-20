@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
 import in.healthhunt.model.beans.Constants;
@@ -227,10 +228,19 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<String> bookmark(String id, ResponseResolver<String> responseResponseResolver) {
+    public Call<BookMarkResponse> bookmark(String id, ResponseResolver<BookMarkResponse> responseResponseResolver) {
 
-        String url = BASE_URL  + "posts" + "/" + id + "/" + "save";
-        Call<String> loginResponseCall = webServices.bookmark(url);
+        Call<BookMarkResponse> loginResponseCall = webServices.bookmark(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<BookMarkResponse> unBookmark(String id, ResponseResolver<BookMarkResponse> responseResponseResolver) {
+
+        Call<BookMarkResponse> loginResponseCall = webServices.unBookmark(id);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

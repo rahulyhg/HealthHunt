@@ -4,32 +4,56 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
+import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.presenter.homeScreenPresenter.IInteractor;
+import in.healthhunt.presenter.homeScreenPresenter.InteractorImpl;
 import in.healthhunt.view.homeScreenView.myFeedView.productView.IProductView;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ProductPresenterImp implements IProductPresenter {
+public class ProductPresenterImp implements IProductPresenter, IInteractor.OnFinishListener {
 
     private String TAG = ProductPresenterImp.class.getSimpleName();
     private IProductView IProductView;
     private Context mContext;
+    private  IInteractor IInteractor;
 
     public ProductPresenterImp(Context context, IProductView latestProductView) {
         mContext = context;
         IProductView = latestProductView;
+        IInteractor = new InteractorImpl();
     }
 
     @Override
-    public int getProductCount() {
-        return IProductView.getProductCount();
+    public int getCount() {
+        return IProductView.getCount();
+    }
+
+    @Override
+    public void bookmark(String id, int type) {
+        IProductView.showProgress();
+        IInteractor.bookmark(mContext, id, type, this);
+    }
+
+    @Override
+    public void unBookmark(String id, int type) {
+        IProductView.showProgress();
+        IInteractor.unBookmark(mContext, id, type, this);
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IProductView.updateBottomNavigation();
     }
 
 
@@ -44,7 +68,7 @@ public class ProductPresenterImp implements IProductPresenter {
         Bundle bundle = new Bundle();//createBundle(position);
         bundle.putInt(ArticleParams.ARTICLE_TYPE, type);
         bundle.putInt(ArticleParams.POSITION, position);
-        int count = IProductView.getProductCount();
+        int count = IProductView.getCount();
 
         if (position == 4 && position == count - 1) {
             bundle.putBoolean(ArticleParams.IS_LAST_PAGE, true);
@@ -53,6 +77,11 @@ public class ProductPresenterImp implements IProductPresenter {
         }
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IProductView.loadFragment(fragmentName, bundle);
     }
 
     private Bundle createBundle(int pos) {
@@ -103,5 +132,22 @@ public class ProductPresenterImp implements IProductPresenter {
             }
         }
         return bundle;
+    }
+
+    @Override
+    public void onBookMarkSuccess(BookMarkResponse markResponse) {
+        IProductView.hideProgress();
+        IProductView.updateBookMark(markResponse);
+        Toast.makeText(mContext, "BookMark", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError(RestError errorInfo) {
+        IProductView.hideProgress();
+        String msg = "Error";
+        if(errorInfo != null) {
+            msg = errorInfo.getMessage();
+        }
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 }

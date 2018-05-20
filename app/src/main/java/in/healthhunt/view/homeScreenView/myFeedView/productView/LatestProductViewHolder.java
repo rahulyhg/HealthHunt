@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
@@ -70,13 +71,38 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public int getProductCount() {
+    public void loadFragment(String fragmentName, Bundle bundle) {
+            IMyFeedView.loadFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public int getCount() {
         List<ProductPostItem> list = IMyFeedView.getLatestProductArticles();
         int count = 0;
         if(list != null) {
             count = list.size();
         }
         return count;
+    }
+
+    @Override
+    public void updateBookMark(BookMarkResponse markResponse) {
+        IMyFeedView.updateBookMark(markResponse);
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IMyFeedView.updateBottomNavigation();
     }
 
     @Override
@@ -97,7 +123,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     private void openViewAllFragment() {
-        IMyFeedView.updateNavigation();
+        IMyFeedView.updateBottomNavigation();
         Bundle bundle = new Bundle();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.LATEST_PRODUCTS);
         IMyFeedView.onClickViewAll(ViewAllFragment.class.getSimpleName(), bundle);

@@ -24,11 +24,11 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 import in.healthhunt.view.fullView.FullViewActivity;
-import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
@@ -60,7 +60,6 @@ public class LatestProductFragment extends Fragment {
     @BindView(R.id.latest_product_unit)
     TextView mProductUnit;
 
-    private int mType;
     private int mPos;
     private IProductPresenter IProductPresenter;
     private ProductPostItem mProductPostItem;
@@ -83,7 +82,6 @@ public class LatestProductFragment extends Fragment {
 
         if(bundle != null) {
             boolean isLast = bundle.getBoolean(ArticleParams.IS_LAST_PAGE);
-            mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
             mPos = bundle.getInt(ArticleParams.POSITION);
             mProductPostItem = IProductPresenter.getProduct(mPos);
 
@@ -154,14 +152,28 @@ public class LatestProductFragment extends Fragment {
     @OnClick(R.id.last_page_view_all)
     void onViewAll(){
         Bundle bundle = new Bundle();
-        bundle.putInt(ArticleParams.ARTICLE_TYPE, mType);
-        ((HomeActivity)getActivity()).updateNavigation();
-        ((HomeActivity)getActivity()).getHomePresenter().loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.LATEST_PRODUCTS);
+        IProductPresenter.updateBottomNavigation();
+        IProductPresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
     private void openFullView() {
         Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, String.valueOf(mProductPostItem.getId()));
         startActivity(intent);
+    }
+
+    @OnClick(R.id.product_bookmark)
+    void onBookMark(){
+        String id = String.valueOf(mProductPostItem.getId());
+        CurrentUser currentUser = mProductPostItem.getCurrent_user();
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                IProductPresenter.bookmark(id, ArticleParams.LATEST_PRODUCTS);
+            }
+            else {
+                IProductPresenter.unBookmark(id, ArticleParams.LATEST_PRODUCTS);
+            }
+        }
     }
 }

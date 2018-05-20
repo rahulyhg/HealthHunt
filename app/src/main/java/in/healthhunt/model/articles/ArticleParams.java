@@ -70,4 +70,7 @@ public interface ArticleParams {
 
     String POSITION = "position";
 
+    int ARTICLE = 100;
+    int PRODUCT = 200;
+    String POST_TYPE = "post_type";
 }

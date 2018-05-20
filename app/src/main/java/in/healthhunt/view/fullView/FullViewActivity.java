@@ -288,9 +288,10 @@ public class FullViewActivity extends BaseActivity implements IFullView {
     }
 
     private void shareArticle(){
+        ArticlePost articlePost = IFullPresenter.getArticle();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, articlePost.getLink());
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
     }

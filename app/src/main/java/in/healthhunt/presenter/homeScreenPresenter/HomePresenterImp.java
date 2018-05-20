@@ -24,4 +24,24 @@ public class HomePresenterImp implements IHomePresenter {
     public void loadFragment(String tag, Bundle bundle) {
         IHomeView.showFragment(tag, bundle);
     }
+
+    @Override
+    public int getCount() {
+        return 0;
+    }
+
+    @Override
+    public void bookmark(String id, int type) {
+
+    }
+
+    @Override
+    public void unBookmark(String id, int type) {
+
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+
+    }
 }

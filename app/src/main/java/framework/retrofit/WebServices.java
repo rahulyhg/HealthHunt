@@ -3,6 +3,7 @@ package framework.retrofit;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -18,7 +19,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
-import retrofit2.http.Url;
 
 
 public interface WebServices {
@@ -47,8 +47,11 @@ public interface WebServices {
  @GET("posts/{id}")
  Call<PostResponse> fetchFullArticle(@Path("id") String id);
 
- @POST
- Call<String> bookmark(@Url String url);
+ @POST("posts/{id}/save")
+ Call<BookMarkResponse> bookmark(@Path("id") String id);
+
+ @POST("posts/{id}/unsave")
+ Call<BookMarkResponse> unBookmark(@Path("id") String id);
 
 
     /*@Header("authToken") String token,*/

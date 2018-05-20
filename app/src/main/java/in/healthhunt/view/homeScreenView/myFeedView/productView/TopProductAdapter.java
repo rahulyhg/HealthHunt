@@ -18,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
@@ -52,7 +54,7 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return ITopProductPresenter.getProductCount();
+        return ITopProductPresenter.getCount();
     }
 
     public void setClickListener(ClickListener clickListener) {
@@ -146,6 +148,21 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onClick(View view) {
             if(mClickListener != null) {
                 mClickListener.ItemClicked(view, getAdapterPosition());
+            }
+        }
+
+        @OnClick(R.id.product_bookmark)
+        void onBookMark(){
+            ProductPostItem postsItem = ITopProductPresenter.getProduct(getAdapterPosition());
+            String id = String.valueOf(postsItem.getId());
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                if(!currentUser.isBookmarked()){
+                    ITopProductPresenter.bookmark(id, ArticleParams.TOP_PRODUCTS);
+                }
+                else {
+                    ITopProductPresenter.unBookmark(id, ArticleParams.TOP_PRODUCTS);
+                }
             }
         }
 

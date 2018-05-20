@@ -2,6 +2,7 @@ package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
@@ -64,7 +66,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public int getArticleCount() {
+    public int getCount() {
         List<ArticlePostItem> list = IMyFeedView.getTrendingArticles();
         int count = 0;
         if(list != null && !list.isEmpty()) {
@@ -84,7 +86,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void updateBookMark(String id, int type, boolean isBookMark) {
+    public void updateBookMark(BookMarkResponse markResponse) {
 
     }
 
@@ -96,6 +98,16 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     @Override
     public void hideProgress() {
 
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IMyFeedView.updateBottomNavigation();
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IMyFeedView.loadFragment(fragmentName, bundle);
     }
 
     @Override

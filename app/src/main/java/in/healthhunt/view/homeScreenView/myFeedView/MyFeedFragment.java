@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.IMyFeedPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.MyFeedPresenterImp;
@@ -66,7 +67,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         Log.i("TagFrag", "MyFeed Fragment");
         mFragmentManager = getFragmentManager();
         IHomeView.updateTitle(getString(R.string.my_feed));
-        setNavigation();
+        setBottomNavigation();
         setAdapter();
         return view;
     }
@@ -75,6 +76,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         mFeedAdapter = new MyFeedAdapter(IMyFeedPresenter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mFeedViewer.setLayoutManager(layoutManager);
+        mFeedViewer.setNestedScrollingEnabled(false);
         mFeedViewer.setAdapter(mFeedAdapter);
     }
 
@@ -197,13 +199,8 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
-    public void updateNavigation() {
-        IHomeView.updateNavigation();
-    }
-
-    @Override
-    public void setNavigation() {
-        IHomeView.setNavigation();
+    public void setBottomNavigation() {
+        IHomeView.setBottomNavigation();
     }
 
     @Override
@@ -257,14 +254,32 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
-    public void updateBookMark(String id, int type, boolean isBookMark) {
-        IMyFeedPresenter.updateBookMark(id, type, isBookMark);
+    public void updateBookMark(BookMarkResponse markResponse) {
+        IMyFeedPresenter.updateBookMark(markResponse);
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IHomeView.updateBottomNavigation();
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IHomeView.getHomePresenter().loadFragment(fragmentName, bundle);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mFeedViewer = null;
-        mFeedAdapter = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

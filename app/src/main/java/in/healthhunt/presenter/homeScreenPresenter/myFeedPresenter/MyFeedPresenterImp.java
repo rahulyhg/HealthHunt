@@ -14,6 +14,7 @@ import java.util.Set;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
@@ -193,17 +194,74 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
     }
 
     @Override
-    public void updateBookMark(String id, int type, boolean isBookMark) {
+    public void updateBookMark(BookMarkResponse markResponse) {
+        int type = markResponse.getData().getType();
         switch (type){
             case ArticleParams.BASED_ON_TAGS:
+
                 for(ArticlePostItem postItem : mTagArticles) {
-                    if(postItem.getId() == Integer.parseInt(id)) {
+                    if(postItem.getId() == markResponse.getData().getPostId()) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(isBookMark);
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
                         }
                     }
                 }
+                break;
+            case ArticleParams.TRENDING_ARTICLES:
+                for(ArticlePostItem postItem : mTrendingArticles) {
+                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                        }
+                    }
+                }
+                break;
+
+            case ArticleParams.SPONSORED_ARTICLES:
+                for(ArticlePostItem postItem : mSponsoredArticles) {
+                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                        }
+                    }
+                }
+                break;
+
+            case ArticleParams.LATEST_ARTICLES:
+                for(ArticlePostItem postItem : mLatestArticles) {
+                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                        }
+                    }
+                }
+                break;
+
+            case ArticleParams.TOP_PRODUCTS:
+                for(ProductPostItem postItem : mTopProduct) {
+                    if(postItem.getId().equals(markResponse.getData().getPostId())) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                        }
+                    }
+                }
+                break;
+
+            case ArticleParams.LATEST_PRODUCTS:
+                for(ProductPostItem postItem : mLatestProduct) {
+                    if(postItem.getId().equals(markResponse.getData().getPostId())) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                        }
+                    }
+                }
+                break;
         }
 
         IMyFeedView.updateAdapter();

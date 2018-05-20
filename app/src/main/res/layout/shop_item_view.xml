@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shop_article_item_view"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/ic_shop_card_bg">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="264dp"
+        android:gravity="center">
+
+        <FrameLayout
+            android:id="@+id/shop_article_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            >
+
+            <ImageView
+                android:id="@+id/shop_article_image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:src="@drawable/artical"
+                android:scaleType="centerCrop"
+                android:layout_margin="1dp"/>
+
+            <ImageView
+                android:id="@+id/shop_article_bookmark"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="top|right"
+                android:scaleType="center"
+                android:src="@mipmap/ic_bookmark" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/shop_article_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:gravity="left|center"
+            android:maxLines="5"
+            android:text="@string/lorem_ipsum"
+            android:textColor="@color/hh_edittext_text_color"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:layout_below="@id/shop_article_image_view"/>
+
+        <LinearLayout
+            android:id="@+id/shop_category_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:gravity="left|center">
+
+            <ImageView
+                android:id="@+id/shop_category_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:background="@mipmap/ic_exercise"
+                android:backgroundTint="@color/hh_blue_light" />
+
+            <TextView
+                android:id="@+id/shop_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@string/font_family_regular"
+                android:gravity="left|center"
+                android:text="Nutrition"
+                android:layout_gravity="left|center"
+                android:textColor="@color/hh_blue_light"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

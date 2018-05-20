@@ -1,18 +1,17 @@
 package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.view.homeScreenView.myFeedView.IView;
 
 /**
  * Created by abhishekkumar on 4/24/18.
  */
 
-public interface IArticleView {
+public interface IArticleView extends IView {
     Fragment getFragmentArticleItem(int position);
-    int getArticleCount();
     ArticlePostItem getArticle(int pos);
-    void updateBookMark(String id, int type, boolean isBookMark);
-    void showProgress();
-    void hideProgress();
+    void loadFragment(String fragmentName, Bundle bundle);
 }

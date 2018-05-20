@@ -15,29 +15,32 @@ import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.articleResponse.CategoriesItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.presenter.homeScreenPresenter.IInteractor;
+import in.healthhunt.presenter.homeScreenPresenter.InteractorImpl;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.IArticleView;
 
 /**
  * Created by abhishekkumar on 4/27/18.
  */
 
-public class ArticlePresenterImp implements IArticlePresenter, in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticleInteractor.OnFinishListener {
+public class ArticlePresenterImp implements IArticlePresenter, IInteractor.OnFinishListener {
 
     private IArticleView IArticleView;
     private Context mContext;
-    private IArticleInteractor IArticleInteractor;
+    private IInteractor IInteractor;
     public ArticlePresenterImp(Context context, IArticleView articleView) {
         mContext = context;
         IArticleView = articleView;
-        IArticleInteractor = new ArticleInteractorImpl();
+        IInteractor = new InteractorImpl();
     }
 
     @Override
     public int getCount() {
-        return IArticleView.getArticleCount();
+        return IArticleView.getCount();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class ArticlePresenterImp implements IArticlePresenter, in.healthhunt.pre
         bundle.putInt(ArticleParams.ARTICLE_TYPE, type);
         bundle.putInt(ArticleParams.POSITION, position);
 
-        int count = IArticleView.getArticleCount();
+        int count = IArticleView.getCount();
 
         if(position == 4 && position == count - 1) {
             bundle.putBoolean(ArticleParams.IS_LAST_PAGE, true);
@@ -62,17 +65,28 @@ public class ArticlePresenterImp implements IArticlePresenter, in.healthhunt.pre
     @Override
     public void bookmark(String id, int type) {
         IArticleView.showProgress();
-        IArticleInteractor.bookmark(mContext, id, type, this);
+        IInteractor.bookmark(mContext, id, type, this);
     }
 
     @Override
-    public void unBookmark(String id) {
-
+    public void unBookmark(String id, int type) {
+        IArticleView.showProgress();
+        IInteractor.unBookmark(mContext, id, type, this);
     }
 
     @Override
     public ArticlePostItem getArticle(int pos) {
         return IArticleView.getArticle(pos);
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IArticleView.updateBottomNavigation();
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IArticleView.loadFragment(fragmentName, bundle);
     }
 
     private Bundle createBundle(int pos) {
@@ -152,15 +166,19 @@ public class ArticlePresenterImp implements IArticlePresenter, in.healthhunt.pre
 }
 
     @Override
-    public void onBookMarkSuccess(String id, int type) {
+    public void onBookMarkSuccess(BookMarkResponse markResponse) {
         IArticleView.hideProgress();
-        IArticleView.updateBookMark(id, type, true);
+        IArticleView.updateBookMark(markResponse);
         Toast.makeText(mContext, "BookMark", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onError(RestError errorInfo) {
         IArticleView.hideProgress();
-        Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+        String msg = "Error";
+        if(errorInfo != null) {
+            msg = errorInfo.getMessage();
+        }
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
 }

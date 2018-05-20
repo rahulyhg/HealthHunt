@@ -18,11 +18,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.articleResponse.CategoriesItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
@@ -191,6 +193,21 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         void onClick(View view) {
             if(mClickListener != null) {
                 mClickListener.ItemClicked(view, getAdapterPosition());
+            }
+        }
+
+        @OnClick(R.id.article_bookmark)
+        void onBookMark(){
+            ArticlePostItem postsItem = IArticlePresenter.getArticle(getAdapterPosition());
+            String id = String.valueOf(postsItem.getId());
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                if(!currentUser.isBookmarked()){
+                    IArticlePresenter.bookmark(id, ArticleParams.TRENDING_ARTICLES);
+                }
+                else {
+                    IArticlePresenter.unBookmark(id, ArticleParams.TRENDING_ARTICLES);
+                }
             }
         }
     }

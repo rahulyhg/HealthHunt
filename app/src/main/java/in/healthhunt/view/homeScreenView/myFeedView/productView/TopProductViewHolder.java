@@ -2,6 +2,7 @@ package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -60,13 +62,33 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     }
 
     @Override
-    public int getProductCount() {
+    public int getCount() {
         List<ProductPostItem> list = IMyFeedView.getTopProductArticles();
         int count = 0;
         if(list != null && !list.isEmpty()) {
             count = list.size();
         }
         return count;
+    }
+
+    @Override
+    public void updateBookMark(BookMarkResponse markResponse) {
+        IMyFeedView.updateBookMark(markResponse);
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void updateBottomNavigation() {
+        IMyFeedView.updateBottomNavigation();
     }
 
 
@@ -83,6 +105,11 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     @Override
     public Fragment getFragmentArticleItem(int position) {
         return null;
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IMyFeedView.loadFragment(fragmentName, bundle);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,6 @@ import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
 import in.healthhunt.view.fullView.FullViewActivity;
-import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -141,8 +141,8 @@ public class ArticleFragment extends Fragment {
     void onViewAll(){
         Bundle bundle = new Bundle();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, mType);
-        ((HomeActivity)getActivity()).updateNavigation();
-        ((HomeActivity)getActivity()).getHomePresenter().loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
+        IArticlePresenter.updateBottomNavigation();
+        IArticlePresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
     private void openFullView() {
@@ -153,8 +153,19 @@ public class ArticleFragment extends Fragment {
 
     @OnClick(R.id.article_bookmark)
     void onBookMark(){
+        Log.i("TAGBOOK","On Bookmark Click");
         String id = String.valueOf(mArticlePostItem.getId());
-        IArticlePresenter.bookmark(id, mType);
+        CurrentUser currentUser = mArticlePostItem.getCurrent_user();
+        Log.i("TAGBOOK","currentUser " + currentUser);
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                Log.i("TAGBOOK","Bookmark");
+                IArticlePresenter.bookmark(id, mType);
+            }
+            else {
+                IArticlePresenter.unBookmark(id, mType);
+            }
+        }
     }
 
     private void setContent() {
@@ -204,7 +215,7 @@ public class ArticleFragment extends Fragment {
         List<TagsItem> tagItems = mArticlePostItem.getTags();
         if(tagItems != null && !tagItems.isEmpty()) {
             for(TagsItem  tagItem: tagItems) {
-               tagsName = "#" + tagItem.getName() + " ";
+                tagsName = "#" + tagItem.getName() + " ";
             }
         }
         mHashTags.setText(tagsName);

@@ -28,7 +28,7 @@ public class LatestProductAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return IProductPresenter.getProductCount();
+        return IProductPresenter.getCount();
     }
 
     /*@Override
