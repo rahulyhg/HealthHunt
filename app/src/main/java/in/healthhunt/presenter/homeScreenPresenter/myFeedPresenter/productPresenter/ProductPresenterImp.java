@@ -10,28 +10,28 @@ import java.util.List;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
-import in.healthhunt.presenter.homeScreenPresenter.IInteractor;
-import in.healthhunt.presenter.homeScreenPresenter.InteractorImpl;
+import in.healthhunt.presenter.homeScreenPresenter.BookMarkInteractorImpl;
+import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
 import in.healthhunt.view.homeScreenView.myFeedView.productView.IProductView;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ProductPresenterImp implements IProductPresenter, IInteractor.OnFinishListener {
+public class ProductPresenterImp implements IProductPresenter, IBookMarkInteractor.OnFinishListener {
 
     private String TAG = ProductPresenterImp.class.getSimpleName();
     private IProductView IProductView;
     private Context mContext;
-    private  IInteractor IInteractor;
+    private IBookMarkInteractor IInteractor;
 
     public ProductPresenterImp(Context context, IProductView latestProductView) {
         mContext = context;
         IProductView = latestProductView;
-        IInteractor = new InteractorImpl();
+        IInteractor = new BookMarkInteractorImpl();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ProductPresenterImp implements IProductPresenter, IInteractor.OnFin
     }
 
     @Override
-    public void onBookMarkSuccess(BookMarkResponse markResponse) {
+    public void onBookMarkSuccess(BookMarkData markResponse) {
         IProductView.hideProgress();
         IProductView.updateBookMark(markResponse);
         Toast.makeText(mContext, "BookMark", Toast.LENGTH_SHORT).show();

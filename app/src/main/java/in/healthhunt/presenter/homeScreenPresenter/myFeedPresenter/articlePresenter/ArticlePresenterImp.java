@@ -15,27 +15,27 @@ import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.articleResponse.CategoriesItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
-import in.healthhunt.presenter.homeScreenPresenter.IInteractor;
-import in.healthhunt.presenter.homeScreenPresenter.InteractorImpl;
+import in.healthhunt.presenter.homeScreenPresenter.BookMarkInteractorImpl;
+import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.IArticleView;
 
 /**
  * Created by abhishekkumar on 4/27/18.
  */
 
-public class ArticlePresenterImp implements IArticlePresenter, IInteractor.OnFinishListener {
+public class ArticlePresenterImp implements IArticlePresenter, IBookMarkInteractor.OnFinishListener {
 
     private IArticleView IArticleView;
     private Context mContext;
-    private IInteractor IInteractor;
+    private IBookMarkInteractor IInteractor;
     public ArticlePresenterImp(Context context, IArticleView articleView) {
         mContext = context;
         IArticleView = articleView;
-        IInteractor = new InteractorImpl();
+        IInteractor = new BookMarkInteractorImpl();
     }
 
     @Override
@@ -166,7 +166,7 @@ public class ArticlePresenterImp implements IArticlePresenter, IInteractor.OnFin
 }
 
     @Override
-    public void onBookMarkSuccess(BookMarkResponse markResponse) {
+    public void onBookMarkSuccess(BookMarkData markResponse) {
         IArticleView.hideProgress();
         IArticleView.updateBookMark(markResponse);
         Toast.makeText(mContext, "BookMark", Toast.LENGTH_SHORT).show();

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import butterknife.ButterKnife;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
@@ -94,7 +94,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
+    public void updateBookMark(BookMarkData markResponse) {
 
     }
 

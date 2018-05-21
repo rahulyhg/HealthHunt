@@ -14,7 +14,8 @@ import java.util.Set;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
@@ -25,7 +26,7 @@ import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.IMyFeedInteractor.OnArticleFinishListener, IMyFeedInteractor.OnProductFinishListener{
+public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.OnArticleFinishListener, IMyFeedInteractor.OnProductFinishListener{
 
     private String TAG = MyFeedPresenterImp.class.getSimpleName();
     private IMyFeedView IMyFeedView;
@@ -194,26 +195,36 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
-        int type = markResponse.getData().getType();
+    public void updateBookMark(BookMarkData markResponse) {
+        BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
+
+
+        if(bookMarkInfo == null){
+            Log.i("TAG", " Book Mark info is null");
+            return;
+        }
+
+        int type = bookMarkInfo.getType();
+
+        Log.i("TAGBOOKMA", "type " +type);
         switch (type){
             case ArticleParams.BASED_ON_TAGS:
 
                 for(ArticlePostItem postItem : mTagArticles) {
-                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }
                 break;
             case ArticleParams.TRENDING_ARTICLES:
                 for(ArticlePostItem postItem : mTrendingArticles) {
-                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }
@@ -221,10 +232,10 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
 
             case ArticleParams.SPONSORED_ARTICLES:
                 for(ArticlePostItem postItem : mSponsoredArticles) {
-                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }
@@ -232,10 +243,10 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
 
             case ArticleParams.LATEST_ARTICLES:
                 for(ArticlePostItem postItem : mLatestArticles) {
-                    if(postItem.getId() == markResponse.getData().getPostId()) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }
@@ -243,10 +254,10 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
 
             case ArticleParams.TOP_PRODUCTS:
                 for(ProductPostItem postItem : mTopProduct) {
-                    if(postItem.getId().equals(markResponse.getData().getPostId())) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }
@@ -254,10 +265,10 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, in.healthhunt.prese
 
             case ArticleParams.LATEST_PRODUCTS:
                 for(ProductPostItem postItem : mLatestProduct) {
-                    if(postItem.getId().equals(markResponse.getData().getPostId())) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
-                            currentUser.setBookmarked(markResponse.getData().isBookMark());
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
                         }
                     }
                 }

@@ -5,12 +5,13 @@ import android.content.Context;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public interface IFullInteractor {
+public interface IFullInteractor extends IBookMarkInteractor{
 
     interface OnFinishListener {
         void onArticleSuccess(ArticlePost item);

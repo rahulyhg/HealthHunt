@@ -8,9 +8,11 @@ import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
@@ -70,11 +72,16 @@ public class WebServicesWrapper {
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder request = chain.request().newBuilder();
 
+
                 Log.i("TAGHHHHHH", " hjh " + request.build().url());
+                //Log.i("TAGHHHHHH", " TAG " + request.get().head().build().url());
                 String timeStamp = HealthHuntUtility.getUTCTimeStamp();
 
                 String url = request.build().url().toString();
-                String requestUrl = authUrl + url.substring(url.lastIndexOf("/") + 1, url.length());
+
+                String requestUrl = url.substring(url.indexOf(authUrl));
+
+                Log.i("TAGHHHHHH", " EndPoint " + requestUrl);
 
                 String authCode = requestUrl + privateKey + timeStamp;
                 String md5 = HealthHuntUtility.getMD5(authCode);
@@ -91,7 +98,11 @@ public class WebServicesWrapper {
                 Log.i("TAG123", "Auth URL " + requestUrl);
                 Log.i("TAG123", "URL " + request.build().url().toString());
 
-
+                String session_token = HealthHuntPreference.getString(mContext, Constants.SESSION_TOKEN);
+                if(session_token != null) {
+                    request.addHeader(Constants.SESSION_TOKEN, session_token);
+                    Log.i("TAG123", "response session token " + session_token);
+                }
 
                 Response response = chain.proceed(request.build());
 
@@ -101,11 +112,6 @@ public class WebServicesWrapper {
                 Log.i("TAG123", "Context = " +mContext);
 
                 //Context context = application.getApplicationContext();
-                String session_token = HealthHuntPreference.getString(mContext, Constants.SESSION_TOKEN);
-                if(session_token != null) {
-                    request.addHeader(Constants.SESSION_TOKEN, session_token);
-                    Log.i("TAG123", "response session token " + session_token);
-                }
                 //}
                 //response.
 
@@ -228,9 +234,12 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<BookMarkResponse> bookmark(String id, ResponseResolver<BookMarkResponse> responseResponseResolver) {
+    public Call<List<BookMarkResponse>> bookmark(String id, ResponseResolver<List<BookMarkResponse>> responseResponseResolver) {
 
-        Call<BookMarkResponse> loginResponseCall = webServices.bookmark(id);
+        Log.i("TAGBookmark", "Bookmark");
+
+        Call<List<BookMarkResponse>> loginResponseCall = webServices.bookmark(id);
+
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -238,9 +247,9 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<BookMarkResponse> unBookmark(String id, ResponseResolver<BookMarkResponse> responseResponseResolver) {
+    public Call<BookMarkData> unBookmark(String id, ResponseResolver<BookMarkData> responseResponseResolver) {
 
-        Call<BookMarkResponse> loginResponseCall = webServices.unBookmark(id);
+        Call<BookMarkData> loginResponseCall = webServices.unBookmark(id);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

@@ -61,7 +61,7 @@ public class Data {
 	@Override
  	public String toString(){
 		return 
-			"Data{" + 
+			"BookMarkData{" +
 			"total = '" + total + '\'' + 
 			",offset = '" + offset + '\'' + 
 			",limit = '" + limit + '\'' + 

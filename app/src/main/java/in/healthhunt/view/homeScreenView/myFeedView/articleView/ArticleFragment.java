@@ -3,7 +3,6 @@ package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -148,6 +147,7 @@ public class ArticleFragment extends Fragment {
     private void openFullView() {
         Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, String.valueOf(mArticlePostItem.getId()));
+        intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
         startActivity(intent);
     }
 
@@ -253,12 +253,12 @@ public class ArticleFragment extends Fragment {
     }
 
     private void updateBookMark(boolean isBookMark) {
+        Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
         if(!isBookMark){
             mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
         }
         else {
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.mipmap.ic_bookmark);
-            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_green_light2), PorterDuff.Mode.SRC_ATOP);
+            mArticleBookMark.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
         }
     }
 }

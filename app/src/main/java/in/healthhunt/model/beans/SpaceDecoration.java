@@ -52,9 +52,9 @@ public class SpaceDecoration extends RecyclerView.ItemDecoration {
                 outRect.top = 0;
               }
 
-              if (position < itemCount - 2) {
+             /* if (position < itemCount - 2) {
                 outRect.bottom = position / cols == rows - 1 ? spacing : 0;
-              } else {
+              } else*/ {
                 outRect.bottom = 0;
               }
               break;

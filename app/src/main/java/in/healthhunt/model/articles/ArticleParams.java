@@ -73,4 +73,9 @@ public interface ArticleParams {
     int ARTICLE = 100;
     int PRODUCT = 200;
     String POST_TYPE = "post_type";
+
+    int SAVED = 1000;
+    int APPROVED = 2000;
+    int RECEIVED = 3000;
+    int DOWNLOADED = 4000;
 }

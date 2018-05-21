@@ -6,6 +6,7 @@ import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
 import retrofit2.Response;
 
 /**
@@ -31,6 +32,16 @@ public class FullInteractorImpl implements IFullInteractor {
 
     @Override
     public void fetchFullProduct(Context context, String id, OnFinishListener finishListener) {
+
+    }
+
+    @Override
+    public void bookmark(Context context, String id, int type, IBookMarkInteractor.OnFinishListener finishListener) {
+
+    }
+
+    @Override
+    public void unBookmark(Context context, String id, int type, IBookMarkInteractor.OnFinishListener finishListener) {
 
     }
 }

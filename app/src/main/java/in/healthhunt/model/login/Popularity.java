@@ -2,8 +2,8 @@ package in.healthhunt.model.login;
 
 public class Popularity{
 	private int hays;
-	private int profileViews;
-	private int observedPosts;
+	private int profile_views;
+	private int observed_posts;
 	private int nays;
 	private int likes;
 
@@ -15,20 +15,20 @@ public class Popularity{
 		return hays;
 	}
 
-	public void setProfileViews(int profileViews){
-		this.profileViews = profileViews;
+	public void setProfile_views(int profile_views){
+		this.profile_views = profile_views;
 	}
 
-	public int getProfileViews(){
-		return profileViews;
+	public int getProfile_views(){
+		return profile_views;
 	}
 
-	public void setObservedPosts(int observedPosts){
-		this.observedPosts = observedPosts;
+	public void setObserved_posts(int observed_posts){
+		this.observed_posts = observed_posts;
 	}
 
-	public int getObservedPosts(){
-		return observedPosts;
+	public int getObserved_posts(){
+		return observed_posts;
 	}
 
 	public void setNays(int nays){
@@ -52,8 +52,8 @@ public class Popularity{
 		return 
 			"Popularity{" + 
 			"hays = '" + hays + '\'' + 
-			",profile_views = '" + profileViews + '\'' + 
-			",observed_posts = '" + observedPosts + '\'' + 
+			",profile_views = '" + profile_views + '\'' +
+			",observed_posts = '" + observed_posts + '\'' +
 			",nays = '" + nays + '\'' + 
 			",likes = '" + likes + '\'' + 
 			"}";

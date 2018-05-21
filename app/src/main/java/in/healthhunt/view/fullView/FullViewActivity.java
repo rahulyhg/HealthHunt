@@ -2,13 +2,16 @@ package in.healthhunt.view.fullView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import in.healthhunt.model.articles.articleResponse.Content;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -91,19 +95,27 @@ public class FullViewActivity extends BaseActivity implements IFullView {
     @BindView(R.id.full_article_download)
     ImageView mDownloadView;
 
+    @BindView(R.id.full_article_bookmark)
+    ImageView mBookMark;
+
     @BindView(R.id.full_view)
     LinearLayout mFullView;
 
     private IFullPresenter IFullPresenter;
+    private int mPostType;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_article_view_item);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         ButterKnife.bind(this);
         IFullPresenter = new FullPresenterImp(getApplicationContext(), this);
         String id = getIntent().getStringExtra(ArticleParams.ID);
+        mPostType = getIntent().getIntExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
         Log.i("TagFull", "Id = " + id);
         IFullPresenter.fetchArticle(id);
 
@@ -128,6 +140,28 @@ public class FullViewActivity extends BaseActivity implements IFullView {
             setArticleContent(articlePost);
             setAboutContent(articlePost);
             setCommentContent(articlePost);
+        }
+    }
+
+    @Override
+    public int getPostType() {
+        return mPostType;
+    }
+
+    @Override
+    public void updateBookMarkIcon() {
+        CurrentUser currentUser = null;
+
+        if(mPostType == ArticleParams.ARTICLE) {
+            ArticlePost articlePost = IFullPresenter.getArticle();
+            currentUser = articlePost.getCurrent_user();
+        }
+        else {
+
+        }
+
+        if(currentUser != null) {
+            updateBookMark(currentUser.isBookmarked());
         }
     }
 
@@ -225,6 +259,11 @@ public class FullViewActivity extends BaseActivity implements IFullView {
 
         mReadTime.setText(readTime);
 
+        CurrentUser currentUser = articlePost.getCurrent_user();
+        if(currentUser != null) {
+            updateBookMark(currentUser.isBookmarked());
+        }
+
         int count = articlePost.getShare_count();
         mCount.setText(String.valueOf(count));
 
@@ -294,5 +333,15 @@ public class FullViewActivity extends BaseActivity implements IFullView {
         sendIntent.putExtra(Intent.EXTRA_TEXT, articlePost.getLink());
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
+    }
+
+    private void updateBookMark(boolean isBookMark) {
+        Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
+        if(!isBookMark){
+            mBookMark.setImageResource(R.mipmap.ic_bookmark_full_view);
+        }
+        else {
+            mBookMark.setColorFilter(ContextCompat.getColor(this, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+        }
     }
 }

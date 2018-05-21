@@ -2,6 +2,7 @@ package in.healthhunt.presenter.viewAllPresenter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
@@ -13,8 +14,13 @@ import java.util.Set;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.presenter.homeScreenPresenter.BookMarkInteractorImpl;
+import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
 import in.healthhunt.presenter.preference.HealthHuntPreference;
 import in.healthhunt.view.viewAll.IViewAll;
 
@@ -22,7 +28,7 @@ import in.healthhunt.view.viewAll.IViewAll;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ViewAllPresenterImp implements IViewAllPresenter, in.healthhunt.presenter.viewAllPresenter.IViewAllInteractor.OnFinishListener {
+public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteractor.OnFinishListener, IBookMarkInteractor.OnFinishListener {
 
     private String TAG = ViewAllPresenterImp.class.getSimpleName();
     private IViewAll IViewAll;
@@ -30,11 +36,13 @@ public class ViewAllPresenterImp implements IViewAllPresenter, in.healthhunt.pre
     private IViewAllInteractor IViewAllInteractor;
     private List<ArticlePostItem> mArticlePosts;
     private List<ProductPostItem> mProductPosts;
+    private IBookMarkInteractor IBookMarkInteractor;
 
     public ViewAllPresenterImp(Context context, IViewAll viewAll) {
         mContext =  context;
         IViewAll = viewAll;
         IViewAllInteractor = new ViewAllInteractorImpl();
+        IBookMarkInteractor = new BookMarkInteractorImpl();
     }
 
     @Override
@@ -109,6 +117,18 @@ public class ViewAllPresenterImp implements IViewAllPresenter, in.healthhunt.pre
     }
 
     @Override
+    public void bookmark(String id) {
+        IViewAll.showProgress();
+        IBookMarkInteractor.bookmark(mContext, id, IViewAll.getType(), this);
+    }
+
+    @Override
+    public void unBookmark(String id) {
+        IViewAll.showProgress();
+        IBookMarkInteractor.unBookmark(mContext, id, IViewAll.getType(), this);
+    }
+
+    @Override
     public List<ArticlePostItem> getAllArticles() {
         return mArticlePosts;
     }
@@ -148,6 +168,46 @@ public class ViewAllPresenterImp implements IViewAllPresenter, in.healthhunt.pre
     public void onProductSuccess(List<ProductPostItem> items) {
         IViewAll.hideProgress();
         mProductPosts = items;
+        IViewAll.updateAdapter();
+    }
+
+    @Override
+    public void onBookMarkSuccess(BookMarkData markResponse) {
+        IViewAll.hideProgress();
+        BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
+
+        if(bookMarkInfo == null){
+            Log.i("TAG", " Book Mark info is null");
+            return;
+        }
+
+        int type = bookMarkInfo.getType();
+        switch (type){
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:
+
+                for(ArticlePostItem postItem : mArticlePosts) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                        }
+                    }
+                }
+                break;
+
+            case ArticleParams.LATEST_PRODUCTS:
+                for(ProductPostItem postItem : mProductPosts) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
+                        CurrentUser currentUser = postItem.getCurrent_user();
+                        if (currentUser != null) {
+                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                        }
+                    }
+                }
+                break;
+        }
+
         IViewAll.updateAdapter();
     }
 

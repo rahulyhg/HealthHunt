@@ -12,7 +12,7 @@ import in.healthhunt.model.articles.productResponse.ProductPostItem;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public interface IViewAllPresenter {
+public interface IViewAllPresenter{
     int getCount(int type);
     RecyclerView.ViewHolder createViewHolder(View view);
     List<ArticlePostItem> getAllArticles();
@@ -21,4 +21,6 @@ public interface IViewAllPresenter {
     ProductPostItem getProduct(int pos);
     void fetchAll(int type);
     int getView();
+    void bookmark(String id);
+    void unBookmark(String id);
 }

@@ -97,4 +97,14 @@
     <string name="healthhunt_shop">Healthhunt shop</string>
     <string name="filter">Filter</string>
 
+
+    <!-- my hunts -->
+    <string name="saved">Saved</string>
+    <string name="approved">Approved</string>
+    <string name="received">Received</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="articles">Articles</string>
+    <string name="videos">Videos</string>
+    <string name="questions">Questions</string>
+
 </resources>

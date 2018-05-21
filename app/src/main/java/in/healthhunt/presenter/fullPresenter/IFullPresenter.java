@@ -14,4 +14,7 @@ public interface IFullPresenter {
     void fetchArticle(String id);
     ArticlePost getArticle();
     ProductPostItem getProduct();
+    void bookmark(String id);
+    void unBookmark(String id);
 }
+

@@ -1,5 +1,6 @@
 package in.healthhunt.view.homeScreenView.shopView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,11 +21,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.ShopPresenterImp;
+import in.healthhunt.view.fullView.FullViewActivity;
 
 /**
  * Created by abhishekkumar on 5/19/18.
@@ -35,7 +38,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     private IShopPresenter IShopPresenter;
     private Unbinder mUnbinder;
 
-    @BindView(R.id.shop_recycler_view)
+    @BindView(R.id.recycler_view)
     RecyclerView mShopViewer;
 
     @BindView(R.id.suggestion_header)
@@ -55,7 +58,6 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @BindView(R.id.suggestion_view)
     LinearLayout mSuggestionView;
-
 
 
     @Override
@@ -79,7 +81,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
+    public void updateBookMark(BookMarkData markResponse) {
 
     }
 
@@ -129,7 +131,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
         params.setMargins(params.getMarginStart(),margin, params.getMarginEnd(), params.bottomMargin - margin);
         mFilterButton.setLayoutParams(params);
         mFilterView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.hh_green_light2));
-        mShopViewer.setPadding(mShopViewer.getPaddingLeft(), HealthHuntUtility.dpToPx(16, getContext()), mShopViewer.getPaddingRight(), mShopViewer.getPaddingBottom());
+        //mShopViewer.setPadding(mShopViewer.getPaddingLeft(), HealthHuntUtility.dpToPx(16, getContext()), mShopViewer.getPaddingRight(), mShopViewer.getPaddingBottom());
     }
 
     @OnClick(R.id.filter_view)
@@ -148,6 +150,12 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void ItemClicked(View v, int position) {
-
+       // ArticlePostItem postsItem = IShopPresenter.getArticle(position);
+        //if(postsItem != null) {
+            Intent intent = new Intent(getContext(), FullViewActivity.class);
+            intent.putExtra(ArticleParams.ID, "");
+            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+            getContext().startActivity(intent);
+       // }
     }
 }

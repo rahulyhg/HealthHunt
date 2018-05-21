@@ -1,8 +1,10 @@
 package framework.retrofit;
 
+import java.util.List;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductResponse;
@@ -48,10 +50,10 @@ public interface WebServices {
  Call<PostResponse> fetchFullArticle(@Path("id") String id);
 
  @POST("posts/{id}/save")
- Call<BookMarkResponse> bookmark(@Path("id") String id);
+ Call<List<BookMarkResponse>>bookmark(@Path("id") String id);
 
  @POST("posts/{id}/unsave")
- Call<BookMarkResponse> unBookmark(@Path("id") String id);
+ Call<BookMarkData> unBookmark(@Path("id") String id);
 
 
     /*@Header("authToken") String token,*/

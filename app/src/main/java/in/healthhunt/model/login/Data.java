@@ -21,7 +21,7 @@ public class Data<T>{
 	@Override
  	public String toString(){
 		return 
-			"Data{" + 
+			"BookMarkData{" +
 			"user = '" + data + '\'' +
 			"}";
 		}

@@ -3,12 +3,12 @@ package in.healthhunt.model.login;
 import java.util.List;
 
 public class User{
-	private int userStatus;
+	private int user_status;
 	private String gender;
-	private Object userImage;
+	private Object user_image;
 	private List<String> roles;
 	private String link;
-	private String lastName;
+	private String last_name;
 	private String description;
 	private String url;
 	private Collections collections;
@@ -16,19 +16,19 @@ public class User{
 	private String name;
 	private String nickname;
 	private int id;
-	private String userActivationKey;
-	private String registeredDate;
-	private String firstName;
+	private String user_activation_key;
+	private String registered_date;
+	private String first_name;
 	private String email;
 	private String slug;
 	private String username;
 
-	public void setUserStatus(int userStatus){
-		this.userStatus = userStatus;
+	public void setUser_status(int user_status){
+		this.user_status = user_status;
 	}
 
-	public int getUserStatus(){
-		return userStatus;
+	public int getUser_status(){
+		return user_status;
 	}
 
 	public void setGender(String gender){
@@ -39,12 +39,12 @@ public class User{
 		return gender;
 	}
 
-	public void setUserImage(Object userImage){
-		this.userImage = userImage;
+	public void setUser_image(Object user_image){
+		this.user_image = user_image;
 	}
 
-	public Object getUserImage(){
-		return userImage;
+	public Object getUser_image(){
+		return user_image;
 	}
 
 	public void setRoles(List<String> roles){
@@ -63,12 +63,12 @@ public class User{
 		return link;
 	}
 
-	public void setLastName(String lastName){
-		this.lastName = lastName;
+	public void setLast_name(String last_name){
+		this.last_name = last_name;
 	}
 
-	public String getLastName(){
-		return lastName;
+	public String getLast_name(){
+		return last_name;
 	}
 
 	public void setDescription(String description){
@@ -127,28 +127,28 @@ public class User{
 		return id;
 	}
 
-	public void setUserActivationKey(String userActivationKey){
-		this.userActivationKey = userActivationKey;
+	public void setUser_activation_key(String user_activation_key){
+		this.user_activation_key = user_activation_key;
 	}
 
-	public String getUserActivationKey(){
-		return userActivationKey;
+	public String getUser_activation_key(){
+		return user_activation_key;
 	}
 
-	public void setRegisteredDate(String registeredDate){
-		this.registeredDate = registeredDate;
+	public void setRegistered_date(String registered_date){
+		this.registered_date = registered_date;
 	}
 
-	public String getRegisteredDate(){
-		return registeredDate;
+	public String getRegistered_date(){
+		return registered_date;
 	}
 
-	public void setFirstName(String firstName){
-		this.firstName = firstName;
+	public void setFirst_name(String first_name){
+		this.first_name = first_name;
 	}
 
-	public String getFirstName(){
-		return firstName;
+	public String getFirst_name(){
+		return first_name;
 	}
 
 	public void setEmail(String email){
@@ -179,12 +179,12 @@ public class User{
  	public String toString(){
 		return 
 			"User{" + 
-			"user_status = '" + userStatus + '\'' + 
+			"user_status = '" + user_status + '\'' +
 			",gender = '" + gender + '\'' + 
-			",user_image = '" + userImage + '\'' + 
+			",user_image = '" + user_image + '\'' +
 			",roles = '" + roles + '\'' + 
 			",link = '" + link + '\'' + 
-			",last_name = '" + lastName + '\'' + 
+			",last_name = '" + last_name + '\'' +
 			",description = '" + description + '\'' + 
 			",url = '" + url + '\'' + 
 			",collections = '" + collections + '\'' + 
@@ -192,9 +192,9 @@ public class User{
 			",name = '" + name + '\'' + 
 			",nickname = '" + nickname + '\'' + 
 			",id = '" + id + '\'' + 
-			",user_activation_key = '" + userActivationKey + '\'' + 
-			",registered_date = '" + registeredDate + '\'' + 
-			",first_name = '" + firstName + '\'' + 
+			",user_activation_key = '" + user_activation_key + '\'' +
+			",registered_date = '" + registered_date + '\'' +
+			",first_name = '" + first_name + '\'' +
 			",email = '" + email + '\'' + 
 			",slug = '" + slug + '\'' + 
 			",username = '" + username + '\'' + 

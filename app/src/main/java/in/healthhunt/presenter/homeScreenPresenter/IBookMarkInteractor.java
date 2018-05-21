@@ -3,16 +3,16 @@ package in.healthhunt.presenter.homeScreenPresenter;
 import android.content.Context;
 
 import framework.retrofit.RestError;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public interface IInteractor {
+public interface IBookMarkInteractor {
 
     interface OnFinishListener {
-        void onBookMarkSuccess(BookMarkResponse markResponse);
+        void onBookMarkSuccess(BookMarkData markResponse);
         void onError(RestError errorInfo);
     }
 

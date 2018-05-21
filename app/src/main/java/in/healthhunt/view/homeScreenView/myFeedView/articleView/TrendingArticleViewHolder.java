@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
@@ -86,8 +86,8 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
-
+    public void updateBookMark(BookMarkData markResponse) {
+        IMyFeedView.updateBookMark(markResponse);
     }
 
     @Override
@@ -116,6 +116,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
         if(postsItem != null) {
             Intent intent = new Intent(mContext, FullViewActivity.class);
             intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
             mContext.startActivity(intent);
         }
     }

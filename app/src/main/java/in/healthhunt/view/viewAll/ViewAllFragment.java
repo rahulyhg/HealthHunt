@@ -94,10 +94,10 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         switch (mType){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
-                viewHolder = new ViewAllArticleHolder(view, this);
+                viewHolder = new ViewAllArticleHolder(view, this, IViewAllPresenter);
                 break;
             case ArticleParams.LATEST_PRODUCTS:
-                viewHolder = new ViewAllProductHolder(view, this);
+                viewHolder = new ViewAllProductHolder(view, this, IViewAllPresenter);
                 break;
         }
         return viewHolder;
@@ -136,6 +136,12 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         return layout;
         }
 
+    @Override
+    public int getType() {
+        return mType;
+    }
+
+
     private String getArticleName() {
         String name = "";
         switch (mType) {
@@ -156,19 +162,23 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     @Override
     public void ItemClicked(View v, int position) {
         String id = null;
+        int postType = ArticleParams.ARTICLE;
         switch (mType){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
                 id = String.valueOf(IViewAllPresenter.getArticle(position).getId());
+                postType = ArticleParams.ARTICLE;
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
                 id = String.valueOf(IViewAllPresenter.getProduct(position).getId());
+                postType = ArticleParams.PRODUCT;
                 break;
         }
 
         Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, id);
+        intent.putExtra(ArticleParams.POST_TYPE, postType);
         startActivity(intent);
     }
 }

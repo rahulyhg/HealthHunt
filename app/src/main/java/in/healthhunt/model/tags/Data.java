@@ -34,7 +34,7 @@ public class Data{
 	@Override
  	public String toString(){
 		return 
-			"Data{" + 
+			"BookMarkData{" +
 			"offset = '" + offset + '\'' + 
 			",limit = '" + limit + '\'' + 
 			",tags = '" + tags + '\'' + 

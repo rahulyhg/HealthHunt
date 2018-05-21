@@ -1,41 +1,47 @@
 package in.healthhunt.model.articles.bookmarkResponse;
 
-public class BookMarkResponse{
-	private Data data;
-	private String message;
-	private boolean status;
+import com.google.gson.annotations.SerializedName;
 
-	public void setData(Data data){
+import java.util.List;
+
+public class BookMarkResponse{
+	private List<Object> headers;
+
+	@SerializedName("data")
+	private BookMarkData data;
+	private int status;
+
+	public void setHeaders(List<Object> headers){
+		this.headers = headers;
+	}
+
+	public List<Object> getHeaders(){
+		return headers;
+	}
+
+	public void setData(BookMarkData data){
 		this.data = data;
 	}
 
-	public Data getData(){
+	public BookMarkData getData(){
 		return data;
 	}
 
-	public void setMessage(String message){
-		this.message = message;
-	}
-
-	public String getMessage(){
-		return message;
-	}
-
-	public void setStatus(boolean status){
+	public void setStatus(int status){
 		this.status = status;
 	}
 
-	public boolean isStatus(){
+	public int getStatus(){
 		return status;
 	}
 
 	@Override
- 	public String toString(){
-		return 
-			"BookMarkResponse{" + 
-			"data = '" + data + '\'' + 
-			",message = '" + message + '\'' + 
-			",status = '" + status + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"BookMarkResponse{" +
+						"headers = '" + headers + '\'' +
+						",data = '" + data + '\'' +
+						",status = '" + status + '\'' +
+						"}";
+	}
 }

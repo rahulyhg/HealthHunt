@@ -1,6 +1,8 @@
 package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,6 +119,16 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             holder.mHashTags.setText(tagsName);
+
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                if(!currentUser.isBookmarked()){
+                    holder.mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
+                }
+                else {
+                    holder.mArticleBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+                }
+            }
 
 
             String readingTime = postsItem.getRead_time();

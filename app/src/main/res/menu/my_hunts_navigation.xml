@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_saved"
+        android:icon="@mipmap/ic_my_hunts_bookmark"
+        android:title="@string/saved"
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
+
+    <item
+        android:id="@+id/navigation_approved"
+        android:icon="@mipmap/ic_approved"
+        android:title="@string/approved"
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
+
+    <item
+        android:id="@+id/navigation_received"
+        android:icon="@mipmap/ic_received"
+        android:title="@string/received"
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
+
+    <item
+        android:id="@+id/navigation_downloaded"
+        android:icon="@mipmap/ic_downloaded"
+        android:title="@string/downloaded"
+        app:showAsAction="always|withText"
+        android:checkable="false"/>
+
+</menu>

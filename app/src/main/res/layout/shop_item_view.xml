@@ -3,7 +3,7 @@
     android:id="@+id/shop_article_item_view"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@mipmap/ic_shop_card_bg">
+    android:background="@mipmap/ic_my_hunts_card_bg">
 
 
     <RelativeLayout

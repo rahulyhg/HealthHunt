@@ -15,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -72,7 +72,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
+    public void updateBookMark(BookMarkData markResponse) {
         IMyFeedView.updateBookMark(markResponse);
     }
 
@@ -118,6 +118,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
         if(postsItem != null) {
             Intent intent = new Intent(mContext, FullViewActivity.class);
             intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
             mContext.startActivity(intent);
         }
     }

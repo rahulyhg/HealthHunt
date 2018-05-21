@@ -2,10 +2,12 @@ package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +123,11 @@ public class LatestProductFragment extends Fragment {
             mProductUnit.setText(postUnit);
         }
 
+        CurrentUser currentUser = mProductPostItem.getCurrent_user();
+        if(currentUser != null) {
+            updateBookMark(currentUser.isBookmarked());
+        }
+
 
         String articleUrl = null;
         List<MediaItem> mediaItems = mProductPostItem.getMedia();
@@ -160,6 +167,7 @@ public class LatestProductFragment extends Fragment {
     private void openFullView() {
         Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, String.valueOf(mProductPostItem.getId()));
+        intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
         startActivity(intent);
     }
 
@@ -174,6 +182,16 @@ public class LatestProductFragment extends Fragment {
             else {
                 IProductPresenter.unBookmark(id, ArticleParams.LATEST_PRODUCTS);
             }
+        }
+    }
+
+    private void updateBookMark(boolean isBookMark) {
+        Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
+        if(!isBookMark){
+            mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
+        }
+        else {
+            mProductBookMark.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
         }
     }
 }

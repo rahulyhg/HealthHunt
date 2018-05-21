@@ -18,7 +18,7 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
@@ -91,8 +91,9 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
+    public void updateBookMark(BookMarkData markResponse) {
         IMyFeedView.updateBookMark(markResponse);
+        mArticleAdapter.notifyDataSetChanged();
     }
 
     @Override

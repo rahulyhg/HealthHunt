@@ -1,6 +1,8 @@
 package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -96,6 +98,16 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Log.i("TAGPRODU", "type " + brandName);
             if(brandName != null) {
                 holder.mProductType.setText(brandName);
+            }
+
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                    if(!currentUser.isBookmarked()){
+                        holder.mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
+                    }
+                    else {
+                        holder.mProductBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+                    }
             }
 
             String price = postsItem.getPost_price();

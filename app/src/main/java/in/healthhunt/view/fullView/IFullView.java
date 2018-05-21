@@ -8,4 +8,6 @@ public interface IFullView {
     void showProgress();
     void hideProgress();
     void setContent();
+    int getPostType();
+    void updateBookMarkIcon();
 }

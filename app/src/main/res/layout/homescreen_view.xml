@@ -56,7 +56,7 @@
         android:background="@android:color/white"
         app:itemIconTint="@color/bottm_nav_bg"
         app:itemTextColor="@color/bottm_nav_bg"
-        app:menu="@menu/navigation"
+        app:menu="@menu/home_navigation"
         app:elevation="20dp"
         app:itemBackground="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"/>

@@ -13,4 +13,5 @@ public interface IViewAll {
     void hideProgress();
     void updateAdapter();
     int getViewLayout();
+    int getType();
 }

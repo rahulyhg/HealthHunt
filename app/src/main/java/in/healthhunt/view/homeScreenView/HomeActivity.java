@@ -34,6 +34,7 @@ import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.homeScreenView.myFeedView.MyFeedFragment;
+import in.healthhunt.view.homeScreenView.myHuntsView.MyHuntFragment;
 import in.healthhunt.view.homeScreenView.shopView.ShopFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 
@@ -112,7 +113,13 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 else if(item.getItemId() == R.id.navigation_my_hunts) {
                     mCurrentItem = 1;
                     updateTitle(getString(R.string.my_hunts));
-                    //IHomePresenter.loadFragment(MyFeedFragment.class.getSimpleName(), null);
+                    Fragment fragment = mFragment[mCurrentItem];
+                    if(fragment == null){
+                        IHomePresenter.loadFragment(MyHuntFragment.class.getSimpleName(), null);
+                    }
+                    else {
+                        updateFragVisible(mCurrentItem);
+                    }
                 }
                 else if(item.getItemId() == R.id.navigation_watch) {
                     mCurrentItem = 2;
@@ -186,6 +193,12 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 if (fragment == null) {
                     fragment = new ViewAllFragment();
                 }
+            } else if (tag.equals(MyHuntFragment.class.getSimpleName())) {
+                layout = R.id.my_hunt_frame;
+                if (fragment == null) {
+                    fragment = new MyHuntFragment();
+                }
+                mFragment[1] = fragment;
             } else if (tag.equals(ShopFragment.class.getSimpleName())) {
                 layout = R.id.shop_frame;
                 if (fragment == null) {

@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
@@ -86,7 +86,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public void updateBookMark(BookMarkResponse markResponse) {
+    public void updateBookMark(BookMarkData markResponse) {
         IMyFeedView.updateBookMark(markResponse);
     }
 

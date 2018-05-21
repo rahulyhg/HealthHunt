@@ -1,15 +1,20 @@
-package in.healthhunt.model.login;
+package in.healthhunt.model.articles.bookmarkResponse;
 
-public class HealthHuntResponse{
-	private Data data;
+import com.google.gson.annotations.SerializedName;
+
+public class BookMarkData {
+
+	@SerializedName("data")
+	private BookMarkInfo data;
+
 	private String message;
 	private boolean status;
 
-	public void setData(Data data){
+	public void setBookMarkInfo(BookMarkInfo data){
 		this.data = data;
 	}
 
-	public Data getData(){
+	public BookMarkInfo getBookMarkInfo(){
 		return data;
 	}
 
@@ -32,7 +37,7 @@ public class HealthHuntResponse{
 	@Override
  	public String toString(){
 		return 
-			"HealthHuntResponse{" + 
+			"BookMarkData{" +
 			"data = '" + data + '\'' + 
 			",message = '" + message + '\'' + 
 			",status = '" + status + '\'' + 

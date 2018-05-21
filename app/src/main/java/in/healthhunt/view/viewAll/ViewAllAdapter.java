@@ -1,6 +1,8 @@
 package in.healthhunt.view.viewAll;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import in.healthhunt.model.articles.articleResponse.CategoriesItem;
 import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -125,6 +128,16 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             holder.mHashTags.setText(tagsName);
 
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                if(!currentUser.isBookmarked()){
+                    holder.mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
+                }
+                else {
+                    holder.mArticleBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+                }
+            }
+
 
             String readingTime = postsItem.getRead_time();
             readingTime = readingTime + " min read";
@@ -159,6 +172,16 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String postUnit = postsItem.getPost_unit();
             if (postUnit != null) {
                 holder.mProductUnit.setText(postUnit);
+            }
+
+            CurrentUser currentUser = postsItem.getCurrent_user();
+            if(currentUser != null) {
+                if(!currentUser.isBookmarked()){
+                    holder.mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
+                }
+                else {
+                    holder.mProductBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+                }
             }
 
 

@@ -11,6 +11,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.presenter.viewAllPresenter.IViewAllPresenter;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -53,18 +56,36 @@ public class ViewAllArticleHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.view_all_article_date)
     TextView mArticleDate;
 
+    private IViewAllPresenter IViewAllPresenter;
+
     private ViewAllAdapter.ClickListener mClickListener;
-    public ViewAllArticleHolder(View articleView, ViewAllAdapter.ClickListener clickListener) {
+    public ViewAllArticleHolder(View articleView, ViewAllAdapter.ClickListener clickListener, IViewAllPresenter viewAllPresenter) {
         super(articleView);
         ButterKnife.bind(this, articleView);
         mContext = articleView.getContext();
         mClickListener = clickListener;
+        IViewAllPresenter = viewAllPresenter;
     }
 
     @OnClick(R.id.view_all_item_view)
     void onClick(View view) {
         if(mClickListener != null) {
             mClickListener.ItemClicked(view, getAdapterPosition());
+        }
+    }
+
+    @OnClick(R.id.view_all_bookmark)
+    void onBookMark(){
+        ArticlePostItem postsItem = IViewAllPresenter.getArticle(getAdapterPosition());
+        String id = String.valueOf(postsItem.getId());
+        CurrentUser currentUser = postsItem.getCurrent_user();
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                IViewAllPresenter.bookmark(id);
+            }
+            else {
+                IViewAllPresenter.unBookmark(id);
+            }
         }
     }
 }

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:scrollbars="none"
     android:background="@color/hh_background_light"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/full_view"

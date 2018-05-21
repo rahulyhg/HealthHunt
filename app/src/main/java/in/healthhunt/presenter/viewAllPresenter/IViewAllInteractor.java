@@ -13,7 +13,7 @@ import in.healthhunt.model.articles.productResponse.ProductPostItem;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public interface IViewAllInteractor {
+public interface IViewAllInteractor{
 
     interface OnFinishListener {
         void onArticleSuccess(List<ArticlePostItem> items);

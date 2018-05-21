@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 
 /**
@@ -34,5 +34,5 @@ public interface IMyFeedPresenter {
     int getView(int type);
     void deleteArticleType(int pos);
     void addContinueArticles();
-    void updateBookMark(BookMarkResponse markResponse);
+    void updateBookMark(BookMarkData markResponse);
 }

@@ -1,18 +1,10 @@
 package in.healthhunt.model.articles.bookmarkResponse;
 
-public class Data{
-	private int postId;
+public class BookMarkInfo{
+	private String post_id;
 	private String collection;
 	private boolean isBookMark;
 	private int type;
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
 
 	public boolean isBookMark() {
 		return isBookMark;
@@ -22,12 +14,20 @@ public class Data{
 		isBookMark = bookMark;
 	}
 
-	public void setPostId(int postId){
-		this.postId = postId;
+	public int getType() {
+		return type;
 	}
 
-	public int getPostId(){
-		return postId;
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void setPost_id(String post_id){
+		this.post_id = post_id;
+	}
+
+	public String getPost_id(){
+		return post_id;
 	}
 
 	public void setCollection(String collection){
@@ -41,8 +41,8 @@ public class Data{
 	@Override
  	public String toString(){
 		return 
-			"Data{" + 
-			"post_id = '" + postId + '\'' + 
+			"BookMarkInfo{" + 
+			"post_id = '" + post_id + '\'' +
 			",collection = '" + collection + '\'' + 
 			"}";
 		}
