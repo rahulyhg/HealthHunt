@@ -1,5 +1,6 @@
 package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -31,8 +32,8 @@ public class LatestProductAdapter extends FragmentStatePagerAdapter {
         return IProductPresenter.getCount();
     }
 
-    /*@Override
+    @Override
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
-    }*/
+    }
 }

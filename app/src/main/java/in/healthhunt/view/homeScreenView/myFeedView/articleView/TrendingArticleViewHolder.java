@@ -16,7 +16,6 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
@@ -86,18 +85,13 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
-    public void updateBookMark(BookMarkData markResponse) {
-        IMyFeedView.updateBookMark(markResponse);
-    }
-
-    @Override
     public void showProgress() {
-
+        IMyFeedView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IMyFeedView.hideProgress();
     }
 
     @Override
@@ -108,6 +102,11 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IMyFeedView.loadFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateAdapter() {
+        mTrendingViewer.getAdapter().notifyDataSetChanged();
     }
 
     @Override

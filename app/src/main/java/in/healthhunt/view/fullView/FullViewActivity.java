@@ -6,14 +6,20 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,26 +38,34 @@ import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Likes;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
+import in.healthhunt.model.beans.SpaceDecoration;
+import in.healthhunt.model.comment.CommentsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.fullPresenter.FullPresenterImp;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
 import in.healthhunt.view.BaseActivity;
+import in.healthhunt.view.fullView.commentView.CommentAdapter;
+import in.healthhunt.view.fullView.commentView.CommentViewHolder;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by abhishekkumar on 5/10/18.
  */
 
-public class FullViewActivity extends BaseActivity implements IFullView {
+public class FullViewActivity extends BaseActivity implements IFullView, CommentAdapter.ClickListener {
 
 
     @BindView(R.id.full_article_read_time)
     TextView mReadTime;
 
-    @BindView(R.id.full_article_count)
-    TextView mCount;
+    @BindView(R.id.full_likes_count)
+    TextView mLikesCount;
+
+    @BindView(R.id.full_article_like)
+    ImageView mLikeImage;
 
     @BindView(R.id.full_view_category_name)
     TextView mCategoryName;
@@ -101,16 +115,27 @@ public class FullViewActivity extends BaseActivity implements IFullView {
     @BindView(R.id.full_view)
     LinearLayout mFullView;
 
+    @BindView(R.id.comments_recycler_list)
+    RecyclerView mCommentViewer;
+
+    @BindView(R.id.full_view_scroll)
+    ScrollView mFullViewScroll;
+
+    @BindView(R.id.send_comment)
+    Button mSendComment;
+
+    @BindView(R.id.comment_content)
+    EditText mCommentContent;
+
     private IFullPresenter IFullPresenter;
     private int mPostType;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.full_article_view_item);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         ButterKnife.bind(this);
         IFullPresenter = new FullPresenterImp(getApplicationContext(), this);
@@ -165,6 +190,33 @@ public class FullViewActivity extends BaseActivity implements IFullView {
         }
     }
 
+    @Override
+    public CommentViewHolder createViewHolder(View view) {
+        return new CommentViewHolder(view, IFullPresenter, this);
+    }
+
+    private void setCommentAdapter(){
+        CommentAdapter commentAdapter = new CommentAdapter(getApplicationContext(), IFullPresenter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        mCommentViewer.setLayoutManager(layoutManager);
+        mCommentViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getApplicationContext()), SpaceDecoration.VERTICAL));
+        mCommentViewer.setAdapter(commentAdapter);
+    }
+
+    @Override
+    public void updateCommentAdapter() {
+        mFullViewScroll.fullScroll(View.FOCUS_DOWN);
+        CommentAdapter commentAdapter = (CommentAdapter) mCommentViewer.getAdapter();
+        if(commentAdapter == null){
+            setCommentAdapter();
+        }
+        else {
+            commentAdapter.notifyDataSetChanged();
+        }
+
+        setCommentContent(IFullPresenter.getArticle());
+    }
+
     @OnClick(R.id.comments_view_all)
     void onViewAll(){
         Log.i("TAGCOMMENT" , " isShown " + mCommentView.isShown());
@@ -173,12 +225,63 @@ public class FullViewActivity extends BaseActivity implements IFullView {
             mCommentViewAll.setText(R.string.view_all);
             mCommentArrow.setImageResource(R.mipmap.ic_chevron_down);
             mCommentView.setVisibility(View.GONE);
+            mCommentViewer.setVisibility(View.GONE);
         }
         else {
             mCommentViewAll.setText(R.string.close_all);
             mCommentArrow.setImageResource(R.mipmap.ic_chevron_up);
             mCommentView.setVisibility(View.VISIBLE);
+            mCommentViewer.setVisibility(View.VISIBLE);
+
+            CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
+            if(adapter == null) {
+                ArticlePost post = IFullPresenter.getArticle();
+                IFullPresenter.fetchComments(String.valueOf(post.getId()));
+            }
         }
+    }
+
+
+    @OnClick(R.id.full_article_bookmark)
+    void onBookMark(){
+        CurrentUser currentUser = null;
+        switch (mPostType){
+            case ArticleParams.ARTICLE:
+                ArticlePost articlePost = IFullPresenter.getArticle();
+                if(articlePost != null){
+                    currentUser = articlePost.getCurrent_user();
+                    if(currentUser != null ) {
+                        if(!currentUser.isBookmarked()) {
+                            IFullPresenter.bookmark(String.valueOf(articlePost.getId()));
+                        }
+                        else {
+                            IFullPresenter.unBookmark(String.valueOf(articlePost.getId()));
+                        }
+                    }
+                }
+
+                break;
+
+            case ArticleParams.PRODUCT:
+                break;
+        }
+    }
+
+    @OnClick(R.id.send_comment)
+    void onSend(){
+        ArticlePost articlePost = IFullPresenter.getArticle();
+        if(articlePost != null){
+            int post_id = articlePost.getId();
+            String content = mCommentContent.getText().toString();
+            if(!content.isEmpty()){
+                IFullPresenter.addNewComment(String.valueOf(post_id), content);
+            }
+        }
+    }
+
+    @OnClick(R.id.full_article_like)
+    void onLikeClick(){
+
     }
 
     private void setCommentContent(ArticlePost articlePost) {
@@ -187,6 +290,9 @@ public class FullViewActivity extends BaseActivity implements IFullView {
             int count = Integer.parseInt(commentCount);
             if(count > 0){
                 mCommentCount.setText(commentCount);
+            }
+            else {
+                mCommentCount.setText("");
             }
         }
     }
@@ -214,38 +320,38 @@ public class FullViewActivity extends BaseActivity implements IFullView {
                 html = (Spannable) Html.fromHtml(content.getRendered(), imageGetter, null);
             }
             mContent.setText(html);
+        }
 
-            String tagsName = "";
-            List<TagsItem> tagItems = articlePost.getTags();
-            if (tagItems != null && !tagItems.isEmpty()) {
-                for (TagsItem tagItem : tagItems) {
-                    String tag = tagItem.getName();
-                    tagsName = "#" + tag + " ";
-                }
+        String tagsName = "";
+        List<TagsItem> tagItems = articlePost.getTags();
+        if (tagItems != null && !tagItems.isEmpty()) {
+            for (TagsItem tagItem : tagItems) {
+                String tag = tagItem.getName();
+                tagsName = "#" + tag + " ";
             }
-            mHashTags.setText(tagsName);
+        }
+        mHashTags.setText(tagsName);
 
-            String date = articlePost.getDate();
-            date = HealthHuntUtility.getDateWithFormat(date);
-            if (date != null) {
-                date.trim();
-                mPublishDate.setText(date);
-            }
+        String date = articlePost.getDate();
+        date = HealthHuntUtility.getDateWithFormat(date);
+        if (date != null) {
+            date.trim();
+            mPublishDate.setText(date);
+        }
 
 
-            Author author = articlePost.getAuthor();
-            if (author != null) {
-                mAuthorName.setText(author.getName());
-                String authorUrl = author.getUrl();
-                if (authorUrl != null) {
-                    authorUrl = authorUrl.replace("\n", "");
-                    Glide.with(this)
-                            .load(authorUrl).placeholder(R.mipmap.default_profile)
-                            .bitmapTransform(new CropCircleTransformation(this))
-                            .into(mAuthorImage);
-                } else {
-                    mAuthorImage.setBackgroundResource(R.mipmap.default_profile);
-                }
+        Author author = articlePost.getAuthor();
+        if (author != null) {
+            mAuthorName.setText(author.getName());
+            String authorUrl = author.getUrl();
+            if (authorUrl != null) {
+                authorUrl = authorUrl.replace("\n", "");
+                Glide.with(this)
+                        .load(authorUrl).placeholder(R.mipmap.default_profile)
+                        .bitmapTransform(new CropCircleTransformation(this))
+                        .into(mAuthorImage);
+            } else {
+                mAuthorImage.setBackgroundResource(R.mipmap.default_profile);
             }
         }
     }
@@ -264,8 +370,15 @@ public class FullViewActivity extends BaseActivity implements IFullView {
             updateBookMark(currentUser.isBookmarked());
         }
 
-        int count = articlePost.getShare_count();
-        mCount.setText(String.valueOf(count));
+
+        Likes likes = articlePost.getLikes();
+        if(likes != null){
+            String likeCount = likes.getLikes();
+            if(likeCount != null){
+                mLikesCount.setText(likeCount);
+            }
+        }
+
 
         String categoryName = null;
         List<CategoriesItem> categories = articlePost.getCategories();
@@ -338,10 +451,37 @@ public class FullViewActivity extends BaseActivity implements IFullView {
     private void updateBookMark(boolean isBookMark) {
         Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
         if(!isBookMark){
+            mBookMark.setColorFilter(null);
             mBookMark.setImageResource(R.mipmap.ic_bookmark_full_view);
         }
         else {
             mBookMark.setColorFilter(ContextCompat.getColor(this, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
         }
+    }
+
+    @Override
+    public void onMore(View view, final int position) {
+        Log.i("TAGPOPUP", "onClick");
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.setGravity(Gravity.LEFT);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                int id = item.getItemId();
+                switch (id){
+                    case R.id.comment_edit:
+                        Toast.makeText(getApplicationContext(), "Edit", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.comment_delete:
+                        CommentsItem commentsItem = IFullPresenter.getComment(position);
+                        IFullPresenter.deleteComment(String.valueOf(commentsItem.getId()));
+                        break;
+                }
+                return true;
+            }
+        });
+        popup.inflate(R.menu.comment_menu);
+        popup.show();
     }
 }

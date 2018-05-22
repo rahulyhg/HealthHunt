@@ -78,4 +78,7 @@ public interface ArticleParams {
     int APPROVED = 2000;
     int RECEIVED = 3000;
     int DOWNLOADED = 4000;
+
+
+    String POST_ID = "post_id";
 }

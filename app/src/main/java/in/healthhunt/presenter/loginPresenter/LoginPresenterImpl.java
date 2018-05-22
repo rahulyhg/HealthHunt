@@ -23,7 +23,8 @@ import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.presenter.interactor.loginInteractor.ILoginInteractor;
 import in.healthhunt.view.loginView.ILoginView;
 
 /**

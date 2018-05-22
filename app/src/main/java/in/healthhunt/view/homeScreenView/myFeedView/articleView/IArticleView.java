@@ -14,4 +14,5 @@ public interface IArticleView extends IView {
     Fragment getFragmentArticleItem(int position);
     ArticlePostItem getArticle(int pos);
     void loadFragment(String fragmentName, Bundle bundle);
+    void updateAdapter();
 }

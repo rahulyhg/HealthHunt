@@ -10,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleAdapter;
 
 /**

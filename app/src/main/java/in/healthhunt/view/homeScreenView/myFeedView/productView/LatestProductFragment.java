@@ -188,6 +188,7 @@ public class LatestProductFragment extends Fragment {
     private void updateBookMark(boolean isBookMark) {
         Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
         if(!isBookMark){
+            mProductBookMark.setColorFilter(null);
             mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
         }
         else {

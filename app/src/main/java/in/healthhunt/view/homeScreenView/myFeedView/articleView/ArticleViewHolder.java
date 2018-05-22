@@ -18,7 +18,6 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
@@ -91,19 +90,13 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     }
 
     @Override
-    public void updateBookMark(BookMarkData markResponse) {
-        IMyFeedView.updateBookMark(markResponse);
-        mArticleAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void showProgress() {
-
+        IMyFeedView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IMyFeedView.hideProgress();
     }
 
     @Override
@@ -114,6 +107,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IMyFeedView.loadFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateAdapter() {
+        mArticlePager.getAdapter().notifyDataSetChanged();
     }
 
     private void openViewAllFragment() {

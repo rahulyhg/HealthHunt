@@ -233,6 +233,7 @@ public class ArticleFragment extends Fragment {
 
         CurrentUser currentUser = mArticlePostItem.getCurrent_user();
         if(currentUser != null) {
+            Log.i("TAGUSER", " ISBOOK" + currentUser.isBookmarked());
             updateBookMark(currentUser.isBookmarked());
         }
 
@@ -255,6 +256,7 @@ public class ArticleFragment extends Fragment {
     private void updateBookMark(boolean isBookMark) {
         Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
         if(!isBookMark){
+            mArticleBookMark.setColorFilter(null);
             mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
         }
         else {

@@ -15,7 +15,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -72,18 +71,13 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     }
 
     @Override
-    public void updateBookMark(BookMarkData markResponse) {
-        IMyFeedView.updateBookMark(markResponse);
-    }
-
-    @Override
     public void showProgress() {
-
+        IMyFeedView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IMyFeedView.hideProgress();
     }
 
     @Override
@@ -110,6 +104,11 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IMyFeedView.loadFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateAdapter() {
+        mTopProductViewer.getAdapter().notifyDataSetChanged();
     }
 
     @Override

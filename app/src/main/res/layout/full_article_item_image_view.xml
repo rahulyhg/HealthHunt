@@ -102,7 +102,7 @@
 
 
                 <TextView
-                    android:id="@+id/full_article_count"
+                    android:id="@+id/full_likes_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_family_regular"

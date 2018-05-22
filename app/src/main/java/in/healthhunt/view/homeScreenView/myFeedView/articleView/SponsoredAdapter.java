@@ -129,6 +129,7 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){
+                    holder.mArticleBookMark.setColorFilter(null);
                     holder.mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
                 }
                 else {

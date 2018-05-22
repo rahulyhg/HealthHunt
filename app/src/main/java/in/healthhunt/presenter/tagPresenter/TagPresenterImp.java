@@ -11,9 +11,11 @@ import java.util.Set;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.tags.TagRequest;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.presenter.interactor.tagInteractor.ITagInteractor;
+import in.healthhunt.presenter.interactor.tagInteractor.TagInteractorImpl;
 import in.healthhunt.view.tagView.ITagView;
 import in.healthhunt.view.tagView.TagViewHolder;
 

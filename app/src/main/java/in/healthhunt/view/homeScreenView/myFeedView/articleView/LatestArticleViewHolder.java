@@ -18,7 +18,6 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
@@ -90,12 +89,12 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public void showProgress() {
-
+        IMyFeedView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IMyFeedView.hideProgress();
     }
 
     @Override
@@ -109,8 +108,8 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public void updateBookMark(BookMarkData markResponse) {
-
+    public void updateAdapter() {
+        mArticlePager.getAdapter().notifyDataSetChanged();
     }
 
     @OnClick(R.id.latest_view_all)

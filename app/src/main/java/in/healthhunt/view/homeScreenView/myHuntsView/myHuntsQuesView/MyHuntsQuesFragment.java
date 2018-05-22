@@ -23,11 +23,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsArticlePresenter.IMyHuntsArticlePresenter;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsArticlePresenter.MyHuntsArticlePresenterImp;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.MyHuntsArticlePresenterImp;
 import in.healthhunt.view.fullView.FullViewActivity;
 import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleAdapter;
@@ -140,11 +139,6 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
                 break;
         }
         return count;
-    }
-
-    @Override
-    public void updateBookMark(BookMarkData markResponse) {
-
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.List;
 
 import in.healthhunt.R;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
 
 /**
  * Created by abhishekkumar on 5/21/18.

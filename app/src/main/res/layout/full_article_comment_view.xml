@@ -43,7 +43,6 @@
                     android:fontFamily="@string/font_family_regular"
                     android:textSize="16sp"
                     android:textColor="@color/hh_text_color"
-                    android:text="12"
                     android:layout_marginStart="8dp"
                     android:gravity="left"
                     />
@@ -87,6 +86,7 @@
             android:layout_marginTop="-8dp"
             android:visibility="gone">
             <EditText
+                android:id="@+id/comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="104dp"
                 android:background="@mipmap/ic_comment_bg"
@@ -103,6 +103,7 @@
                 />
 
             <Button
+                android:id="@+id/send_comment"
                 android:layout_width="170dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="20dp"
@@ -116,19 +117,21 @@
                 android:textColor="@android:color/white"
                 />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/comments_recycler_list"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
                 android:layout_marginTop="24dp"
-                android:scrollbars="none">
-            </android.support.v7.widget.RecyclerView>
+                android:background="@color/hh_line_color"/>
 
         </LinearLayout>
 
     </LinearLayout>
-    <View
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/comments_recycler_list"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/hh_line_color"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:scrollbars="none">
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

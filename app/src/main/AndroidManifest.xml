@@ -25,7 +25,7 @@
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".view.onBoardingView.OnBoardingActivity"></activity>
         <activity android:name=".view.homeScreenView.HomeActivity" android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".view.fullView.FullViewActivity"></activity>
+        <activity android:name=".view.fullView.FullViewActivity" android:theme="@style/Full_View_AppTheme"></activity>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"

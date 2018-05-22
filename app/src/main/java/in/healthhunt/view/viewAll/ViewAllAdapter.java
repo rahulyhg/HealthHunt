@@ -85,7 +85,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
             }
             else {
-                holder.mArticleImage.setBackgroundResource(R.drawable.artical);
+                holder.mArticleImage.setImageResource(R.drawable.artical);
             }
 
 
@@ -131,6 +131,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){
+                    holder.mArticleBookMark.setColorFilter(null);
                     holder.mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
                 }
                 else {
@@ -177,6 +178,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){
+                    holder.mProductBookMark.setColorFilter(null);
                     holder.mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
                 }
                 else {
@@ -200,7 +202,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Log.i("TAG11", "productUrl " + url);
                 Glide.with(mContext).load(url).placeholder(R.drawable.top_products).into(holder.mProductImage);
             } else {
-                holder.mProductImage.setBackgroundResource(R.drawable.top_products);
+                holder.mProductImage.setImageResource(R.drawable.top_products);
             }
         }
     }

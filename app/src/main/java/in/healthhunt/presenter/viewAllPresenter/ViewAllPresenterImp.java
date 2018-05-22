@@ -19,30 +19,39 @@ import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.presenter.homeScreenPresenter.BookMarkInteractorImpl;
-import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
+import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.IBookMarkInteractor;
+import in.healthhunt.presenter.interactor.productInteractor.IProductInteractor;
+import in.healthhunt.presenter.interactor.productInteractor.ProductInteractorImpl;
 import in.healthhunt.view.viewAll.IViewAll;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteractor.OnFinishListener, IBookMarkInteractor.OnFinishListener {
+public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteractor.OnViewAllFinishListener,
+        IProductInteractor.OnViewAllFinishListener,IBookMarkInteractor.OnFinishListener {
 
     private String TAG = ViewAllPresenterImp.class.getSimpleName();
     private IViewAll IViewAll;
     private Context mContext;
-    private IViewAllInteractor IViewAllInteractor;
+   // private IViewAllInteractor IViewAllInteractor;
     private List<ArticlePostItem> mArticlePosts;
     private List<ProductPostItem> mProductPosts;
     private IBookMarkInteractor IBookMarkInteractor;
+    private IArticleInteractor IArticleInteractor;
+    private IProductInteractor IProductInteractor;
 
     public ViewAllPresenterImp(Context context, IViewAll viewAll) {
         mContext =  context;
         IViewAll = viewAll;
-        IViewAllInteractor = new ViewAllInteractorImpl();
+        //IViewAllInteractor = new ViewAllInteractorImpl();
         IBookMarkInteractor = new BookMarkInteractorImpl();
+        IArticleInteractor = new ArticleInteractorImpl();
+        IProductInteractor = new ProductInteractorImpl();
     }
 
     @Override
@@ -82,7 +91,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteracto
                 map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
                 map.put(ArticleParams.LIMIT, String.valueOf(30));
-                IViewAllInteractor.fetchAllArticle(mContext, map,this);
+                IArticleInteractor.fetchAllArticle(mContext, map,this);
                 break;
             case ArticleParams.BASED_ON_TAGS:
                 Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
@@ -97,7 +106,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteracto
                 map.put(ArticleParams.TAGS, tags);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
                 map.put(ArticleParams.LIMIT, String.valueOf(30));
-                IViewAllInteractor.fetchAllArticle(mContext, map,this);
+                IArticleInteractor.fetchAllArticle(mContext, map,this);
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
@@ -106,7 +115,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteracto
                 map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
                 map.put(ArticleParams.LIMIT, String.valueOf(30));
-                IViewAllInteractor.fetchAllProduct(mContext, map, this);
+                IProductInteractor.fetchAllProduct(mContext, map, this);
                 break;
         }
     }
@@ -187,7 +196,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IViewAllInteracto
             case ArticleParams.LATEST_ARTICLES:
 
                 for(ArticlePostItem postItem : mArticlePosts) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
+                    if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());

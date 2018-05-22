@@ -22,7 +22,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
@@ -79,12 +78,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     public int getCount() {
         return IShopPresenter.getCount();
     }
-
-    @Override
-    public void updateBookMark(BookMarkData markResponse) {
-
-    }
-
+    
     @Override
     public void showProgress() {
 

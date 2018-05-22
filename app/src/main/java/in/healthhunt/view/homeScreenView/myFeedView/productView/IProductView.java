@@ -14,4 +14,5 @@ public interface IProductView extends IView{
     ProductPostItem getProduct(int pos);
     Fragment getFragmentArticleItem(int position);
     void loadFragment(String fragmentName, Bundle bundle);
+    void updateAdapter();
 }

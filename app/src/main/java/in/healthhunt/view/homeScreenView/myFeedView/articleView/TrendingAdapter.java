@@ -123,6 +123,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){
+                    holder.mArticleBookMark.setColorFilter(null);
                     holder.mArticleBookMark.setImageResource(R.mipmap.ic_bookmark);
                 }
                 else {

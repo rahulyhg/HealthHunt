@@ -59,6 +59,11 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return ITopProductPresenter.getCount();
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
     public void setClickListener(ClickListener clickListener) {
         this.mClickListener = clickListener;
     }
@@ -102,12 +107,13 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
-                    if(!currentUser.isBookmarked()){
-                        holder.mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
-                    }
-                    else {
-                        holder.mProductBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
-                    }
+                if(!currentUser.isBookmarked()){
+                    holder.mProductBookMark.setColorFilter(null);
+                    holder.mProductBookMark.setImageResource(R.mipmap.ic_bookmark);
+                }
+                else {
+                    holder.mProductBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+                }
             }
 
             String price = postsItem.getPost_price();

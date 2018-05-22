@@ -11,10 +11,11 @@ import java.util.List;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
-import in.healthhunt.presenter.homeScreenPresenter.BookMarkInteractorImpl;
-import in.healthhunt.presenter.homeScreenPresenter.IBookMarkInteractor;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.IBookMarkInteractor;
 import in.healthhunt.view.homeScreenView.myFeedView.productView.IProductView;
 
 /**
@@ -137,8 +138,18 @@ public class ProductPresenterImp implements IProductPresenter, IBookMarkInteract
     @Override
     public void onBookMarkSuccess(BookMarkData markResponse) {
         IProductView.hideProgress();
-        IProductView.updateBookMark(markResponse);
-        Toast.makeText(mContext, "BookMark", Toast.LENGTH_SHORT).show();
+        for(int i=0; i<IProductView.getCount(); i++){
+            ProductPostItem postItem = IProductView.getProduct(i);
+            BookMarkInfo info = markResponse.getBookMarkInfo();
+            if(info != null) {
+                if (postItem.getId().equals(info.getPost_id())) {
+                    postItem.getCurrent_user().setBookmarked(info.isBookMark());
+                    break;
+                }
+            }
+        }
+
+        IProductView.updateAdapter();
     }
 
     @Override

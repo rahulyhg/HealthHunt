@@ -14,24 +14,25 @@ import java.util.Set;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
-import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
+import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
+import in.healthhunt.presenter.interactor.productInteractor.IProductInteractor;
+import in.healthhunt.presenter.interactor.productInteractor.ProductInteractorImpl;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.OnArticleFinishListener, IMyFeedInteractor.OnProductFinishListener{
+public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.OnArticleFinishListener, IProductInteractor.OnProductFinishListener{
 
     private String TAG = MyFeedPresenterImp.class.getSimpleName();
     private IMyFeedView IMyFeedView;
     private Context mContext;
-    private IMyFeedInteractor IMyFeedInteractor;
+    //private IMyFeedInteractor IMyFeedInteractor;
     private List<ArticlePostItem> mTagArticles;
     private List<ArticlePostItem> mTrendingArticles;
     private List<ArticlePostItem> mLatestArticles;
@@ -39,13 +40,19 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
     private List<ProductPostItem> mTopProduct;
     private List<ProductPostItem> mLatestProduct;
     private Map<Integer, Integer> mArticlesType;
+
+    private IArticleInteractor IArticleInteractor;
+    private IProductInteractor IProductInteractor;
+
     private int fetchCount;
 
 
     public MyFeedPresenterImp(Context context, IMyFeedView feedView) {
         mContext =  context;
         IMyFeedView = feedView;
-        IMyFeedInteractor = new MyFeedInteractorImpl();
+        //IMyFeedInteractor = new MyFeedInteractorImpl();
+        IArticleInteractor = new ArticleInteractorImpl();
+        IProductInteractor = new ProductInteractorImpl();
         mArticlesType = new HashMap<Integer, Integer>();
     }
 
@@ -78,7 +85,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
 
-        IMyFeedInteractor.fetchArticle(mContext, ArticleParams.BASED_ON_TAGS, map, this);
+        IArticleInteractor.fetchArticle(mContext, ArticleParams.BASED_ON_TAGS, map, this);
     }
 
     @Override
@@ -87,7 +94,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.TRENDING, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        IMyFeedInteractor.fetchArticle(mContext, ArticleParams.TRENDING_ARTICLES, map, this);
+        IArticleInteractor.fetchArticle(mContext, ArticleParams.TRENDING_ARTICLES, map, this);
     }
 
     @Override
@@ -96,7 +103,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        IMyFeedInteractor.fetchArticle(mContext, ArticleParams.LATEST_ARTICLES, map, this);
+        IArticleInteractor.fetchArticle(mContext, ArticleParams.LATEST_ARTICLES, map, this);
     }
 
     @Override
@@ -105,7 +112,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.SPONSORED, type);
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        IMyFeedInteractor.fetchArticle(mContext, ArticleParams.SPONSORED_ARTICLES, map, this);
+        IArticleInteractor.fetchArticle(mContext, ArticleParams.SPONSORED_ARTICLES, map, this);
     }
 
     @Override
@@ -115,7 +122,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        IMyFeedInteractor.fetchProduct(mContext, ArticleParams.TOP_PRODUCTS, map, this);
+        IProductInteractor.fetchProduct(mContext, ArticleParams.TOP_PRODUCTS, map, this);
 
     }
 
@@ -127,7 +134,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
         map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
-        IMyFeedInteractor.fetchProduct(mContext, ArticleParams.LATEST_PRODUCTS, map, this);
+        IProductInteractor.fetchProduct(mContext, ArticleParams.LATEST_PRODUCTS, map, this);
 
     }
 
@@ -192,90 +199,6 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IMyFeedInteractor.O
     @Override
     public void addContinueArticles() {
         updateMapWithAdded(1, ArticleParams.CONTINUE_ARTICLES);
-    }
-
-    @Override
-    public void updateBookMark(BookMarkData markResponse) {
-        BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
-
-
-        if(bookMarkInfo == null){
-            Log.i("TAG", " Book Mark info is null");
-            return;
-        }
-
-        int type = bookMarkInfo.getType();
-
-        Log.i("TAGBOOKMA", "type " +type);
-        switch (type){
-            case ArticleParams.BASED_ON_TAGS:
-
-                for(ArticlePostItem postItem : mTagArticles) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-            case ArticleParams.TRENDING_ARTICLES:
-                for(ArticlePostItem postItem : mTrendingArticles) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-
-            case ArticleParams.SPONSORED_ARTICLES:
-                for(ArticlePostItem postItem : mSponsoredArticles) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-
-            case ArticleParams.LATEST_ARTICLES:
-                for(ArticlePostItem postItem : mLatestArticles) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-
-            case ArticleParams.TOP_PRODUCTS:
-                for(ProductPostItem postItem : mTopProduct) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-
-            case ArticleParams.LATEST_PRODUCTS:
-                for(ProductPostItem postItem : mLatestProduct) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
-                        CurrentUser currentUser = postItem.getCurrent_user();
-                        if (currentUser != null) {
-                            currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        }
-                    }
-                }
-                break;
-        }
-
-        IMyFeedView.updateAdapter();
     }
 
     @Override

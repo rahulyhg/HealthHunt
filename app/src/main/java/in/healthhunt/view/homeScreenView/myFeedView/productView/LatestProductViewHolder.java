@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
@@ -76,6 +75,11 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
+    public void updateAdapter() {
+        mLatestArticlePager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
     public int getCount() {
         List<ProductPostItem> list = IMyFeedView.getLatestProductArticles();
         int count = 0;
@@ -86,18 +90,13 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
-    public void updateBookMark(BookMarkData markResponse) {
-        IMyFeedView.updateBookMark(markResponse);
-    }
-
-    @Override
     public void showProgress() {
-
+        IMyFeedView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IMyFeedView.hideProgress();
     }
 
     @Override

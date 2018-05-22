@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 
 import framework.retrofit.RestError;
+import in.healthhunt.presenter.interactor.shopInteractor.IShopInteractor;
+import in.healthhunt.presenter.interactor.shopInteractor.ShopInteractorImpl;
 import in.healthhunt.view.homeScreenView.shopView.IShopView;
 import in.healthhunt.view.homeScreenView.shopView.ShopViewHolder;
 

@@ -11,21 +11,27 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
-import in.healthhunt.model.articles.productResponse.ProductResponse;
+import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.comment.AllCommentInfo;
+import in.healthhunt.model.comment.CommentRequest;
+import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.comment.NewComment;
+import in.healthhunt.model.likes.LikesInfo;
+import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
-import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
+import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.response.HHResponse;
+import in.healthhunt.model.tags.TagData;
 import in.healthhunt.model.tags.TagRequest;
-import in.healthhunt.model.tags.TagResponse;
 import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -174,9 +180,9 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<LoginResponse> login(LoginRequest loginRequest, ResponseResolver<LoginResponse> responseResponseResolver) {
+    public Call<HHResponse<User>> login(LoginRequest loginRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
 
-        Call<LoginResponse> loginResponseCall = webServices.login(loginRequest);
+        Call<HHResponse<User>> loginResponseCall = webServices.login(loginRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -184,9 +190,9 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<User> signUp(SignUpRequest signUpRequest, ResponseResolver<User> responseResponseResolver) {
+    public Call<HHResponse<User>> signUp(SignUpRequest signUpRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
 
-        Call<User> loginResponseCall = webServices.signUp(signUpRequest);
+        Call<HHResponse<User>> loginResponseCall = webServices.signUp(signUpRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -204,19 +210,9 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<TagResponse> fetchTags(TagRequest tagRequest, ResponseResolver<TagResponse> responseResponseResolver) {
+    public Call<HHResponse<TagData>> fetchTags(TagRequest tagRequest, ResponseResolver<HHResponse<TagData>> responseResponseResolver) {
 
-        Call<TagResponse> loginResponseCall = webServices.fetchTags(tagRequest.getPage(), tagRequest.getPerPage());
-
-        loginResponseCall.enqueue(responseResponseResolver);
-
-        return loginResponseCall;
-
-    }
-
-    public Call<ArticleResponse> fetchArticles(Map<String, String> params, ResponseResolver<ArticleResponse> responseResponseResolver) {
-
-        Call<ArticleResponse> loginResponseCall = webServices.fetchArticles(params);
+        Call<HHResponse<TagData>> loginResponseCall = webServices.fetchTags(tagRequest.getPage(), tagRequest.getPerPage());
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -224,9 +220,19 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<ProductResponse> fetchProducts(Map<String, String> params, ResponseResolver<ProductResponse> responseResponseResolver) {
+    public Call<HHResponse<ArticleData>> fetchArticles(Map<String, String> params, ResponseResolver<HHResponse<ArticleData>> responseResponseResolver) {
 
-        Call<ProductResponse> loginResponseCall = webServices.fetchProducts(params);
+        Call<HHResponse<ArticleData>> loginResponseCall = webServices.fetchArticles(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<ProductData>> fetchProducts(Map<String, String> params, ResponseResolver<HHResponse<ProductData>> responseResponseResolver) {
+
+        Call<HHResponse<ProductData>> loginResponseCall = webServices.fetchProducts(params);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -260,6 +266,47 @@ public class WebServicesWrapper {
     public Call<PostResponse> fetchFullArticle(String id, ResponseResolver<PostResponse> responseResponseResolver) {
 
         Call<PostResponse> loginResponseCall = webServices.fetchFullArticle(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<AllCommentInfo>> fetchComments(Map<String, String> params, ResponseResolver<HHResponse<AllCommentInfo>> responseResponseResolver) {
+
+        Call<HHResponse<AllCommentInfo>> loginResponseCall = webServices.fetchComments(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<CommentsItem>> deleteComment(String id, ResponseResolver<HHResponse<CommentsItem>> responseResponseResolver) {
+
+        Call<HHResponse<CommentsItem>> loginResponseCall = webServices.deleteComment(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<NewComment>> addNewComment(CommentRequest commentRequest, ResponseResolver<HHResponse<NewComment>> responseResponseResolver) {
+
+        Log.i("TAGPOSTIDIII", " ID " + commentRequest.getPost_id() + "Con " + commentRequest.getContent());
+        Call<HHResponse<NewComment>> loginResponseCall = webServices.addNewComment(commentRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<LikesInfo>> updateLikes(String id, LikesRequest likesRequest, ResponseResolver<HHResponse<LikesInfo>> responseResponseResolver) {
+
+        Call<HHResponse<LikesInfo>> loginResponseCall = webServices.updateLikes(id, likesRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

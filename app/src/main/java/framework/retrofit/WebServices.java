@@ -3,17 +3,23 @@ package framework.retrofit;
 import java.util.List;
 import java.util.Map;
 
-import in.healthhunt.model.articles.articleResponse.ArticleResponse;
+import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
 import in.healthhunt.model.articles.postResponse.PostResponse;
-import in.healthhunt.model.articles.productResponse.ProductResponse;
+import in.healthhunt.model.articles.productResponse.ProductData;
+import in.healthhunt.model.comment.AllCommentInfo;
+import in.healthhunt.model.comment.CommentRequest;
+import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.comment.NewComment;
+import in.healthhunt.model.likes.LikesInfo;
+import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
-import in.healthhunt.model.login.LoginResponse;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.User;
-import in.healthhunt.model.tags.TagResponse;
+import in.healthhunt.model.response.HHResponse;
+import in.healthhunt.model.tags.TagData;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -29,22 +35,22 @@ public interface WebServices {
  //@POST("/api/account-login")
  //Call<LoginResponse> login(@Field("access_token") String token);
  @POST("login")
- Call<LoginResponse> login(@Body LoginRequest loginRequest);
+ Call<HHResponse<User>> login(@Body LoginRequest loginRequest);
 
  @POST("signup")
- Call<User> signUp(@Body SignUpRequest signUpRequest);
+ Call<HHResponse<User>> signUp(@Body SignUpRequest signUpRequest);
 
  @POST("forgot_password")
  Call<String> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
 
  @GET("tags")
- Call<TagResponse> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
+ Call<HHResponse<TagData>> fetchTags(@Query("page") int page, @Query("per_page") int per_page);
 
  @GET("posts")
- Call<ArticleResponse> fetchArticles(@QueryMap Map<String, String> params);
+ Call<HHResponse<ArticleData>> fetchArticles(@QueryMap Map<String, String> params);
 
  @GET("posts")
- Call<ProductResponse> fetchProducts(@QueryMap Map<String, String> params);
+ Call<HHResponse<ProductData>> fetchProducts(@QueryMap Map<String, String> params);
 
  @GET("posts/{id}")
  Call<PostResponse> fetchFullArticle(@Path("id") String id);
@@ -54,6 +60,18 @@ public interface WebServices {
 
  @POST("posts/{id}/unsave")
  Call<BookMarkData> unBookmark(@Path("id") String id);
+
+ @GET("comments")
+ Call<HHResponse<AllCommentInfo>> fetchComments(@QueryMap Map<String, String> params);
+
+ @POST("comments/{id}/delete")
+ Call<HHResponse<CommentsItem>> deleteComment(@Path("id") String id);
+
+ @POST("comments")
+ Call<HHResponse<NewComment>> addNewComment(@Body CommentRequest commentRequest);
+
+ @POST("likes/{id}")
+ Call<HHResponse<LikesInfo>> updateLikes(@Path("id") String id, @Body LikesRequest likesRequest);
 
 
     /*@Header("authToken") String token,*/
