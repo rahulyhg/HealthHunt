@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/suggestion_view">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp">
+
+
+        <TextView
+            android:id="@+id/suggestion_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_medium"
+            android:textSize="20sp"
+            android:gravity="left|center"
+            android:textColor="@color/hh_edittext_text_color"
+            android:text="@string/healthhunt_shop"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:id="@+id/suggestion_cross"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_cross"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/suggestion_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@string/font_family_regular"
+        android:textSize="16sp"
+        android:gravity="left|top"
+        android:textColor="@color/hh_edittext_text_color"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/lorem_ipsum"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/hh_line_color"/>
+
+</LinearLayout>

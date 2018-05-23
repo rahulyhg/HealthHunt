@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="120dp"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -9,61 +11,75 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="16dp">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/profile_pic"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@mipmap/avatar"
-                />
-
+            android:layout_height="wrap_content"
+            >
             <LinearLayout
-                android:id="@+id/profile_pic_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
-                <TextView
-                    android:id="@+id/profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:fontFamily="@string/font_family_medium"
-                    android:textSize="16sp"
-                    android:gravity="left|center"
-                    android:textColor="@color/hh_edittext_text_color"
-                    android:text="HHHHHH"
-                    />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/edit_profile"
+                <ImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="left|center" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:fontFamily="@string/font_family_regular"
-                    android:textSize="12sp"
-                    android:gravity="left|center"
-                    android:textColor="@color/hh_text_color"
-                    android:text="HHHHHH"
-                    />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:fontFamily="@string/font_family_medium"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:textColor="@color/hh_edittext_text_color"
+                        android:layout_gravity="left|center"
+                        android:text="Abhishek"
+                        />
+
+                    <TextView
+                        android:id="@+id/commented_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:fontFamily="@string/font_family_regular"
+                        android:textSize="14sp"
+                        android:gravity="left|center"
+                        android:textColor="@color/hh_text_color"
+                        android:layout_gravity="left|center"
+                        android:text="HHHHHH"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
-
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/comment_edit"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@mipmap/ic_more"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/comment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="2"
             android:fontFamily="@string/font_family_regular"
-            android:textSize="16sp"
-            android:gravity="left"
             android:textColor="@color/hh_edittext_text_color"
-            android:text="HHHHHH hgg ghgh gh"
+            android:gravity="left"
+            android:textSize="16sp"
             android:layout_marginTop="12dp"
+            android:text="@string/explore_new_things"
             />
+
     </LinearLayout>
 
     <View

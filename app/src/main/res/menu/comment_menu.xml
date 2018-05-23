@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/comment_edit"
         android:title="@string/edit"
-        android:checkable="false"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/comment_delete"
-        android:icon="@mipmap/ic_my_feed"
         android:title="@string/delete"
-        android:checkable="false"/>
+        app:showAsAction="ifRoom" />
 </menu>

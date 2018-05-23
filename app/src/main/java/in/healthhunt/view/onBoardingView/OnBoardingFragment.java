@@ -17,7 +17,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.presenter.preference.HealthHuntPreference;
+import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 
 /**

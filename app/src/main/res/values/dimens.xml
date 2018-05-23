@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="indicator_height">8dp</dimen>
-    <dimen name="indicator_width">8dp</dimen>
-    <dimen name="indicator_margin_start">4dp</dimen>
-    <dimen name="indicator_margin_end">4dp</dimen>
-    <dimen name="homescreen_margin_end">8dp</dimen>
+    <dimen name="popup_window_height">112dp</dimen>
 </resources>

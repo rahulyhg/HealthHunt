@@ -11,10 +11,10 @@
 
 
         <ImageView
+            android:id="@+id/full_article_image"
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/artical"
             android:layout_gravity="center"
             />
 
@@ -34,8 +34,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="left|top|center"
-                android:gravity="left|top|center">
+                android:layout_gravity="left|top"
+                android:gravity="left|top">
 
 
                 <ImageView
@@ -43,6 +43,7 @@
                     android:layout_height="24dp"
                     android:src="@mipmap/ic_article_watch"
                     android:scaleType="center"
+                    android:layout_gravity="top"
                     />
 
                 <TextView
@@ -67,25 +68,26 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:layout_gravity="right|top"
-                android:gravity="right|top">
+                android:gravity="right|bottom">
 
 
                 <ImageView
-                    android:id="@+id/article_download"
+                    android:id="@+id/full_article_download"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@mipmap/ic_download"
+                    android:src="@mipmap/ic_download_full_view"
+                    android:layout_gravity="top"
                     android:scaleType="center"
-                    android:layout_marginStart="10dp"
                     />
 
                 <ImageView
                     android:id="@+id/full_article_bookmark"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@mipmap/ic_bookmark"
                     android:scaleType="center"
-                    android:layout_marginStart="10dp"
+                    android:src="@mipmap/ic_bookmark_full_view"
+                    android:layout_marginStart="18dp"
+                    android:layout_gravity="top"
                     />
 
                 <ImageView
@@ -94,21 +96,22 @@
                     android:layout_height="24dp"
                     android:src="@mipmap/ic_full_article_heart"
                     android:scaleType="center"
-                    android:layout_marginStart="10dp"
+                    android:layout_gravity="top"
+                    android:layout_marginStart="18dp"
                     />
 
 
                 <TextView
-                    android:id="@+id/full_article_count"
+                    android:id="@+id/full_likes_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@string/font_family_regular"
                     android:textSize="14sp"
-                    android:gravity="left"
+                    android:gravity="left|center"
                     android:textColor="@android:color/white"
-                    android:text="3 min kjghkj"
-                    android:layout_marginStart="8dp"
-                    android:layout_gravity="center"
+                    android:text="367"
+                    android:layout_marginStart="10dp"
+                    android:layout_gravity="top"
                     />
 
             </LinearLayout>
@@ -132,6 +135,7 @@
             />
 
         <TextView
+            android:id="@+id/full_view_category_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_family_regular"
