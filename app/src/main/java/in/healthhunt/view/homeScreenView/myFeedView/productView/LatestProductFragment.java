@@ -141,7 +141,7 @@ public class LatestProductFragment extends Fragment {
             Glide.with(this).load(articleUrl).placeholder(R.drawable.artical).into(mProductImage);
         }
         else {
-            mProductImage.setBackgroundResource(R.drawable.artical);
+            mProductImage.setImageResource(R.drawable.artical);
         }
     }
 

@@ -28,5 +28,7 @@ public interface IFullPresenter {
     CommentsItem getComment(int pos);
     void  deleteComment(String id);
     void addNewComment(String post_id, String content);
+    void updateComment(String id, String content);
+    void updateLike(String id, boolean isLike);
 }
 

@@ -15,7 +15,6 @@ public interface Constants {
     String TIME_STAMP = "timestamp";
     String CONTENT_TYPE = "Content-Type";
     String SESSION_TOKEN = "sessionToken";
-    String USER_NAME = "username";
     String SELECTED_TAGS_KEY = "selected_tags_key";
     String IS_LOGIN_FIRST_KEY = "is_login_first_key";
     String IS_LOGIN_NORMAL = "is_login_normal_key";
@@ -23,5 +22,15 @@ public interface Constants {
     String FACEBOOK = "facebook";
     String GOOGLE = "google";
     String AUTHCODE = "authCode";
+
+    String USER_ID = "user_id";
+    String USER_URL = "user_url";
+    String USER_NAME = "user_name";
+
+    String NUTRITION ="nutrition";
+    String FITNESS ="fitness";
+    String ORGANIC_BEAUTY ="organic beauty";
+    String MENTAL_WELLBEING = "mental wellbeing";
+    String LOVE ="love";
 
 }

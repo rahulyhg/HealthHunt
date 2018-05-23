@@ -176,6 +176,14 @@ public class ArticleFragment extends Fragment {
         }
         if(categoryName != null) {
             mCategoryName.setText(categoryName);
+            int res = HealthHuntUtility.getCategoryIcon(categoryName);
+            mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+            if(res != 0){
+                mCategoryImage.setImageResource(res);
+            }
+            else {
+                mCategoryImage.setImageResource(R.mipmap.ic_fitness);
+            }
         }
 
 
@@ -195,7 +203,7 @@ public class ArticleFragment extends Fragment {
                         .into(mAuthorImage);
             }
             else {
-                mAuthorImage.setBackgroundResource(R.mipmap.default_profile);
+                mAuthorImage.setImageResource(R.mipmap.default_profile);
             }
         }
 
@@ -249,7 +257,7 @@ public class ArticleFragment extends Fragment {
             Glide.with(this).load(articleUrl).placeholder(R.drawable.artical).into(mArticleImage);
         }
         else {
-            mArticleImage.setBackgroundResource(R.drawable.artical);
+            mArticleImage.setImageResource(R.drawable.artical);
         }
     }
 

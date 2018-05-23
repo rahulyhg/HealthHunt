@@ -3,7 +3,7 @@ package in.healthhunt.model.comment;
 public class Author{
 	private String name;
 	private int id;
-	private Object url;
+	private String url;
 
 	public void setName(String name){
 		this.name = name;
@@ -21,11 +21,11 @@ public class Author{
 		return id;
 	}
 
-	public void setUrl(Object url){
+	public void setUrl(String url){
 		this.url = url;
 	}
 
-	public Object getUrl(){
+	public String getUrl(){
 		return url;
 	}
 

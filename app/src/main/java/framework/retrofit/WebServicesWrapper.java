@@ -18,15 +18,15 @@ import in.healthhunt.model.articles.postResponse.PostResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.comment.AllCommentInfo;
+import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.comment.NewComment;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
-import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
@@ -180,9 +180,9 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<HHResponse<User>> login(LoginRequest loginRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
+    public Call<HHResponse<UserData>> login(LoginRequest loginRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
 
-        Call<HHResponse<User>> loginResponseCall = webServices.login(loginRequest);
+        Call<HHResponse<UserData>> loginResponseCall = webServices.login(loginRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -190,9 +190,9 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<HHResponse<User>> signUp(SignUpRequest signUpRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
+    public Call<HHResponse<UserData>> signUp(SignUpRequest signUpRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
 
-        Call<HHResponse<User>> loginResponseCall = webServices.signUp(signUpRequest);
+        Call<HHResponse<UserData>> loginResponseCall = webServices.signUp(signUpRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -293,10 +293,20 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<HHResponse<NewComment>> addNewComment(CommentRequest commentRequest, ResponseResolver<HHResponse<NewComment>> responseResponseResolver) {
+    public Call<HHResponse<CommentData>> updateComment(String id, CommentRequest commentRequest, ResponseResolver<HHResponse<CommentData>> responseResponseResolver) {
+
+        Call<HHResponse<CommentData>> loginResponseCall = webServices.updateComment(id, commentRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<CommentData>> addNewComment(CommentRequest commentRequest, ResponseResolver<HHResponse<CommentData>> responseResponseResolver) {
 
         Log.i("TAGPOSTIDIII", " ID " + commentRequest.getPost_id() + "Con " + commentRequest.getContent());
-        Call<HHResponse<NewComment>> loginResponseCall = webServices.addNewComment(commentRequest);
+        Call<HHResponse<CommentData>> loginResponseCall = webServices.addNewComment(commentRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

@@ -90,7 +90,7 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mProductImage);
             }
             else {
-                holder.mProductImage.setBackgroundResource(R.drawable.artical);
+                holder.mProductImage.setImageResource(R.drawable.artical);
             }
 
 

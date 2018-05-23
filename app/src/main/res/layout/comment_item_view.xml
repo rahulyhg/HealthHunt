@@ -2,8 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="120dp"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -63,6 +61,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@mipmap/ic_more"
+                android:visibility="gone"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"/>
         </RelativeLayout>
@@ -71,16 +70,44 @@
             android:id="@+id/comment_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"
             android:fontFamily="@string/font_family_regular"
             android:textColor="@color/hh_edittext_text_color"
             android:gravity="left"
             android:textSize="16sp"
             android:layout_marginTop="12dp"
-            android:text="@string/explore_new_things"
             />
 
+        <EditText
+            android:id="@+id/edit_comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:textColor="@color/hh_edittext_text_color"
+            android:gravity="left"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            android:background="@android:color/transparent"
+            android:textCursorDrawable="@drawable/edit_cursor_color"
+            />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/update_comment"
+        android:layout_width="170dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button_bg"
+        android:text="@string/update"
+        android:layout_gravity="left"
+        android:fontFamily="@string/font_family_medium"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        />
 
     <View
         android:layout_width="match_parent"

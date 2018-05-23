@@ -1,6 +1,7 @@
 package in.healthhunt.view.fullView;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,8 +72,8 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
     @BindView(R.id.full_view_category_name)
     TextView mCategoryName;
 
-    @BindView(R.id.full_article_tag_icon)
-    ImageView mTagImage;
+    @BindView(R.id.full_article_category_icon)
+    ImageView mCategoryImage;
 
     @BindView(R.id.full_article_image)
     ImageView mArticleImage;
@@ -205,7 +207,7 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
 
     @Override
     public void updateCommentAdapter() {
-        mFullViewScroll.fullScroll(View.FOCUS_DOWN);
+        mCommentContent.setText("");
         CommentAdapter commentAdapter = (CommentAdapter) mCommentViewer.getAdapter();
         if(commentAdapter == null){
             setCommentAdapter();
@@ -237,6 +239,7 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
             if(adapter == null) {
                 ArticlePost post = IFullPresenter.getArticle();
                 IFullPresenter.fetchComments(String.valueOf(post.getId()));
+                mFullViewScroll.fullScroll(View.FOCUS_DOWN);
             }
         }
     }
@@ -268,11 +271,15 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
     }
 
     @OnClick(R.id.send_comment)
-    void onSend(){
+    void onSend(View view){
+        String content = mCommentContent.getText().toString().trim();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         ArticlePost articlePost = IFullPresenter.getArticle();
         if(articlePost != null){
             int post_id = articlePost.getId();
-            String content = mCommentContent.getText().toString();
             if(!content.isEmpty()){
                 IFullPresenter.addNewComment(String.valueOf(post_id), content);
             }
@@ -282,6 +289,17 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
     @OnClick(R.id.full_article_like)
     void onLikeClick(){
 
+        Likes likes = IFullPresenter.getArticle().getLikes();
+        Log.i("TAGLIKES", "LIkes " + likes);
+        if(likes != null) {
+            String like = likes.getLikes();
+            if(like!= null){
+                Log.i("TAGLIKES", "Article Id " + IFullPresenter.getArticle().getId() + " is Likes " + like);
+            }
+        }
+
+        int id = IFullPresenter.getArticle().getId();
+        IFullPresenter.updateLike(String.valueOf(id), true);
     }
 
     private void setCommentContent(ArticlePost articlePost) {
@@ -384,8 +402,16 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         List<CategoriesItem> categories = articlePost.getCategories();
         if (categories != null && !categories.isEmpty()) {
             categoryName = categories.get(0).getName();
+            mCategoryName.setText(categoryName);
+            mCategoryImage.setColorFilter(ContextCompat.getColor(this, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+            int res = HealthHuntUtility.getCategoryIcon(categoryName);
+            if(res != 0){
+                mCategoryImage.setImageResource(res);
+            }
+            else {
+                mCategoryImage.setImageResource(R.mipmap.ic_fitness);
+            }
         }
-        mCategoryName.setText(categoryName);
 
         String url = null;
         List<MediaItem> mediaItems = articlePost.getMedia();
@@ -461,20 +487,21 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
 
     @Override
     public void onMore(View view, final int position) {
-        Log.i("TAGPOPUP", "onClick");
+        Log.i("TAGPOPUP", "onMore");
+
         PopupMenu popup = new PopupMenu(this, view);
         popup.setGravity(Gravity.LEFT);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
+                CommentsItem commentsItem = IFullPresenter.getComment(position);
                 int id = item.getItemId();
                 switch (id){
                     case R.id.comment_edit:
-                        Toast.makeText(getApplicationContext(), "Edit", Toast.LENGTH_SHORT).show();
+                        editComment(position);
                         break;
                     case R.id.comment_delete:
-                        CommentsItem commentsItem = IFullPresenter.getComment(position);
                         IFullPresenter.deleteComment(String.valueOf(commentsItem.getId()));
                         break;
                 }
@@ -483,5 +510,29 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         });
         popup.inflate(R.menu.comment_menu);
         popup.show();
+    }
+
+    @Override
+    public void update(View view, int position) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+
+        CommentViewHolder holder = (CommentViewHolder) mCommentViewer.getChildViewHolder(mCommentViewer.getChildAt(position));
+        CommentsItem commentsItem = IFullPresenter.getComment(position);
+        int id = commentsItem.getId();
+        String content = holder.mCommentEditText.getText().toString();
+        IFullPresenter.updateComment(String.valueOf(id), content);
+    }
+
+    private void editComment(int position) {
+       // CommentsItem commentsItem = IFullPresenter.getComment(position);
+        CommentViewHolder holder = (CommentViewHolder) mCommentViewer.getChildViewHolder(mCommentViewer.getChildAt(position));
+        holder.mCommentText.setVisibility(View.GONE);
+        holder.mCommentEditText.setVisibility(View.VISIBLE);
+        holder.mCommentUpdate.setVisibility(View.VISIBLE);
+       // Spannable html = (Spannable) Html.fromHtml(commentsItem.getContent().getRendered());
+        holder.mCommentEditText.setText(holder.mCommentText.getText().toString().trim());
+        holder.mCommentEditText.requestFocus();
     }
 }

@@ -1,6 +1,6 @@
 package in.healthhunt.model.comment;
 
-public class NewComment {
+public class CommentData {
 	private CommentsItem comment;
 	private int post_comment_count;
 
@@ -23,7 +23,7 @@ public class NewComment {
 	@Override
  	public String toString(){
 		return 
-			"NewComment{" +
+			"CommentData{" +
 			"comment = '" + comment + '\'' +
 			",post_comment_count = '" + post_comment_count + '\'' +
 			"}";

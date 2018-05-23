@@ -62,7 +62,11 @@ public interface ArticleParams {
     String PRODUCT_UNIT = "product_unit";
     String BRAND_NAME = "brand_name";
     String IS_BOOKMARK = "is_bookmark";
+    String FORMAT = "format";
+    int PRODUCT_SERVICES = 1;
+    int PRODUCT_SERVICE_REQUEST = 2;
 
+    String LIKE_TYPE = "like_type";
 
     String IS_LAST_PAGE = "is_last_page";
 

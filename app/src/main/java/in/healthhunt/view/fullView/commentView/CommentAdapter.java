@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,11 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import in.healthhunt.R;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.comment.Author;
 import in.healthhunt.model.comment.CommentsItem;
 import in.healthhunt.model.comment.Content;
+import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
 import in.healthhunt.view.fullView.URLImageParser;
@@ -53,6 +56,22 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
             if(author != null){
                 String name = author.getName();
                 holder.mUserName.setText(name);
+
+                String user_id = HealthHuntPreference.getString(mContext, Constants.USER_ID);
+                Log.i("TAGUSERU", "User_ID " + user_id + " Author ID " + author.getId() );
+                if(user_id.equals(String.valueOf(author.getId()))){
+                    holder.mCommentEdit.setVisibility(View.VISIBLE);
+                }
+                else{
+                    holder.mCommentEdit.setVisibility(View.GONE);
+                }
+
+                String url = author.getUrl();
+                Glide.with(mContext)
+                        .load(url)
+                        .bitmapTransform(new CropCircleTransformation(mContext)).placeholder(R.mipmap.avatar)
+                        .into(holder.mUserPic);
+
             }
 
             String date = commentsItem.getDate();
@@ -70,14 +89,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                 } else {
                     html = (Spannable) Html.fromHtml(content.getRendered(), imageGetter, null);
                 }
-                holder.mCommentText.setText(html);
+                holder.mCommentText.setText(html.toString().trim());
+                holder.mCommentText.setVisibility(View.VISIBLE);
+                holder.mCommentEditText.setVisibility(View.GONE);
+                holder.mCommentUpdate.setVisibility(View.GONE);
             }
-
-            String url = commentsItem.getImage();
-            Glide.with(mContext)
-                    .load(url)
-                    .bitmapTransform(new CropCircleTransformation(mContext)).placeholder(R.mipmap.avatar)
-                    .into(holder.mUserPic);
 
         }
     }
@@ -93,5 +109,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
     public interface ClickListener {
         void onMore(View v, int position);
+        void update(View v, int position);
     }
 }

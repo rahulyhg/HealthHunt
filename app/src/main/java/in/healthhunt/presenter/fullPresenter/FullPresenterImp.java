@@ -15,12 +15,14 @@ import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Likes;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.comment.NewComment;
 import in.healthhunt.model.likes.LikesInfo;
+import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
 import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
 import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
@@ -154,6 +156,22 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     }
 
     @Override
+    public void updateComment(String id, String content) {
+        IFullView.showProgress();
+        CommentRequest request = new CommentRequest();
+        request.setContent(content);
+        ICommentInteractor.updateComment(mContext, id, request,this);
+    }
+
+    @Override
+    public void updateLike(String id, boolean isLike) {
+        IFullView.showProgress();
+        LikesRequest likesRequest = new LikesRequest();
+        likesRequest.setLike_type(2);
+        ILikesInteractor.updateLikes(mContext, id, likesRequest, this);
+    }
+
+    @Override
     public void onArticleSuccess(ArticlePost item) {
         Log.i("TAGITEM", "ITEM " + item);
         mArticlePost = item;
@@ -205,7 +223,9 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void onLikesSuccess(LikesInfo likesInfo) {
-
+        IFullView.hideProgress();
+        Likes likes = likesInfo.getLikes();
+        Log.i("TAGLIKEINFO", "INFO " + likes);
     }
 
     @Override
@@ -235,10 +255,32 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     }
 
     @Override
-    public void onNewCommentSuccess(NewComment newComment) {
+    public void onNewCommentSuccess(CommentData newComment) {
         int post_comment = newComment.getPost_comment_count();
         mArticlePost.setComments(String.valueOf(post_comment));
         mCommentsItems.add(newComment.getComment());
+        IFullView.hideProgress();
+        IFullView.updateCommentAdapter();
+    }
+
+    @Override
+    public void onUpdateSuccess(CommentsItem commentsItem) {
+       // int pos = 0;
+        for(int i=0; i<mCommentsItems.size(); i++){
+            CommentsItem item = mCommentsItems.get(i);
+            if(item.getId() == commentsItem.getId()){
+                //pos = i;
+                mCommentsItems.set(i, commentsItem);
+                break;
+            }
+        }
+
+        /*Log.i("TAGDATA", " Content " + commentsItem.getContent().getRendered());
+        CommentsItem item = mCommentsItems.get(pos);
+        item.getContent().setRendered(commentsItem.getContent().getRendered());
+        mCommentsItems.set(pos, item);
+*/
+      //  Log.i("TAGPOS " , "POS " + pos);
         IFullView.hideProgress();
         IFullView.updateCommentAdapter();
     }

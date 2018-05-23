@@ -36,6 +36,7 @@ import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.homeScreenView.myFeedView.MyFeedFragment;
 import in.healthhunt.view.homeScreenView.myHuntsView.MyHuntFragment;
 import in.healthhunt.view.homeScreenView.shopView.ShopFragment;
+import in.healthhunt.view.homeScreenView.watchView.WatchFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
@@ -124,7 +125,13 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 else if(item.getItemId() == R.id.navigation_watch) {
                     mCurrentItem = 2;
                     updateTitle(getString(R.string.watch));
-                    //IHomePresenter.loadFragment(MyFeedFragment.class.getSimpleName(), null);
+                    Fragment fragment = mFragment[mCurrentItem];
+                    if(fragment == null){
+                        IHomePresenter.loadFragment(WatchFragment.class.getSimpleName(), null);
+                    }
+                    else {
+                        updateFragVisible(mCurrentItem);
+                    }
                 }
                 else if(item.getItemId() == R.id.navigation_shop) {
                     mCurrentItem = 3;
@@ -199,7 +206,15 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     fragment = new MyHuntFragment();
                 }
                 mFragment[1] = fragment;
-            } else if (tag.equals(ShopFragment.class.getSimpleName())) {
+            }
+            else if (tag.equals(WatchFragment.class.getSimpleName())) {
+                layout = R.id.watch_frame;
+                if (fragment == null) {
+                    fragment = new WatchFragment();
+                }
+                mFragment[2] = fragment;
+            }
+            else if (tag.equals(ShopFragment.class.getSimpleName())) {
                 layout = R.id.shop_frame;
                 if (fragment == null) {
                     fragment = new ShopFragment();

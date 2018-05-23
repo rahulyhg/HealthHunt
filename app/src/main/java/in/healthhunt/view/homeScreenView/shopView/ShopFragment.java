@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.ShopPresenterImp;
 import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.homeScreenView.IHomeView;
 
 /**
  * Created by abhishekkumar on 5/19/18.
@@ -58,18 +66,22 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     @BindView(R.id.suggestion_view)
     LinearLayout mSuggestionView;
 
+    private IHomeView IHomeView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IShopPresenter = new ShopPresenterImp(getContext(), this);
+        IHomeView = (IHomeView) getActivity();
+        IShopPresenter.fetchMarkets();
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        mSuggestionContent.setText(R.string.healthhunt_shop_content);
+        Log.i("TAGSHOWPR", "IHomeView ONCREATE " + IHomeView);
         setAdapter();
         return view;
     }
@@ -81,17 +93,17 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     
     @Override
     public void showProgress() {
-
+        IHomeView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-
+        IHomeView.hideProgress();
     }
 
     @Override
     public void updateBottomNavigation() {
-
+        IHomeView.updateBottomNavigation();
     }
 
     @Override
@@ -101,7 +113,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void updateAdapter() {
-
+        mShopViewer.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -125,12 +137,22 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
         params.setMargins(params.getMarginStart(),margin, params.getMarginEnd(), params.bottomMargin - margin);
         mFilterButton.setLayoutParams(params);
         mFilterView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.hh_green_light2));
-        //mShopViewer.setPadding(mShopViewer.getPaddingLeft(), HealthHuntUtility.dpToPx(16, getContext()), mShopViewer.getPaddingRight(), mShopViewer.getPaddingBottom());
     }
 
     @OnClick(R.id.filter_view)
     void onFilterClick(){
 
+        Map<String,String> map = new HashMap<String, String>();
+        List<String> products = new ArrayList<String>();
+        List<String> brands = new ArrayList<String>();
+        List<String> city = new ArrayList<String>();
+
+        List<ArticlePostItem> itemList = IShopPresenter.getAllArticles();
+        if(itemList != null) {
+            for(ArticlePostItem item : itemList){
+                String type = item.getType();
+            }
+        }
     }
 
     private void setAdapter() {
@@ -144,12 +166,12 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void ItemClicked(View v, int position) {
-       // ArticlePostItem postsItem = IShopPresenter.getArticle(position);
-        //if(postsItem != null) {
+        ArticlePostItem postsItem = IShopPresenter.getArticle(position);
+        if(postsItem != null) {
             Intent intent = new Intent(getContext(), FullViewActivity.class);
-            intent.putExtra(ArticleParams.ID, "");
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
             getContext().startActivity(intent);
-       // }
+        }
     }
 }

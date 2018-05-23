@@ -93,9 +93,16 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             List<CategoriesItem> categories = postsItem.getCategories();
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
+                holder.mCategoryName.setText(categoryName);
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+                int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                if(res != 0){
+                    holder.mCategoryImage.setImageResource(res);
+                }
+                else {
+                    holder.mCategoryImage.setImageResource(R.mipmap.ic_fitness);
+                }
             }
-
-            holder.mCategoryName.setText(categoryName);
 
             Author author = postsItem.getAuthor();
             if(author != null){

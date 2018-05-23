@@ -10,6 +10,9 @@ import framework.retrofit.RestError;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
+import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
+import in.healthhunt.model.response.HHResponse;
 
 /**
  * Created by abhishekkumar on 4/9/18.
@@ -18,9 +21,9 @@ import in.healthhunt.model.login.SignUpRequest;
 public interface ILoginInteractor {
 
     interface OnLoginFinishListener {
-        void onSuccess();
+        void onSuccess(User user);
         void onError(RestError errorInfo);
-        void onNewUserSuccess(String msg);
+        void onNewUserSuccess(HHResponse<UserData> user);
     }
 
     interface OnPasswordChangeListener {

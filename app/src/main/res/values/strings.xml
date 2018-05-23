@@ -82,9 +82,11 @@
     <string name="comments">Comments</string>
     <string name="write_comments_here">Write your comment here</string>
     <string name="send">Send</string>
+    <string name="update">Update</string>
     <string name="rs">\u20B9</string>
     <string name="read_time">%s min read</string>
     <string name="close_all">Close all</string>
+    <string name="healthhunt_shop_content">Organic food, yoga practitioners, relaxing spa massages, healthy snacking items, reflexology sessions, and much more… you will find all of this at one place – healthhunt shop! Whether you are looking to connect with newer audience or for the latest, healthy products and services – healthhunt shop is for you! View your saved items and collections here!</string>
 
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
@@ -96,6 +98,12 @@
     <!-- shop -->
     <string name="healthhunt_shop">Healthhunt shop</string>
     <string name="filter">Filter</string>
+    <string name="product">Product</string>
+    <string name="city">City</string>
+    <string name="brancd_name">Brand name</string>
+    <string name="remove">Remove</string>
+    <string name="apply">Apply</string>
+
 
 
     <!-- my hunts -->
@@ -106,5 +114,6 @@
     <string name="articles">Articles</string>
     <string name="videos">Videos</string>
     <string name="questions">Questions</string>
+    
 
 </resources>

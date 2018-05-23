@@ -1,12 +1,10 @@
 package in.healthhunt.model.articles.postResponse;
 
-import java.util.List;
-
 public class PostResponse{
 	private boolean product;
 	private Data data;
 	private String message;
-	private List<CardItem> card;
+	private Object/*List<CardItem>*/ card;
 	private boolean status;
 
 	public void setProduct(boolean product){
@@ -33,11 +31,11 @@ public class PostResponse{
 		return message;
 	}
 
-	public void setCard(List<CardItem> card){
+	public void setCard(/*List<CardItem>*/Object card){
 		this.card = card;
 	}
 
-	public List<CardItem> getCard(){
+	public /*List<CardItem>*/Object getCard(){
 		return card;
 	}
 
