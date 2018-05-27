@@ -35,7 +35,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     TextView mSponsoredArticleName;
 
     @BindView(R.id.sponsored_recycler_list)
-    RecyclerView mSponsoredViewer;
+    public RecyclerView mSponsoredViewer;
 
     private IArticlePresenter IArticlePresenter;
     private in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView IMyFeedView;
@@ -57,6 +57,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
         mSponsoredViewer.setLayoutManager(layoutManager);
         mSponsoredViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mSponsoredViewer.setAdapter(sponsoredAdapter);
+        mSponsoredViewer.setFocusableInTouchMode(false);
     }
 
     @OnClick(R.id.cross_image)
@@ -106,7 +107,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        //IMyFeedView.lo(fragmentName, bundle);
     }
 
     @Override

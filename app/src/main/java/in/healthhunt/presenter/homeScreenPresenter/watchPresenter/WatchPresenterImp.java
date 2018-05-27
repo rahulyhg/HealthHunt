@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.homeScreenPresenter.watchPresenter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
@@ -10,8 +11,13 @@ import java.util.Map;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
+import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
 import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
+import in.healthhunt.presenter.interactor.bookMarkInteractor.IBookMarkInteractor;
 import in.healthhunt.view.homeScreenView.watchView.IWatchView;
 import in.healthhunt.view.homeScreenView.watchView.WatchViewHolder;
 
@@ -19,18 +25,20 @@ import in.healthhunt.view.homeScreenView.watchView.WatchViewHolder;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.OnViewAllFinishListener{
+public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.OnViewAllFinishListener, IBookMarkInteractor.OnFinishListener{
 
     private String TAG = WatchPresenterImp.class.getSimpleName();
     private IArticleInteractor IArticleInteractor;
     private Context mContext;
     private IWatchView IWatchView;
     private List<ArticlePostItem> mVideoArticles;
+    private IBookMarkInteractor IBookMarkInteractor;
 
 
     public WatchPresenterImp(Context context, IWatchView watchView) {
         mContext =  context;
         IArticleInteractor = new ArticleInteractorImpl();
+        IBookMarkInteractor = new BookMarkInteractorImpl();
         IWatchView = watchView;
     }
 
@@ -38,6 +46,24 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
     public void onArticleSuccess(List<ArticlePostItem> items) {
         IWatchView.hideProgress();
         mVideoArticles = items;
+        Log.i("TAGITEMS", "ITEMS " + mVideoArticles.size());
+        IWatchView.updateAdapter();
+    }
+
+    @Override
+    public void onBookMarkSuccess(BookMarkData markResponse) {
+        IWatchView.hideProgress();
+        for(int i = 0; i< mVideoArticles.size(); i++) {
+            ArticlePostItem postItem = mVideoArticles.get(i);
+            BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
+            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if (currentUser != null) {
+                    currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                }
+                break;
+            }
+        }
         IWatchView.updateAdapter();
     }
 
@@ -60,12 +86,14 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
 
     @Override
     public void bookmark(String id, int type) {
-
+        IWatchView.showProgress();
+        IBookMarkInteractor.bookmark(mContext, id, type, this);
     }
 
     @Override
     public void unBookmark(String id, int type) {
-
+        IWatchView.showProgress();
+        IBookMarkInteractor.unBookmark(mContext, id, type, this);
     }
 
     @Override

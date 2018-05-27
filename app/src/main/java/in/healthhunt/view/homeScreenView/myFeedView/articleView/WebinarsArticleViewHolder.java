@@ -89,7 +89,7 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        //IMyFeedView.loadFragment(fragmentName, bundle);
     }
 
     @Override

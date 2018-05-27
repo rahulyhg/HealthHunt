@@ -34,7 +34,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     TextView mArticleName;
 
     @BindView(R.id.trending_recycler_list)
-    RecyclerView mTrendingViewer;
+    public RecyclerView mTrendingViewer;
 
     private IArticlePresenter IArticlePresenter;
     private in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView IMyFeedView;
@@ -57,6 +57,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
         mTrendingViewer.setLayoutManager(layoutManager);
         mTrendingViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTrendingViewer.setAdapter(trendingAdapter);
+        mTrendingViewer.setFocusableInTouchMode(false);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        //IMyFeedView.loadFragment(fragmentName, bundle);
     }
 
     @Override

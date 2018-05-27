@@ -18,8 +18,8 @@ import in.healthhunt.model.comment.CommentsItem;
 import in.healthhunt.model.comment.Content;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.utility.HealthHuntUtility;
+import in.healthhunt.model.utility.URLImageParser;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
-import in.healthhunt.view.fullView.URLImageParser;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**

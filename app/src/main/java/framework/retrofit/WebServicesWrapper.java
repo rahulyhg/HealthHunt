@@ -14,13 +14,15 @@ import java.util.Map;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
+import in.healthhunt.model.articles.postResponse.FullArticleResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -85,7 +87,10 @@ public class WebServicesWrapper {
 
                 String url = request.build().url().toString();
 
-                String requestUrl = url.substring(url.indexOf(authUrl));
+                String requestUrl = null;
+                if(url.contains(authUrl)) {
+                     requestUrl = url.substring(url.indexOf(authUrl));
+                }
 
                 Log.i("TAGHHHHHH", " EndPoint " + requestUrl);
 
@@ -240,6 +245,16 @@ public class WebServicesWrapper {
 
     }
 
+    public Call<FullProductResponse> fetchFullProduct(String id, ResponseResolver<FullProductResponse> responseResponseResolver) {
+
+        Call<FullProductResponse> loginResponseCall = webServices.fetchFullProduct(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
     public Call<List<BookMarkResponse>> bookmark(String id, ResponseResolver<List<BookMarkResponse>> responseResponseResolver) {
 
         Log.i("TAGBookmark", "Bookmark");
@@ -263,15 +278,17 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<PostResponse> fetchFullArticle(String id, ResponseResolver<PostResponse> responseResponseResolver) {
+    public Call<FullArticleResponse> fetchFullArticle(String id, ResponseResolver<FullArticleResponse> responseResponseResolver) {
 
-        Call<PostResponse> loginResponseCall = webServices.fetchFullArticle(id);
+        Call<FullArticleResponse> loginResponseCall = webServices.fetchFullArticle(id);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
         return loginResponseCall;
 
     }
+
+
 
     public Call<HHResponse<AllCommentInfo>> fetchComments(Map<String, String> params, ResponseResolver<HHResponse<AllCommentInfo>> responseResponseResolver) {
 
@@ -317,6 +334,16 @@ public class WebServicesWrapper {
     public Call<HHResponse<LikesInfo>> updateLikes(String id, LikesRequest likesRequest, ResponseResolver<HHResponse<LikesInfo>> responseResponseResolver) {
 
         Call<HHResponse<LikesInfo>> loginResponseCall = webServices.updateLikes(id, likesRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<FilterData> fetchFilters(Map<String, String> params, ResponseResolver<FilterData> responseResponseResolver) {
+
+        Call<FilterData> loginResponseCall = webServices.fetchFilters(params);
 
         loginResponseCall.enqueue(responseResponseResolver);
 

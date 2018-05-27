@@ -125,8 +125,16 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     }
 
     @Override
-    public TagViewHolder createTagViewHolder(View view, ITagPresenter tagPresenter) {
-        return new TagViewHolder(view, tagPresenter);
+    public TagItem getTag(int pos) {
+        if(mTagList != null) {
+            mTagList.get(pos);
+        }
+        return null;
+    }
+
+    @Override
+    public TagViewHolder createTagViewHolder(View view) {
+        return ITagView.createTagViewHolder(view);
     }
 
     private TagRequest createTagRequest(int pageNumber) {

@@ -34,7 +34,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     TextView mTopArticleName;
 
     @BindView(R.id.top_product_recycler_list)
-    RecyclerView mTopProductViewer;
+    public RecyclerView mTopProductViewer;
 
 
     private IProductPresenter ITopProductPresenter;
@@ -58,6 +58,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
         mTopProductViewer.setLayoutManager(layoutManager);
         mTopProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTopProductViewer.setAdapter(topProductAdapter);
+        mTopProductViewer.setFocusableInTouchMode(false);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        //IMyFeedView.loadFragment(fragmentName, bundle);
     }
 
     @Override

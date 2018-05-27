@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,13 +26,16 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
+import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.ShopPresenterImp;
 import in.healthhunt.view.fullView.FullViewActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
+import in.healthhunt.view.homeScreenView.filterView.FilterFragment;
 
 /**
  * Created by abhishekkumar on 5/19/18.
@@ -67,6 +68,9 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     LinearLayout mSuggestionView;
 
     private IHomeView IHomeView;
+    private Map<Integer, List<String>> mFilterData;
+
+    private final int FRAGMENT_FILTER_REQUEST = 1000;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +94,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     public int getCount() {
         return IShopPresenter.getCount();
     }
-    
+
     @Override
     public void showProgress() {
         IHomeView.showProgress();
@@ -103,7 +107,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void updateBottomNavigation() {
-        IHomeView.updateBottomNavigation();
+        IHomeView.hideBottomNavigationSelection();
     }
 
     @Override
@@ -122,6 +126,25 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     }
 
     @Override
+    public void handleFilterData(Map<Integer, List<String>> map) {
+        IHomeView.updateTitle(getString(R.string.shop));
+        mFilterData = map;
+        if(mFilterData == null || mFilterData.isEmpty()){
+            IShopPresenter.fetchMarkets();
+        }
+        else if(mFilterData != null && !mFilterData.isEmpty()){
+            IShopPresenter.fetchMarketFilters(mFilterData);
+        }
+
+        Log.i("TAGSHOP", "MAP "+ map);
+    }
+
+    @Override
+    public Map<Integer, List<String>> getFilterData() {
+        return mFilterData;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {
@@ -132,6 +155,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     @OnClick(R.id.suggestion_cross)
     void onCrossClick(){
         mSuggestionView.setVisibility(View.GONE);
+        HealthHuntPreference.putBoolean(getContext(), Constants.SHOP_FRAGMENT_SUGG_KEY, true);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mFilterButton.getLayoutParams();
         int margin = HealthHuntUtility.dpToPx(4,getContext());
         params.setMargins(params.getMarginStart(),margin, params.getMarginEnd(), params.bottomMargin - margin);
@@ -139,21 +163,12 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
         mFilterView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.hh_green_light2));
     }
 
-    @OnClick(R.id.filter_view)
+    @OnClick(R.id.filter_button)
     void onFilterClick(){
-
-        Map<String,String> map = new HashMap<String, String>();
-        List<String> products = new ArrayList<String>();
-        List<String> brands = new ArrayList<String>();
-        List<String> city = new ArrayList<String>();
-
-        List<ArticlePostItem> itemList = IShopPresenter.getAllArticles();
-        if(itemList != null) {
-            for(ArticlePostItem item : itemList){
-                String type = item.getType();
-            }
-        }
-    }
+        IHomeView.updateTitle(getString(R.string.filter));
+        IHomeView.hideBottomNavigationSelection();
+        IHomeView.getHomePresenter().loadNonFooterFragment(FilterFragment.class.getSimpleName(), null);
+      }
 
     private void setAdapter() {
         ShopAdapter shopAdapter = new ShopAdapter(getContext(), IShopPresenter);
@@ -166,11 +181,11 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void ItemClicked(View v, int position) {
-        ArticlePostItem postsItem = IShopPresenter.getArticle(position);
+        ProductPostItem postsItem = IShopPresenter.getProduct(position);
         if(postsItem != null) {
             Intent intent = new Intent(getContext(), FullViewActivity.class);
             intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
-            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
             getContext().startActivity(intent);
         }
     }

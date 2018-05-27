@@ -11,14 +11,12 @@
         android:layout_height="64dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/profile_oval_shape"
         android:layout_marginStart="16dp"
         android:layout_marginTop="19dp">
         <ImageView
             android:id="@+id/profile_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@mipmap/avatar"
             />
     </LinearLayout>
 
@@ -31,10 +29,9 @@
         android:fontFamily="@string/font_family_medium"
         android:textSize="14sp"
         android:gravity="center"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_pic_view"
-        android:text="HHHHHH"
         />
 
     <TextView
@@ -48,7 +45,7 @@
         android:textColor="@color/hh_edit_profile_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_name"
-        android:text="HHHHHH"
+        android:text="@string/edit_profile"
         />
 
 

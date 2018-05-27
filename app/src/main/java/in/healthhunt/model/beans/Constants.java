@@ -8,6 +8,7 @@ public interface Constants {
     int GMAIL_REQUEST_CODE = 1001;
     int ON_BOARDING_SCREEN_COUNT = 3;
     String VIEWPAGER_FRAGMENT_NO_KEY = "fragment_no_key";
+    String SHOP_FRAGMENT_SUGG_KEY = "shop_fragment_sugg_key";
 
     String DEVICE_TYPE = "deviceType";
     String AUTH_TOKEN = "authToken";
@@ -27,10 +28,19 @@ public interface Constants {
     String USER_URL = "user_url";
     String USER_NAME = "user_name";
 
-    String NUTRITION ="nutrition";
-    String FITNESS ="fitness";
-    String ORGANIC_BEAUTY ="organic beauty";
-    String MENTAL_WELLBEING = "mental wellbeing";
-    String LOVE ="love";
+    String All = "All";
+    String NUTRITION ="Nutrition";
+    String FITNESS ="Fitness";
+    String ORGANIC_BEAUTY ="Organic Beauty";
+    String MENTAL_WELLBEING = "Mental Wellbeing";
+    String LOVE ="Love";
+
+    int PRODUCT_FILTER = 1000;
+    int BRAND_FILTER = 2000;
+    int CITY_FILTER = 3000;
+
+    String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+    String TYPE_AUTOCOMPLETE = "/autocomplete";
+    String OUT_JSON = "/json";
 
 }

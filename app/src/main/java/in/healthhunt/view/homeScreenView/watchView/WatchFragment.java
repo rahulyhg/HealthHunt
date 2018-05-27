@@ -16,11 +16,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.IWatchPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.WatchPresenterImp;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.FullVideoActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
 
 /**
@@ -71,7 +72,7 @@ public class WatchFragment extends Fragment implements IWatchView, WatchAdapter.
 
     @Override
     public void updateBottomNavigation() {
-        IHomeView.updateBottomNavigation();
+        IHomeView.hideBottomNavigationSelection();
     }
 
     @Override
@@ -110,12 +111,12 @@ public class WatchFragment extends Fragment implements IWatchView, WatchAdapter.
 
     @Override
     public void ItemClicked(View v, int position) {
-       // ArticlePostItem postsItem = IShopPresenter.getArticle(position);
-        //if(postsItem != null) {
-            Intent intent = new Intent(getContext(), FullViewActivity.class);
-            intent.putExtra(ArticleParams.ID, "");
-            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+        ArticlePostItem postsItem = IWatchPresenter.getArticle(position);
+        if(postsItem != null) {
+            Intent intent = new Intent(getContext(), FullVideoActivity.class);
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
             getContext().startActivity(intent);
-       // }
+        }
     }
 }

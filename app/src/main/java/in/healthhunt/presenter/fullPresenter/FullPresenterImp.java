@@ -15,9 +15,8 @@ import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
-import in.healthhunt.model.articles.commonResponse.Likes;
+import in.healthhunt.model.articles.postProductResponse.ProductPost;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
-import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
@@ -33,8 +32,8 @@ import in.healthhunt.presenter.interactor.likesInteractor.ILikesInteractor;
 import in.healthhunt.presenter.interactor.likesInteractor.LikesInteractorImpl;
 import in.healthhunt.presenter.interactor.productInteractor.IProductInteractor;
 import in.healthhunt.presenter.interactor.productInteractor.ProductInteractorImpl;
-import in.healthhunt.view.fullView.IFullView;
 import in.healthhunt.view.fullView.commentView.CommentViewHolder;
+import in.healthhunt.view.fullView.fullViewFragments.IFullFragment;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -45,9 +44,10 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         ILikesInteractor.OnFinishListener, ICommentInteractor.OnFinishListener {
 
     private String TAG = FullPresenterImp.class.getSimpleName();
-    private IFullView IFullView;
+    private IFullFragment IFullFragment;
     private Context mContext;
     private ArticlePost mArticlePost;
+    private ProductPost mProductPost;
    // private IFullInteractor IFullInteractor;
     private IBookMarkInteractor IBookMarkInteractor;
     private ILikesInteractor ILikesInteractor;
@@ -58,9 +58,9 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     private int mLimit = 10;
     private List<CommentsItem> mCommentsItems;
 
-    public FullPresenterImp(Context context, IFullView fullView) {
+    public FullPresenterImp(Context context, IFullFragment fullView) {
         mContext =  context;
-        IFullView = fullView;
+        IFullFragment = fullView;
         //IFullInteractor = new FullInteractorImpl();
         IBookMarkInteractor = new BookMarkInteractorImpl();
         ILikesInteractor = new LikesInteractorImpl();
@@ -76,8 +76,14 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void fetchArticle(String id) {
-        IFullView.showProgress();
+        IFullFragment.showProgress();
         IArticleInteractor.fetchFullArticle(mContext, id, this);
+    }
+
+    @Override
+    public void fetchProduct(String id) {
+        IFullFragment.showProgress();
+        IProductInteractor.fetchFullProduct(mContext, id, this);
     }
 
     @Override
@@ -86,25 +92,25 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     }
 
     @Override
-    public ProductPostItem getProduct() {
-        return null;
+    public ProductPost getProduct() {
+        return mProductPost;
     }
 
     @Override
     public void bookmark(String id) {
-        IFullView.showProgress();
-        IBookMarkInteractor.bookmark(mContext, id, IFullView.getPostType(), this);
+        IFullFragment.showProgress();
+        IBookMarkInteractor.bookmark(mContext, id, IFullFragment.getPostType(), this);
     }
 
     @Override
     public void unBookmark(String id) {
-        IFullView.showProgress();
-        IBookMarkInteractor.unBookmark(mContext, id, IFullView.getPostType(), this);
+        IFullFragment.showProgress();
+        IBookMarkInteractor.unBookmark(mContext, id, IFullFragment.getPostType(), this);
     }
 
     @Override
     public CommentViewHolder createViewHolder(View view) {
-        return IFullView.createViewHolder(view);
+        return IFullFragment.createViewHolder(view);
     }
 
     @Override
@@ -118,7 +124,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void fetchComments(String id) {
-        IFullView.showProgress();
+        IFullFragment.showProgress();
         mOffset = 0;
         mLimit = 10;
         Map<String, String> map = new HashMap<String, String>();
@@ -141,13 +147,13 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void deleteComment(String id) {
-        IFullView.showProgress();
+        IFullFragment.showProgress();
         ICommentInteractor.deleteComment(mContext, id, this);
     }
 
     @Override
     public void addNewComment(String post_id, String content) {
-        IFullView.showProgress();
+        IFullFragment.showProgress();
         CommentRequest request = new CommentRequest();
         request.setPost_id(post_id);
         request.setContent(content);
@@ -157,17 +163,17 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void updateComment(String id, String content) {
-        IFullView.showProgress();
+        IFullFragment.showProgress();
         CommentRequest request = new CommentRequest();
         request.setContent(content);
         ICommentInteractor.updateComment(mContext, id, request,this);
     }
 
     @Override
-    public void updateLike(String id, boolean isLike) {
-        IFullView.showProgress();
+    public void updateLike(String id) {
+        IFullFragment.showProgress();
         LikesRequest likesRequest = new LikesRequest();
-        likesRequest.setLike_type(2);
+        likesRequest.setLike_type(String.valueOf(2));
         ILikesInteractor.updateLikes(mContext, id, likesRequest, this);
     }
 
@@ -175,18 +181,20 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     public void onArticleSuccess(ArticlePost item) {
         Log.i("TAGITEM", "ITEM " + item);
         mArticlePost = item;
-        IFullView.hideProgress();
-        IFullView.setContent();
+        IFullFragment.hideProgress();
+        IFullFragment.setContent();
     }
 
     @Override
-    public void onProductSuccess(ProductPostItem item) {
-        IFullView.hideProgress();
+    public void onProductSuccess(ProductPost item) {
+        mProductPost = item;
+        IFullFragment.hideProgress();
+        IFullFragment.setContent();
     }
 
     @Override
     public void onBookMarkSuccess(BookMarkData markResponse) {
-        IFullView.hideProgress();
+        IFullFragment.hideProgress();
         BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
 
         if(bookMarkInfo == null){
@@ -195,27 +203,32 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         }
 
         int type = bookMarkInfo.getType();
-
+        CurrentUser currentUser = null;
         switch (type){
             case ArticleParams.ARTICLE:
+            case ArticleParams.VIDEO:
                 if(bookMarkInfo.getPost_id().equals(String.valueOf(mArticlePost.getId()))) {
-                    CurrentUser currentUser = mArticlePost.getCurrent_user();
-                    if (currentUser != null) {
-                        currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                    }
+                    currentUser = mArticlePost.getCurrent_user();
                 }
                 break;
 
             case ArticleParams.PRODUCT:
+                if(bookMarkInfo.getPost_id().equals(String.valueOf(mProductPost.getId()))) {
+                    currentUser = mProductPost.getCurrent_user();
+                }
                 break;
         }
 
-        IFullView.updateBookMarkIcon();
+        if (currentUser != null) {
+            currentUser.setBookmarked(bookMarkInfo.isBookMark());
+        }
+
+        IFullFragment.updateBookMarkIcon();
     }
 
     @Override
     public void onError(RestError errorInfo) {
-        IFullView.hideProgress();
+        IFullFragment.hideProgress();
         if(errorInfo != null) {
             Toast.makeText(mContext, errorInfo.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -223,18 +236,43 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void onLikesSuccess(LikesInfo likesInfo) {
-        IFullView.hideProgress();
-        Likes likes = likesInfo.getLikes();
-        Log.i("TAGLIKEINFO", "INFO " + likes);
+
+
+        CurrentUser currentUser = null;
+
+        switch (IFullFragment.getPostType()){
+            case ArticleParams.ARTICLE:
+            case ArticleParams.VIDEO:
+                currentUser = mArticlePost.getCurrent_user();
+                break;
+
+            case ArticleParams.PRODUCT:
+                currentUser = mProductPost.getCurrent_user();
+                break;
+        }
+
+        if(currentUser != null) {
+            int likes = currentUser.getLike();
+            if(likes == 0){
+                likes = 1;
+            }
+            else {
+                likes = 0;
+            }
+            currentUser.setLike(likes);
+        }
+
+        IFullFragment.hideProgress();
+        IFullFragment.updateLike();
     }
 
     @Override
     public void onCommentSuccess(List<CommentsItem> item) {
-        IFullView.hideProgress();
+        IFullFragment.hideProgress();
         mCommentsItems = item;
         mOffset = mLimit;
         mLimit+=10;
-        IFullView.updateCommentAdapter();
+        IFullFragment.updateCommentAdapter();
     }
 
     @Override
@@ -242,25 +280,51 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         for(CommentsItem item: mCommentsItems){
             if(id.equals(String.valueOf(item.getId()))){
                 mCommentsItems.remove(item);
-                String comments = mArticlePost.getComments();
-                int com = Integer.parseInt(comments);
-                com--;
-                mArticlePost.setComments(String.valueOf(com));
+
+                String comments = null;
+                switch (IFullFragment.getPostType()){
+                    case ArticleParams.ARTICLE:
+                        comments = mArticlePost.getComments();;
+                        int com = Integer.parseInt(comments);
+                        com--;
+                        mArticlePost.setComments(String.valueOf(com));
+
+                        break;
+
+                    case ArticleParams.PRODUCT:
+                        comments = mProductPost.getComments();
+                        int proCom = Integer.parseInt(comments);
+                        proCom--;
+                        mProductPost.setComments(String.valueOf(proCom));
+
+                        break;
+                }
                 break;
             }
         }
 
-        IFullView.hideProgress();
-        IFullView.updateCommentAdapter();
+        IFullFragment.hideProgress();
+        IFullFragment.updateCommentAdapter();
     }
 
     @Override
     public void onNewCommentSuccess(CommentData newComment) {
         int post_comment = newComment.getPost_comment_count();
-        mArticlePost.setComments(String.valueOf(post_comment));
+
+        switch (IFullFragment.getPostType()){
+            case ArticleParams.ARTICLE:
+                mArticlePost.setComments(String.valueOf(post_comment));
+                break;
+
+            case ArticleParams.PRODUCT:
+                mProductPost.setComments(String.valueOf(post_comment));
+                break;
+
+        }
+
         mCommentsItems.add(newComment.getComment());
-        IFullView.hideProgress();
-        IFullView.updateCommentAdapter();
+        IFullFragment.hideProgress();
+        IFullFragment.updateCommentAdapter();
     }
 
     @Override
@@ -281,7 +345,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         mCommentsItems.set(pos, item);
 */
       //  Log.i("TAGPOS " , "POS " + pos);
-        IFullView.hideProgress();
-        IFullView.updateCommentAdapter();
+        IFullFragment.hideProgress();
+        IFullFragment.updateCommentAdapter();
     }
 }

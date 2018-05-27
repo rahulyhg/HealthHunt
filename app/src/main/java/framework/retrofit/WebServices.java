@@ -6,12 +6,14 @@ import java.util.Map;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
+import in.healthhunt.model.articles.postResponse.FullArticleResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
@@ -53,7 +55,10 @@ public interface WebServices {
  Call<HHResponse<ProductData>> fetchProducts(@QueryMap Map<String, String> params);
 
  @GET("posts/{id}")
- Call<PostResponse> fetchFullArticle(@Path("id") String id);
+ Call<FullArticleResponse> fetchFullArticle(@Path("id") String id);
+
+ @GET("posts/{id}")
+ Call<FullProductResponse> fetchFullProduct(@Path("id") String id);
 
  @POST("posts/{id}/save")
  Call<List<BookMarkResponse>>bookmark(@Path("id") String id);
@@ -76,6 +81,8 @@ public interface WebServices {
  @POST("likes/{id}")
  Call<HHResponse<LikesInfo>> updateLikes(@Path("id") String id, @Body LikesRequest likesRequest);
 
+ @GET("filters/")
+ Call<FilterData> fetchFilters(@QueryMap Map<String, String> params);
 
     /*@Header("authToken") String token,*/
 

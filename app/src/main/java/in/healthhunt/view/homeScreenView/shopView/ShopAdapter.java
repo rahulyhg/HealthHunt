@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,10 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import in.healthhunt.R;
-import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
-import in.healthhunt.model.utility.HealthHuntUtility;
+import in.healthhunt.model.articles.productResponse.Content;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 
 /**
@@ -63,7 +62,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
 
     private void setContent(ShopViewHolder holder, int pos) {
 
-        ArticlePostItem postsItem = IShopPresenter.getArticle(pos);
+        ProductPostItem postsItem = IShopPresenter.getProduct(pos);
         if(postsItem != null) {
             String url = null;
             List<MediaItem> mediaItems = postsItem.getMedia();
@@ -83,8 +82,8 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
             }
 
 
-            String categoryName = null;
-            List<CategoriesItem> categories = postsItem.getCategories();
+            /*String categoryName = null;
+            List<CategoriesItem> categories = postsItem.getC();
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
 
@@ -97,14 +96,19 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
                 else {
                     holder.mCategoryImage.setImageResource(R.mipmap.ic_fitness);
                 }
-            }
+            }*/
 
+            /*postsItem.getC
             Title title = postsItem.getTitle();
             String articleTitle = null;
             if(title != null) {
                 articleTitle = title.getRendered();
+            }*/
+
+            Content content = postsItem.getContent();
+            if(content != null) {
+                holder.mShopContent.setText(Html.fromHtml(content.getRendered()));
             }
-            holder.mShopContent.setText(articleTitle);
 
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {

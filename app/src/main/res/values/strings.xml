@@ -3,6 +3,8 @@
     <string name="server_client_id">473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com</string>
     <string name="facebook_app_id">2014330465547457</string>
     <string name="fb_login_protocol_scheme">fb2014330465547457</string>
+    <string name="youtube_key">AIzaSyDFVYeZ2vDLyraV2KcMEsC6THxxFh_2vMI</string>
+    <string name="google_place_key">AIzaSyDkj5Hzo1qyGT1iGNKQatKs_02oN7cxc_8</string>
 
     <!--473972138506-lvt76674edq0is3r38qpbeqt1p82sjs6.apps.googleusercontent.com-->
     <!-- Font family -->
@@ -48,6 +50,7 @@
     <string name="search_by_tags">Search by tags</string>
     <string name="select_all">Select all</string>
     <string name="exercise">Exercise</string>
+    <string name="enter_the_city">Enter the city</string>
 
 
     <!-- OnBoarding screen string values -->
@@ -90,9 +93,12 @@
 
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="buy">Buy</string>
     
     <string name="share">Share</string>
     <string name="download_this_article">Download this article</string>
+    <string name="Shipping_charges_apply">Shipping charges apply</string>
+    <string name="Loose_Square_Marketing">Loose Square Marketing Solutions</string>
 
 
     <!-- shop -->
@@ -103,6 +109,8 @@
     <string name="brancd_name">Brand name</string>
     <string name="remove">Remove</string>
     <string name="apply">Apply</string>
+    <string name="search_by_product_type">Search by product type</string>
+    <string name="search_by_brand_name">Search by brand name</string>
 
 
 
@@ -114,6 +122,11 @@
     <string name="articles">Articles</string>
     <string name="videos">Videos</string>
     <string name="questions">Questions</string>
-    
+    <string name="edit_profile">Edit profile</string>
+
+    <!-- You Tube -->
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+
+
 
 </resources>

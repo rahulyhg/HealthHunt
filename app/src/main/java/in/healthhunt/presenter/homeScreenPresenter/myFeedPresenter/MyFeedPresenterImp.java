@@ -175,6 +175,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchData() {
+        IMyFeedView.showProgress();
         fetchCount = 6;
         fetchTagsArticle(0, 5);
         fetchTrendingArticle(0, 2);
@@ -228,7 +229,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
         if(fetchCount == 0) {
             buildMap();
-            IMyFeedView.onLoadComplete();
+            IMyFeedView.hideProgress();
             IMyFeedView.updateAdapter();
         }
     }
@@ -249,7 +250,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
         if(fetchCount == 0) {
             buildMap();
-            IMyFeedView.onLoadComplete();
+            IMyFeedView.hideProgress();
             IMyFeedView.updateAdapter();
         }
     }

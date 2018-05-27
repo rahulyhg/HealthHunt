@@ -27,6 +27,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
     private Context mContext;
     private boolean isSelectAll;
     private Map<String, Integer> iconMap;
+    private OnClickListener mOnClickListener;
 
     public TagAdapter(Context context, ITagPresenter tagPresenter) {
         mContext = context;
@@ -36,9 +37,8 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
 
     @Override
     public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i("TAG1223", "tags listdd " + ITagPresenter.getTagCount());
         View view = LayoutInflater.from(mContext).inflate(R.layout.tag_item_view, parent, false);
-        return ITagPresenter.createTagViewHolder(view, ITagPresenter);
+        return ITagPresenter.createTagViewHolder(view);
     }
 
     @Override
@@ -77,6 +77,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagViewHolder> {
             tagItem.setPressed(isAll);
         }
         notifyDataSetChanged();
+    }
+
+    public void setClickListener(OnClickListener onClickListener){
+        mOnClickListener = onClickListener;
+    }
+
+    public interface OnClickListener{
+        void onItemClick(int position);
     }
 
     private void createIconMap() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left|center"
+        android:layout_gravity="center"
+        android:background="@drawable/category_bg"
+        android:paddingEnd="16dp"
+        android:elevation="2dp"
+        android:padding="1dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="5dp">
+
+        <LinearLayout
+            android:id="@+id/category_image_bg"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/category_image"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@mipmap/ic_organic_beauty"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="14sp"
+            android:text="Love"
+            android:layout_gravity="center"
+            android:textColor="@color/hh_text_color"
+            android:layout_marginStart="8dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

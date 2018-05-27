@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/hh_background">
+    android:background="@color/hh_background_light">
 
 
     <LinearLayout
@@ -11,6 +11,7 @@
         android:orientation="vertical"
         android:layout_alignParentTop="true">
         <RelativeLayout
+            android:id="@+id/product_filter"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -19,6 +20,7 @@
 
 
             <TextView
+                android:id="@+id/filter_product_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"
@@ -39,13 +41,81 @@
                 android:layout_centerVertical="true"
                 android:scaleType="center"
                 />
-            <ViewStub
-                android:id="@+id/product_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/product_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="top"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@mipmap/ic_search_bg"
+                >
+
+
+                <ImageView
+                    android:id="@+id/search_icon"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_search"
+                    android:backgroundTint="#000000"
+                    android:alpha="54"/>
+
+
+                <EditText
+                    android:id="@+id/product_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/search_icon"
+                    android:layout_toLeftOf="@id/record"
+                    android:layout_centerInParent="true"
+                    android:gravity="left|center"
+                    android:paddingStart="10dp"
+                    android:background="@null"
+                    android:textSize="16sp"
+                    android:hint="@string/search_by_tags"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_grey_dark"/>
+
+
+                <ImageView
+                    android:id="@+id/record"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_record"
+                    android:alpha="54"
+                    android:backgroundTint="#000000"
+                    />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/product_recycler_list"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scrollbars="none"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+
         <RelativeLayout
+            android:id="@+id/brand_filter"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
@@ -53,6 +123,7 @@
 
 
             <TextView
+                android:id="@+id/filter_brand_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"
@@ -73,14 +144,80 @@
                 android:layout_centerVertical="true"
                 android:scaleType="center"
                 />
-
-            <ViewStub
-                android:id="@+id/brand_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/brand_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="top"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@mipmap/ic_search_bg"
+                >
+
+
+                <ImageView
+                    android:id="@+id/brand_search_icon"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_search"
+                    android:backgroundTint="#000000"
+                    android:alpha="54"/>
+
+
+                <EditText
+                    android:id="@+id/brand_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/brand_search_icon"
+                    android:layout_toLeftOf="@id/brand_record"
+                    android:layout_centerInParent="true"
+                    android:gravity="left|center"
+                    android:paddingStart="10dp"
+                    android:background="@null"
+                    android:textSize="16sp"
+                    android:hint="@string/search_by_tags"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_grey_dark"/>
+
+
+                <ImageView
+                    android:id="@+id/brand_record"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_record"
+                    android:alpha="54"
+                    android:backgroundTint="#000000"
+                    />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/brand_recycler_list"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scrollbars="none"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+
         <RelativeLayout
+            android:id="@+id/city_filter"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
@@ -88,6 +225,7 @@
 
 
             <TextView
+                android:id="@+id/filter_city_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"
@@ -108,42 +246,146 @@
                 android:layout_centerVertical="true"
                 android:scaleType="center"
                 />
-
-            <ViewStub
-                android:id="@+id/city_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/city_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="top"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@mipmap/ic_search_bg"
+                >
+
+
+                <ImageView
+                    android:id="@+id/city_search_icon"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_search"
+                    android:backgroundTint="#000000"
+                    android:alpha="54"/>
+
+
+                <EditText
+                    android:id="@+id/city_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/city_search_icon"
+                    android:layout_toLeftOf="@id/city_record"
+                    android:layout_centerInParent="true"
+                    android:gravity="left|center"
+                    android:paddingStart="10dp"
+                    android:background="@null"
+                    android:textSize="16sp"
+                    android:hint="@string/enter_the_city"
+                    android:fontFamily="@string/font_family_regular"
+                    android:textColor="@color/hh_grey_dark"/>
+
+
+                <ImageView
+                    android:id="@+id/city_record"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_record"
+                    android:alpha="54"
+                    android:backgroundTint="#000000"
+                    />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/city_recycler_list"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scrollbars="none"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp"/>
+        </LinearLayout>
+        <!--<AutoCompleteTextView
+            android:id="@+id/city_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:background="@mipmap/ic_search_bg"
+            android:textSize="16sp"
+            android:hint="@string/enter_the_city"
+            android:fontFamily="@string/font_family_regular"
+            android:drawableStart="@mipmap/ic_search"
+            android:drawableEnd="@mipmap/ic_record"
+            android:paddingEnd="16dp"
+            android:drawablePadding="16dp"
+            android:textColor="@color/hh_grey_dark"
+            android:completionThreshold="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            android:scrollbars="none"
+            />-->
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/remove_apply_view"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:gravity="right|center"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@string/font_family_medium"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:text="@string/remove"
-            android:textColor="#42000000"
-            android:layout_marginEnd="28dp"
-            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/shadow_down">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@string/font_family_medium"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:text="@string/apply"
-            android:textColor="@color/hh_green_light2"
-            />
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="right|center"
+            android:layout_marginEnd="16dp">
+
+            <TextView
+                android:id="@+id/remove"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:fontFamily="@string/font_family_medium"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/remove"
+                android:textColor="@color/hh_text_color2"
+                android:layout_marginEnd="28dp"
+                />
+
+            <TextView
+                android:id="@+id/apply"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:fontFamily="@string/font_family_medium"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:text="@string/apply"
+                android:textColor="@color/hh_green_light2"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

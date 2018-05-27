@@ -17,7 +17,6 @@ public interface IMyFeedView extends IView {
     RecyclerView.ViewHolder createArticleHolder(View view, int type);
     void onClickViewAll(String tag, Bundle bundle);
     void onClickCrossView(int index);
-    void onLoadComplete();
     List<ArticlePostItem> getTagArticles();
     List<ArticlePostItem> getTrendingArticles();
     List<ArticlePostItem> getLatestArticles();
@@ -28,5 +27,5 @@ public interface IMyFeedView extends IView {
     void setBottomNavigation();
     void showAlert(String msg);
     int getView(int type);
-    void loadFragment(String fragmentName, Bundle bundle);
+    void loadNonFooterFragment(String fragmentName, Bundle bundle);
 }

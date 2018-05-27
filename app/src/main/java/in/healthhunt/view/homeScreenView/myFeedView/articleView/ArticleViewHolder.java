@@ -106,7 +106,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        IMyFeedView.loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override

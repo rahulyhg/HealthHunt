@@ -1,151 +1,60 @@
 package in.healthhunt.view.fullView;
 
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spannable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.WindowManager;
 
-import com.bumptech.glide.Glide;
-
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.Content;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
-import in.healthhunt.model.articles.commonResponse.Author;
-import in.healthhunt.model.articles.commonResponse.CurrentUser;
-import in.healthhunt.model.articles.commonResponse.Likes;
-import in.healthhunt.model.articles.commonResponse.MediaItem;
-import in.healthhunt.model.articles.postResponse.ArticlePost;
-import in.healthhunt.model.beans.SpaceDecoration;
-import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.fullPresenter.FullPresenterImp;
-import in.healthhunt.presenter.fullPresenter.IFullPresenter;
 import in.healthhunt.view.BaseActivity;
-import in.healthhunt.view.fullView.commentView.CommentAdapter;
-import in.healthhunt.view.fullView.commentView.CommentViewHolder;
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 
 /**
  * Created by abhishekkumar on 5/10/18.
  */
 
-public class FullViewActivity extends BaseActivity implements IFullView, CommentAdapter.ClickListener {
+public class FullViewActivity extends BaseActivity implements IFullView/*implements IFullFragment, CommentAdapter.ClickListener */{
 
 
-    @BindView(R.id.full_article_read_time)
-    TextView mReadTime;
 
-    @BindView(R.id.full_likes_count)
-    TextView mLikesCount;
-
-    @BindView(R.id.full_article_like)
-    ImageView mLikeImage;
-
-    @BindView(R.id.full_view_category_name)
-    TextView mCategoryName;
-
-    @BindView(R.id.full_article_category_icon)
-    ImageView mCategoryImage;
-
-    @BindView(R.id.full_article_image)
-    ImageView mArticleImage;
-
-    @BindView(R.id.full_article_content)
-    TextView mTitle;
-
-    @BindView(R.id.author_pic)
-    ImageView mAuthorImage;
-
-    @BindView(R.id.author_name)
-    TextView mAuthorName;
-
-    @BindView(R.id.author_publish_date)
-    TextView mPublishDate;
-
-    @BindView(R.id.full_article_description)
-    TextView mContent;
-
-    @BindView(R.id.full_article_hash_tags)
-    TextView mHashTags;
-
-    @BindView(R.id.comment_count)
-    TextView mCommentCount;
-
-    @BindView(R.id.comments_view_all_text)
-    TextView mCommentViewAll;
-
-    @BindView(R.id.comments_view_all_arrow)
-    ImageView mCommentArrow;
-
-    @BindView(R.id.comment_view)
-    LinearLayout mCommentView;
-
-    @BindView(R.id.full_article_download)
-    ImageView mDownloadView;
-
-    @BindView(R.id.full_article_bookmark)
-    ImageView mBookMark;
-
-    @BindView(R.id.full_view)
-    LinearLayout mFullView;
-
-    @BindView(R.id.comments_recycler_list)
-    RecyclerView mCommentViewer;
-
-    @BindView(R.id.full_view_scroll)
-    ScrollView mFullViewScroll;
-
-    @BindView(R.id.send_comment)
-    Button mSendComment;
-
-    @BindView(R.id.comment_content)
-    EditText mCommentContent;
-
-    private IFullPresenter IFullPresenter;
     private int mPostType;
+    private String mId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.full_article_view_item);
+        setContentView(R.layout.activity_fullview);
 
         // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
-        ButterKnife.bind(this);
-        IFullPresenter = new FullPresenterImp(getApplicationContext(), this);
-        String id = getIntent().getStringExtra(ArticleParams.ID);
+        mId = getIntent().getStringExtra(ArticleParams.ID);
         mPostType = getIntent().getIntExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
-        Log.i("TagFull", "Id = " + id);
-        IFullPresenter.fetchArticle(id);
+        Log.i("TagFull", "Id = " + mId);
+        setStatusBarTranslucent(true);
 
+
+        switch (mPostType){
+            case ArticleParams.ARTICLE:
+               loadFragment(new FullArticleFragment());
+                break;
+
+            case ArticleParams.PRODUCT:
+                loadFragment(new FullProductFragment());
+                break;
+        }
+
+    }
+
+    protected void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
 
     @Override
@@ -158,6 +67,23 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         mProgress.dismiss();
     }
 
+    @Override
+    public String getID(){
+        return mId;
+    }
+
+    @Override
+    public int getProductType(){
+        return mPostType;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.full_view_frame, fragment);
+        fragmentTransaction.commit();
+    }
+
+/*
     @Override
     public void setContent() {
         ArticlePost articlePost = IFullPresenter.getArticle();
@@ -219,6 +145,38 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         setCommentContent(IFullPresenter.getArticle());
     }
 
+    @Override
+    public void updateLike() {
+        CurrentUser currentUser =  IFullPresenter.getArticle().getCurrent_user();
+        if(currentUser != null) {
+            int like = currentUser.getLike();
+            int count = Integer.parseInt(mLikesCount.getText().toString());
+            if (like > 0) {
+                updateLikeIcon(true);
+                count++;
+            } else {
+                updateLikeIcon(false);
+                if(count > 0) {
+                    count--;
+                }
+            }
+
+            mLikesCount.setText(String.valueOf(count));
+        }
+    }
+
+    public void updateLikeIcon(boolean isLike) {
+        if(!isLike){
+            mLikeImage.setColorFilter(null);
+            mLikeImage.setImageResource(R.mipmap.ic_full_article_heart);
+        }
+        else {
+            mLikeImage.setColorFilter(ContextCompat.getColor(this, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+
+
     @OnClick(R.id.comments_view_all)
     void onViewAll(){
         Log.i("TAGCOMMENT" , " isShown " + mCommentView.isShown());
@@ -274,6 +232,15 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
     void onSend(View view){
         String content = mCommentContent.getText().toString().trim();
 
+        try {
+            byte[] data = content.getBytes("UTF-8");
+            content = Base64.encodeToString(data, Base64.DEFAULT);
+        }
+        catch (UnsupportedEncodingException unsupportedEncodingException){
+
+        }
+
+
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
@@ -288,18 +255,8 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
 
     @OnClick(R.id.full_article_like)
     void onLikeClick(){
-
-        Likes likes = IFullPresenter.getArticle().getLikes();
-        Log.i("TAGLIKES", "LIkes " + likes);
-        if(likes != null) {
-            String like = likes.getLikes();
-            if(like!= null){
-                Log.i("TAGLIKES", "Article Id " + IFullPresenter.getArticle().getId() + " is Likes " + like);
-            }
-        }
-
         int id = IFullPresenter.getArticle().getId();
-        IFullPresenter.updateLike(String.valueOf(id), true);
+        IFullPresenter.updateLike(String.valueOf(id));
     }
 
     private void setCommentContent(ArticlePost articlePost) {
@@ -386,6 +343,14 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         CurrentUser currentUser = articlePost.getCurrent_user();
         if(currentUser != null) {
             updateBookMark(currentUser.isBookmarked());
+
+            int like = currentUser.getLike();
+            if(like > 0){
+                updateLikeIcon(true);
+            }
+            else {
+                updateLikeIcon(false);
+            }
         }
 
 
@@ -426,9 +391,9 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         }
 
         if (url != null) {
-            Glide.with(this).load(url).placeholder(R.drawable.artical).into(mArticleImage);
+            Glide.with(this).load(url).placeholder(R.drawable.artical).into(mProductImage);
         } else {
-            mArticleImage.setBackgroundResource(R.drawable.artical);
+            mProductImage.setBackgroundResource(R.drawable.artical);
         }
     }
 
@@ -522,17 +487,25 @@ public class FullViewActivity extends BaseActivity implements IFullView, Comment
         CommentsItem commentsItem = IFullPresenter.getComment(position);
         int id = commentsItem.getId();
         String content = holder.mCommentEditText.getText().toString();
+
+        try {
+            byte[] data = content.getBytes("UTF-8");
+            content = Base64.encodeToString(data, Base64.DEFAULT);
+        }
+        catch (UnsupportedEncodingException unsupportedEncodingException){
+
+        }
         IFullPresenter.updateComment(String.valueOf(id), content);
     }
 
     private void editComment(int position) {
-       // CommentsItem commentsItem = IFullPresenter.getComment(position);
+        // CommentsItem commentsItem = IFullPresenter.getComment(position);
         CommentViewHolder holder = (CommentViewHolder) mCommentViewer.getChildViewHolder(mCommentViewer.getChildAt(position));
         holder.mCommentText.setVisibility(View.GONE);
         holder.mCommentEditText.setVisibility(View.VISIBLE);
         holder.mCommentUpdate.setVisibility(View.VISIBLE);
-       // Spannable html = (Spannable) Html.fromHtml(commentsItem.getContent().getRendered());
+        // Spannable html = (Spannable) Html.fromHtml(commentsItem.getContent().getRendered());
         holder.mCommentEditText.setText(holder.mCommentText.getText().toString().trim());
         holder.mCommentEditText.requestFocus();
-    }
+    }*/
 }

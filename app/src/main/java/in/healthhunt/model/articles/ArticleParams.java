@@ -65,6 +65,12 @@ public interface ArticleParams {
     String FORMAT = "format";
     int PRODUCT_SERVICES = 1;
     int PRODUCT_SERVICE_REQUEST = 2;
+    String FILTER_TYPE = "filter_type";
+    String BRANDS = "brands";
+
+    String PRODUCT_TYPE_ID = "productType";
+    String BRAND = "brand";
+    String LOCATION = "location";
 
     String LIKE_TYPE = "like_type";
 
@@ -76,6 +82,8 @@ public interface ArticleParams {
 
     int ARTICLE = 100;
     int PRODUCT = 200;
+    int VIDEO = 300;
+
     String POST_TYPE = "post_type";
 
     int SAVED = 1000;

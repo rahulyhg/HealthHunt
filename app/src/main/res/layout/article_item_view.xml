@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/article_item_view"
     android:layout_width="match_parent"
-    android:layout_height="310dp"
+    android:layout_height="312dp"
     android:background="@mipmap/ic_trending_sponsored_article_bg">
 
 

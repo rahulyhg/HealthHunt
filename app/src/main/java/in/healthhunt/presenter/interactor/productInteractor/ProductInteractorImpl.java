@@ -7,6 +7,7 @@ import java.util.Map;
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
+import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.response.HHResponse;
 import retrofit2.Response;
@@ -32,8 +33,18 @@ public class ProductInteractorImpl implements IProductInteractor {
     }
 
     @Override
-    public void fetchFullProduct(Context context, String id, OnFullViewFinishListener finishListener) {
+    public void fetchFullProduct(Context context, String id, final OnFullViewFinishListener finishListener) {
+            WebServicesWrapper.getInstance(context).fetchFullProduct(id, new ResponseResolver<FullProductResponse>() {
+                @Override
+                public void onSuccess(FullProductResponse postResponse, Response response) {
+                        finishListener.onProductSuccess(postResponse.getData().getPost());
+                }
 
+                @Override
+                public void onFailure(RestError error, String msg) {
+                        finishListener.onError(error);
+                }
+            });
     }
 
     @Override

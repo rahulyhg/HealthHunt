@@ -28,6 +28,7 @@ import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.presenter.interactor.loginInteractor.ILoginInteractor;
+import in.healthhunt.presenter.interactor.loginInteractor.LoginInteractorImpl;
 import in.healthhunt.view.loginView.ILoginView;
 
 /**
@@ -41,10 +42,10 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     ILoginInteractor ILoginInteractor;
     private Context mContext;
 
-    public LoginPresenterImpl(Activity activity, ILoginInteractor loginInteractor) {
+    public LoginPresenterImpl(Activity activity) {
          mContext = activity.getApplicationContext();
         ILoginView = (ILoginView) activity;
-        ILoginInteractor = loginInteractor;
+        ILoginInteractor = new LoginInteractorImpl();
     }
 
     @Override

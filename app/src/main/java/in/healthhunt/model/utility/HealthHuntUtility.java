@@ -138,6 +138,9 @@ public class HealthHuntUtility {
             else if(categoryName.equalsIgnoreCase(Constants.LOVE)){
                 res = R.mipmap.ic_love_icon;
             }
+            else {
+                res = R.mipmap.ic_all;
+            }
         }
         return res;
     }

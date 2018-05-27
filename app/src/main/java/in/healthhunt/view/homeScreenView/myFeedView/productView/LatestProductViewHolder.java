@@ -71,7 +71,7 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-            IMyFeedView.loadFragment(fragmentName, bundle);
+            IMyFeedView.loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override

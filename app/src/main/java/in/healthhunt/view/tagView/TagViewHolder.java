@@ -46,22 +46,24 @@ public class TagViewHolder extends RecyclerView.ViewHolder {
 
     private Context mContext;
     private ITagPresenter ITagPresenter;
-    public TagViewHolder(View itemView, ITagPresenter tagPresenter) {
+    private TagAdapter.OnClickListener mOnClickListener;
+    public TagViewHolder(View itemView, ITagPresenter tagPresenter, TagAdapter.OnClickListener onClickListener) {
         super(itemView);
         ITagPresenter = tagPresenter;
         mContext = itemView.getContext();
+        mOnClickListener = onClickListener;
         ButterKnife.bind(this, itemView);
     }
 
     @OnClick(R.id.tag_view)
     public void onTagClick() {
-
         List<TagItem> itemList = ITagPresenter.getTagList();
         TagItem tagItem = itemList.get(mViewHolderPos);
         tagItem.setPressed(!tagItem.isPressed());
 
         updateTag(tagItem);
         updateSelection(tagItem);
+        mOnClickListener.onItemClick(getAdapterPosition());
     }
 
 

@@ -22,7 +22,6 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.preference.HealthHuntPreference;
-import in.healthhunt.presenter.interactor.loginInteractor.LoginInteractorImpl;
 import in.healthhunt.presenter.loginPresenter.Facebook;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
@@ -54,7 +53,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        IPresenter = new LoginPresenterImpl(this, new LoginInteractorImpl());
+        IPresenter = new LoginPresenterImpl(this);
 
         //Intent intent = new Intent(getApplicationContext(), FullViewActivity.class);
         //startActivity(intent);

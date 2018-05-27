@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import framework.retrofit.RestError;
+import in.healthhunt.model.articles.postProductResponse.ProductPost;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 
 /**
@@ -20,7 +21,7 @@ public interface IProductInteractor {
     }
 
     interface OnFullViewFinishListener {
-        void onProductSuccess(ProductPostItem item);
+        void onProductSuccess(ProductPost item);
         void onError(RestError errorInfo);
     }
 

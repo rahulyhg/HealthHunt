@@ -9,7 +9,11 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.IWatchPresenter;
 
 /**
@@ -54,11 +58,10 @@ public class WatchViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.article_item_view)
     RelativeLayout mShopItemView;
 
-    private int mViewHolderPos;
-
     private Context mContext;
     private IWatchPresenter IWatchPresenter;
     private WatchAdapter.ClickListener mClickListener;
+
     public WatchViewHolder(View itemView, IWatchPresenter watchPresenter, WatchAdapter.ClickListener clickListener) {
         super(itemView);
         IWatchPresenter = watchPresenter;
@@ -67,10 +70,25 @@ public class WatchViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-   // @OnClick(R.id.shop_article_item_view)
+    @OnClick(R.id.article_item_view)
     void onItemClick(View view) {
         if(mClickListener != null) {
             mClickListener.ItemClicked(view, getAdapterPosition());
+        }
+    }
+
+    @OnClick(R.id.article_bookmark)
+    void onBookMark(){
+        ArticlePostItem postsItem = IWatchPresenter.getArticle(getAdapterPosition());
+        String id = String.valueOf(postsItem.getId());
+        CurrentUser currentUser = postsItem.getCurrent_user();
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                IWatchPresenter.bookmark(id, ArticleParams.VIDEO);
+            }
+            else {
+                IWatchPresenter.unBookmark(id, ArticleParams.VIDEO);
+            }
         }
     }
 }

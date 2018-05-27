@@ -21,7 +21,7 @@
                 android:layout_height="100dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:id="@+id/play_icon"
@@ -29,7 +29,7 @@
                 android:layout_height="100dp"
                 android:src="@mipmap/ic_play_icon"
                 android:layout_gravity="center"
-                android:scaleType="center"/>
+                android:scaleType="center" />
 
             <ImageView
                 android:id="@+id/article_bookmark"
@@ -96,8 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="8dp"
-                    android:gravity="left|center"
-                    android:text="Abhishek" />
+                    android:gravity="left|center" />
 
             </LinearLayout>
 
@@ -111,7 +110,6 @@
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
                 android:maxLines="3"
-                android:text="HH JJ  vv  nbvbnvbvbv nvn vnvnvn bvnvv  n nn H JJ  vv  nbvbnvbvbv nvn vnvnvn bvnvv  n nn "
                 android:textColor="@color/hh_edittext_text_color"
                 android:textSize="18sp" />
 
@@ -149,8 +147,7 @@
             android:fontFamily="@string/font_family_regular"
             android:layout_marginBottom="12dp"
             android:textSize="14sp"
-            android:textColor="@color/hh_green_light2"
-            android:text="#Detox" />
+            android:textColor="@color/hh_green_light2" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,7 +163,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
-                android:text="23 mnh 12"
                 android:textColor="@color/hh_edittext_hint_color"
                 android:textSize="12sp"
                 android:layout_weight="1"/>
@@ -177,7 +173,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="right|center"
-                android:text="12 ghg 67"
                 android:textColor="@color/hh_edittext_hint_color"
                 android:textSize="12sp"
                 android:layout_weight="1"/>

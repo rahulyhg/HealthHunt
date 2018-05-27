@@ -1,16 +1,23 @@
 package in.healthhunt.view.homeScreenView.myFeedView;
 
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -20,9 +27,10 @@ import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.IMyFeedPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.MyFeedPresenterImp;
-import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.ArticleViewHolder;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.ContinueArticleViewHolder;
@@ -44,10 +52,17 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     @BindView(R.id.my_feed_recycler_list)
     RecyclerView mFeedViewer;
 
+    @BindView(R.id.category_viewer)
+    LinearLayout mCategoryViewer;
+
+    @BindView(R.id.horizontalScrollView)
+    HorizontalScrollView mHorizontalScrollView;
+
     private IMyFeedPresenter IMyFeedPresenter;
     private FragmentManager mFragmentManager;
     private MyFeedAdapter mFeedAdapter;
     private IHomeView IHomeView;
+    private RecyclerView.RecycledViewPool mPool;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +92,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         mFeedViewer.setLayoutManager(layoutManager);
         mFeedViewer.setNestedScrollingEnabled(false);
         mFeedViewer.setAdapter(mFeedAdapter);
+        mPool = new RecyclerView.RecycledViewPool();
     }
 
     @Override
@@ -99,14 +115,17 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
 
             case ArticleParams.TRENDING_ARTICLES:
                 viewHolder = new TrendingArticleViewHolder(view, this);
+                ((TrendingArticleViewHolder)viewHolder).mTrendingViewer.setRecycledViewPool(mPool);
                 break;
 
             case ArticleParams.SPONSORED_ARTICLES:
                 viewHolder = new SponsoredArticleViewHolder(view, this, type);
+                ((SponsoredArticleViewHolder)viewHolder).mSponsoredViewer.setRecycledViewPool(mPool);
                 break;
 
             case ArticleParams.TOP_PRODUCTS:
                 viewHolder = new TopProductViewHolder(view, this);
+                ((TopProductViewHolder)viewHolder).mTopProductViewer.setRecycledViewPool(mPool);
                 break;
 
             case ArticleParams.LATEST_ARTICLES:
@@ -122,7 +141,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
 
     @Override
     public void onClickViewAll(String tag, Bundle bundle) {
-        ((HomeActivity)getActivity()).getHomePresenter().loadFragment(tag, bundle);
+        IHomeView.getHomePresenter().loadNonFooterFragment(tag, bundle);
     }
 
     @Override
@@ -131,11 +150,6 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         Log.i("TAG1111", "pos " + pos);
         Log.i("TAG1111", "size " + IMyFeedPresenter.getArticlesType().size());
         mFeedAdapter.deleteItem(pos);
-    }
-
-    @Override
-    public void onLoadComplete() {
-        IHomeView.hideProgress();
     }
 
     @Override
@@ -195,6 +209,73 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
                 }
             }
         }
+
+        updateCategoryView();
+    }
+
+    private void updateCategoryView() {
+        List<String> categoryList = IHomeView.getHomePresenter().getCategoryList();
+
+        Log.i("TAGCategoryList", "List " + categoryList);
+        if(categoryList == null || categoryList.isEmpty() || categoryList.contains(Constants.All)){
+            removeAllCategory();
+            mHorizontalScrollView.setVisibility(View.GONE);
+            return;
+        }
+
+
+        removeAllCategory();
+        mHorizontalScrollView.setVisibility(View.VISIBLE);
+        for(String name: categoryList) {
+            addCategoryView(name);
+        }
+    }
+
+    private void addCategoryView(String name) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.category_my_feed_item_view, null);
+        ImageView image = view.findViewById(R.id.category_image);
+        TextView textView = view.findViewById(R.id.category_name);
+
+
+        textView.setText(name);
+
+        if(name.equalsIgnoreCase(Constants.LOVE)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_red_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+
+        if(name.equalsIgnoreCase(Constants.FITNESS)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+
+        int src = HealthHuntUtility.getCategoryIcon(name);
+        image.setImageResource(src);
+
+        view.setTag(name);
+        mCategoryViewer.addView(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IHomeView.getHomePresenter().removeCategory(view.getTag().toString());
+                mCategoryViewer.removeView(view);
+                // will update the articles list
+                if(mCategoryViewer.getChildCount() == 0){
+                    mHorizontalScrollView.setVisibility(View.GONE);
+                }
+                updateArticlesList();
+                IHomeView.updateDrawerFragment();
+            }
+        });
+    }
+
+    private void removeAllCategory() {
+        mCategoryViewer.removeAllViews();
     }
 
     @Override
@@ -254,12 +335,12 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
 
     @Override
     public void updateBottomNavigation() {
-        IHomeView.updateBottomNavigation();
+        IHomeView.hideBottomNavigationSelection();
     }
 
     @Override
-    public void loadFragment(String fragmentName, Bundle bundle) {
-        IHomeView.getHomePresenter().loadFragment(fragmentName, bundle);
+    public void loadNonFooterFragment(String fragmentName, Bundle bundle) {
+        IHomeView.getHomePresenter().loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override
@@ -275,5 +356,9 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    public void updateArticlesList(){
+        IMyFeedPresenter.fetchData();
     }
 }

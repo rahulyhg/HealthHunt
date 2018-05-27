@@ -45,7 +45,7 @@ public class WatchAdapter extends RecyclerView.Adapter<WatchViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(WatchViewHolder holder, int position) {
+    public void onBindViewHolder(WatchViewHolder holder, final int position) {
         setContent(holder, position);
     }
 

@@ -4,16 +4,21 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +36,7 @@ import in.healthhunt.view.onBoardingView.OnBoardingActivity;
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class TagActivity extends BaseActivity implements ITagView{
+public class TagActivity extends BaseActivity implements ITagView, TagAdapter.OnClickListener{
 
     @BindView(R.id.tags_recycler_list)
     public RecyclerView mRecyclerView;
@@ -41,6 +46,9 @@ public class TagActivity extends BaseActivity implements ITagView{
 
     @BindView(R.id.spinner)
     public Spinner mSpinner;
+
+    @BindView(R.id.search_view)
+    public AutoCompleteTextView mSearchView;
 
     @BindView(R.id.done)
     public TextView mDone;
@@ -63,6 +71,8 @@ public class TagActivity extends BaseActivity implements ITagView{
         mTagPresenterImp = new TagPresenterImp(getApplicationContext(), this);
         addTagAdapter();
         mTagPresenterImp.fetchTags();
+
+
     }
 
     private void addTagAdapter() {
@@ -75,19 +85,19 @@ public class TagActivity extends BaseActivity implements ITagView{
     }
 
     private void addSpinnerAdapter() {
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, spinnerItems);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_text_item, spinnerItems);
         mSpinner.setAdapter(arrayAdapter);
     }
 
 
     @OnClick(R.id.done)
     void onDoneClick(){
-         List<TagItem> itemList = mTagPresenterImp.getSelectedTagList();
-         if(itemList.size() < 5) {
-             Toast.makeText(getApplicationContext(), getString(R.string.select_at_least_5_tags),
-                     Toast.LENGTH_SHORT).show();
-             return;
-         }
+        List<TagItem> itemList = mTagPresenterImp.getSelectedTagList();
+        if(itemList.size() < 5) {
+            Toast.makeText(getApplicationContext(), getString(R.string.select_at_least_5_tags),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         mTagPresenterImp.storeSelectedTags();
         Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
@@ -108,12 +118,52 @@ public class TagActivity extends BaseActivity implements ITagView{
 
     @Override
     public void updateAdapter() {
-        /*if(mTagAdapter == null){
-            addTagAdapter();
+        mTagAdapter.notifyDataSetChanged();
+        setSearchAdapter();
+    }
+
+    private void setSearchAdapter() {
+
+        List<TagItem> tagItemList = mTagPresenterImp.getTagList();
+        List<String> searchList = new ArrayList<String>();
+
+        for(TagItem item: tagItemList){
+            searchList.add(item.getName());
         }
-        else */{
-            mTagAdapter.notifyDataSetChanged();
-        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.popup_window_item, searchList);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        width = width - HealthHuntUtility.dpToPx(18, getApplicationContext());
+        mSearchView.setDropDownWidth(width);
+        mSearchView.setDropDownHorizontalOffset(HealthHuntUtility.dpToPx(1, getApplicationContext()));
+        mSearchView.setDropDownVerticalOffset(HealthHuntUtility.dpToPx(1, getApplicationContext()));
+        mSearchView.setAdapter(arrayAdapter);
+
+        mSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+
+                String selectedText = mSearchView.getText().toString();
+                for(TagItem fullTagItem: mTagPresenterImp.getTagList()){
+                    if(fullTagItem.getName().equalsIgnoreCase(selectedText)){
+                        fullTagItem.setPressed(!fullTagItem.isPressed());
+
+                        boolean isPressed = fullTagItem.isPressed();
+                        if(isPressed){
+                            mTagPresenterImp.addTag(fullTagItem);
+                        }
+                        else {
+                            mTagPresenterImp.removeTag(fullTagItem);
+                        }
+                        break;
+                    }
+                }
+                mTagAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     /*@Override
@@ -157,6 +207,11 @@ public class TagActivity extends BaseActivity implements ITagView{
         dialog.show();
     }
 
+    @Override
+    public TagViewHolder createTagViewHolder(View view) {
+        return new TagViewHolder(view, mTagPresenterImp, this);
+    }
+
     @OnClick(R.id.select_all)
     void onSelectAll(){
         isSelectAll = !isSelectAll;
@@ -168,5 +223,17 @@ public class TagActivity extends BaseActivity implements ITagView{
             mTagPresenterImp.unSelectAll();
             mTagAdapter.setSelectAll(false);
         }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        List<TagItem> itemList = mTagPresenterImp.getSelectedTagList();
+        if(itemList != null && !itemList.isEmpty()){
+            mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_edittext_text_color));
+        }
+        else {
+            mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_grey_dark));
+        }
+
     }
 }

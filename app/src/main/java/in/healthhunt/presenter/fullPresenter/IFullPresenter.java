@@ -5,8 +5,8 @@ import android.view.View;
 
 import java.util.List;
 
+import in.healthhunt.model.articles.postProductResponse.ProductPost;
 import in.healthhunt.model.articles.postResponse.ArticlePost;
-import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.comment.CommentsItem;
 import in.healthhunt.view.fullView.commentView.CommentViewHolder;
 
@@ -17,8 +17,9 @@ import in.healthhunt.view.fullView.commentView.CommentViewHolder;
 public interface IFullPresenter {
     void loadFragment(String tag, Bundle bundle);
     void fetchArticle(String id);
+    void fetchProduct(String id);
     ArticlePost getArticle();
-    ProductPostItem getProduct();
+    ProductPost getProduct();
     void bookmark(String id);
     void unBookmark(String id);
     CommentViewHolder createViewHolder(View view);
@@ -29,6 +30,6 @@ public interface IFullPresenter {
     void  deleteComment(String id);
     void addNewComment(String post_id, String content);
     void updateComment(String id, String content);
-    void updateLike(String id, boolean isLike);
+    void updateLike(String id);
 }
 
