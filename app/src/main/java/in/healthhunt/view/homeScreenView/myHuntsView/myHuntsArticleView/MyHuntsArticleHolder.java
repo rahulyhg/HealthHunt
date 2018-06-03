@@ -10,7 +10,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.IMyHuntsArticlesPresenter;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -25,23 +28,23 @@ public class MyHuntsArticleHolder extends RecyclerView.ViewHolder {
     public ImageView mPlayIcon;
 
     @BindView(R.id.my_hunts_article_bookmark)
-    public ImageView mBookMark;
+    public ImageView mArticleBookMark;
 
     @BindView(R.id.my_hunts_article_content)
-    public TextView mShopContent;
+    public TextView mArticleTitle;
 
     @BindView(R.id.my_hunts_category_image)
     public ImageView mCategoryImage;
 
     @BindView(R.id.my_hunts_category_name)
-    TextView mCategoryView;
+    public TextView mCategoryName;
 
 
 
     private Context mContext;
-    private IMyHuntsArticlePresenter IMyHuntsArticlePresenter;
+    private IMyHuntsArticlesPresenter IMyHuntsArticlePresenter;
     private MyHuntsArticleAdapter.ClickListener mClickListener;
-    public MyHuntsArticleHolder(View itemView, IMyHuntsArticlePresenter myHuntsArticlePresenter, MyHuntsArticleAdapter.ClickListener clickListener) {
+    public MyHuntsArticleHolder(View itemView, IMyHuntsArticlesPresenter myHuntsArticlePresenter, MyHuntsArticleAdapter.ClickListener clickListener) {
         super(itemView);
         IMyHuntsArticlePresenter = myHuntsArticlePresenter;
         mClickListener = clickListener;
@@ -56,6 +59,19 @@ public class MyHuntsArticleHolder extends RecyclerView.ViewHolder {
             mClickListener.ItemClicked(view, getAdapterPosition());
         }
     }
-
+    @OnClick(R.id.my_hunts_article_bookmark)
+    void onBookMark(){
+        ArticlePostItem postsItem = IMyHuntsArticlePresenter.getArticle(getAdapterPosition());
+        String id = String.valueOf(postsItem.getArticle_Id());
+        CurrentUser currentUser = postsItem.getCurrent_user();
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                IMyHuntsArticlePresenter.bookmark(id, ArticleParams.ARTICLE);
+            }
+            else {
+                IMyHuntsArticlePresenter.unBookmark(id, ArticleParams.ARTICLE);
+            }
+        }
+    }
 
 }

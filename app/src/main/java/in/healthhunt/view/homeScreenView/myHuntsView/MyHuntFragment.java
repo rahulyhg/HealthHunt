@@ -49,7 +49,6 @@ public class MyHuntFragment extends Fragment {
     @BindView(R.id.suggestion_content)
     TextView mSuggestionContent;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +59,7 @@ public class MyHuntFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_hunts,  container, false);
         ButterKnife.bind(this, view);
+        mSuggestionContent.setText(R.string.healthhunt_my_hunts_content);
         setupViewPager();
         mTabLayout.setupWithViewPager(mHuntPager);
         return view;
@@ -83,6 +83,23 @@ public class MyHuntFragment extends Fragment {
         adapter.addFragment(new MyHuntsVideoFragment(), getString(R.string.videos));
         adapter.addFragment(new MyHuntsShopFragment(), getString(R.string.shop));
         adapter.addFragment(new MyHuntsQuesFragment(), getString(R.string.questions));
+        mHuntPager.setOffscreenPageLimit(5);
         mHuntPager.setAdapter(adapter);
+    }
+
+    public void updateDownloadData(){
+        int currentItem = mHuntPager.getCurrentItem();
+        Fragment fragment = ((MyHuntsPagerAdapter)mHuntPager.getAdapter()).getItem(currentItem);
+        switch (currentItem){
+            case 0:
+                ((MyHuntsArticleFragment)fragment).updateDownloadData();
+                break;
+            case 1:
+                ((MyHuntsVideoFragment)fragment).updateDownloadData();
+                break;
+            case 2:
+                ((MyHuntsShopFragment)fragment).updateDownloadData();
+                break;
+        }
     }
 }

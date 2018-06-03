@@ -17,11 +17,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.activeandroid.query.Select;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -31,9 +36,13 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.BaseActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.homeScreenView.drawerView.DrawerFragment;
 import in.healthhunt.view.homeScreenView.filterView.FilterFragment;
 import in.healthhunt.view.homeScreenView.myFeedView.MyFeedFragment;
@@ -41,6 +50,9 @@ import in.healthhunt.view.homeScreenView.myHuntsView.MyHuntFragment;
 import in.healthhunt.view.homeScreenView.shopView.IShopView;
 import in.healthhunt.view.homeScreenView.shopView.ShopFragment;
 import in.healthhunt.view.homeScreenView.watchView.WatchFragment;
+import in.healthhunt.view.notificationView.NotificationFragment;
+import in.healthhunt.view.profileView.EditProfileFragment;
+import in.healthhunt.view.profileView.ProfileFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
@@ -83,7 +95,6 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homescreen);
         ButterKnife.bind(this);
-
         mAlertDialog = new Dialog(this);
         mAlertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mAlertDialog.setContentView(R.layout.alertdialog_view);
@@ -95,6 +106,31 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         removeShiftMode(mNavigation);
 
 
+        Select select = new Select();
+
+
+        /*List<Title> titles = select.from(Title.class).execute();
+
+        for(Title title: titles) {
+            Log.i("TAGPOSTSINGLE", "DATA title " + title);
+        }*/
+
+        List<MediaItem> items = select.from(MediaItem.class).execute();
+        //ProductPost post = ProductPost.load(ProductPost.class, produc.getProduct_id());
+        /*for(MediaItem mediaItem: items) {
+            Log.i("TAGPOSTSINGLE", "Media  " + mediaItem);
+        }*/
+        //List<ProductPostItem> productPost = select.from(ProductPostItem.class).execute();
+
+        /*for(ProductPost produc: productPost) {
+                List<MediaItem> mediaItem = new Select().from(MediaItem.class).where("parent_id = ?" , produc.getProduct_id()).execute();
+            //Log.i("TAGPOSTSINGLE", "Id " + produc.getProduct_id());
+
+            Log.i("TAGPOSTSINGLE", "mediaItem  " + mediaItem );
+
+           Log.i("TAGPOSTSINGLE", "Product Post  " + produc );
+        }*/
+
         IHomePresenter = new HomePresenterImp(getApplicationContext(), this);
         IHomePresenter.loadFooterFragment(MyFeedFragment.class.getSimpleName(), null);
         updateTitle(getString(R.string.my_feed));
@@ -103,10 +139,10 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setCheckable(true);
-                popTopBackStack();
+                popAllBackStack();
 
                 if(item.getItemId() == R.id.navigation_my_feed) {
-                    mCurrentItem = 0;
+                    mCurrentItem = Constants.FRAGMENT_MY_FEED;
                     //updateTitle(getString(R.string.my_feed));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
@@ -114,7 +150,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     }
                 }
                 else if(item.getItemId() == R.id.navigation_my_hunts) {
-                    mCurrentItem = 1;
+                    mCurrentItem = Constants.FRAGMENT_MY_HUNTS;
                     //updateTitle(getString(R.string.my_hunts));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
@@ -122,7 +158,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     }
                 }
                 else if(item.getItemId() == R.id.navigation_watch) {
-                    mCurrentItem = 2;
+                    mCurrentItem = Constants.FRAGMENT_WATCH;
                     //updateTitle(getString(R.string.watch));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
@@ -130,7 +166,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     }
                 }
                 else if(item.getItemId() == R.id.navigation_shop) {
-                    mCurrentItem = 3;
+                    mCurrentItem = Constants.FRAGMENT_SHOP;
                     //updateTitle(getString(R.string.shop));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
@@ -142,6 +178,13 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 return true;
             }
         });
+    }
+
+    private void popAllBackStack() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        for(int i=0;i <count; i++){
+            popTopBackStack();
+        }
     }
 
     private void addDrawer() {
@@ -188,6 +231,23 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
+    public void setStatusBarTranslucent(boolean makeTranslucent) {
+        if (makeTranslucent) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    @Override
+    public void updateDownloadData() {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
+        if(fragment != null && fragment instanceof MyHuntFragment){
+            ((MyHuntFragment)fragment).updateDownloadData();
+        }
+    }
+
+    @Override
     public void loadNonFooterFragment(String tag, Bundle bundle) {
         if(tag != null) {
             int layout = R.id.main_frame;
@@ -197,6 +257,21 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 fragment = new ViewAllFragment();
             } else if (tag.equals(FilterFragment.class.getSimpleName())) {
                 fragment = new FilterFragment();
+            }
+            else if (tag.equals(FullArticleFragment.class.getSimpleName())) {
+                fragment = new FullArticleFragment();
+            }
+            else if (tag.equals(FullProductFragment.class.getSimpleName())) {
+                fragment = new FullProductFragment();
+            }
+            else if (tag.equals(NotificationFragment.class.getSimpleName())) {
+                fragment = new NotificationFragment();
+            }
+            else if (tag.equals(ProfileFragment.class.getSimpleName())) {
+                fragment = new ProfileFragment();
+            }
+            else if (tag.equals(EditProfileFragment.class.getSimpleName())) {
+                fragment = new EditProfileFragment();
             }
 
             if (bundle != null && fragment != null) {
@@ -246,7 +321,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void updateMyFeedArticles() {
         Fragment fragment = mFragment[mCurrentItem];
         if(fragment != null && fragment instanceof MyFeedFragment){
-            ((MyFeedFragment)fragment).updateArticlesList();
+            ((MyFeedFragment)fragment).updateData();
         }
     }
 
@@ -255,6 +330,16 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         if(mDrawerFragment != null){
             mDrawerFragment.updateAdapter();
         }
+    }
+
+    @Override
+    public void hideActionBar() {
+        mToolbar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showActionBar() {
+        mToolbar.setVisibility(View.VISIBLE);
     }
 
     private void showNonFooterFragment(Fragment fragment, String tag, int layout) {
@@ -395,10 +480,14 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             int count = getSupportFragmentManager().getBackStackEntryCount();
-            if(count > 0){
+            Log.i("TAGCOUNT", "count " + count);
+            if(count == 1){ //when comes back to home screen
+                setStatusBarTranslucent(false);
+                showActionBar();
                 updateFragVisible(mCurrentItem);
                 setBottomNavigation();
                 updateTitleWithFooter(mCurrentItem);
+                showBottomFooter();
             }
             super.onBackPressed();
         }
@@ -445,23 +534,39 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     private void updateTitleWithFooter(int pos){
         String str = "";
-       switch (pos){
-           case 0:
-            str = getString(R.string.my_feed);
-            break;
+        switch (pos){
+            case 0:
+                str = getString(R.string.my_feed);
+                break;
 
-           case 1:
-               str = getString(R.string.my_hunts);
-               break;
+            case 1:
+                str = getString(R.string.my_hunts);
+                break;
 
-           case 2:
-               str = getString(R.string.watch);
-               break;
+            case 2:
+                str = getString(R.string.watch);
+                break;
 
-           case 3:
-               str = getString(R.string.shop);
-               break;
+            case 3:
+                str = getString(R.string.shop);
+                break;
         }
         updateTitle(str);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.notification_id){
+            IHomePresenter.loadNonFooterFragment(NotificationFragment.class.getSimpleName(), null);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

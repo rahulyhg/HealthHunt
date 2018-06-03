@@ -6,7 +6,8 @@
         android:id="@+id/navigation_my_feed"
         android:icon="@mipmap/ic_my_feed"
         android:title="@string/my_feed"
-        android:checkable="false"/>
+        android:checkable="false"
+        app:showAsAction="always|withText"/>
 
     <item
         android:id="@+id/navigation_my_hunts"

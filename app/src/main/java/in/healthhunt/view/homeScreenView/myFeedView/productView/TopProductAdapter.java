@@ -172,7 +172,7 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @OnClick(R.id.product_bookmark)
         void onBookMark(){
             ProductPostItem postsItem = ITopProductPresenter.getProduct(getAdapterPosition());
-            String id = String.valueOf(postsItem.getId());
+            String id = String.valueOf(postsItem.getProduct_id());
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){

@@ -12,11 +12,10 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 
 import in.healthhunt.R;
-import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.comment.Author;
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.Content;
 import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.comment.Content;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.model.utility.URLImageParser;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
@@ -57,7 +56,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                 String name = author.getName();
                 holder.mUserName.setText(name);
 
-                String user_id = HealthHuntPreference.getString(mContext, Constants.USER_ID);
+                User user = User.getUser();
+                String user_id = user.getUserId();//HealthHuntPreference.getString(mContext, Constants.USER_ID);
                 Log.i("TAGUSERU", "User_ID " + user_id + " Author ID " + author.getId() );
                 if(user_id.equals(String.valueOf(author.getId()))){
                     holder.mCommentEdit.setVisibility(View.VISIBLE);

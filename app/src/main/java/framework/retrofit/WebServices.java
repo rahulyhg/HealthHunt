@@ -6,8 +6,8 @@ import java.util.Map;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
-import in.healthhunt.model.articles.postResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
@@ -20,6 +20,7 @@ import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.UserData;
+import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
 import retrofit2.Call;
@@ -83,6 +84,9 @@ public interface WebServices {
 
  @GET("filters/")
  Call<FilterData> fetchFilters(@QueryMap Map<String, String> params);
+
+ @GET("notifications")
+ Call<HHResponse<NotificationData>> fetchNotifications(@QueryMap Map<String, String> params);
 
     /*@Header("authToken") String token,*/
 

@@ -133,7 +133,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
+        map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
         IProductInteractor.fetchProduct(mContext, ArticleParams.LATEST_PRODUCTS, map, this);
 
     }

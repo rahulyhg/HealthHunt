@@ -1,5 +1,6 @@
 package in.healthhunt.presenter.homeScreenPresenter.shopPresenter;
 
+import android.os.Bundle;
 import android.view.View;
 
 import java.util.List;
@@ -25,4 +26,5 @@ public interface IShopPresenter extends IPostPresenter{
      int getFilterBrandCount();
      DataItem getProductItem(int pos);
      DataItem getBrandItem(int pos);
+     void loadFragment(String fragmentName, Bundle bundle);
 }

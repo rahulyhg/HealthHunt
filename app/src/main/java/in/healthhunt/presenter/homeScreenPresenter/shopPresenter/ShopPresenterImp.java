@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.homeScreenPresenter.shopPresenter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -63,7 +64,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         for(int i = 0; i< mProductPosts.size(); i++) {
             ProductPostItem postItem = mProductPosts.get(i);
             BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
-            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
+            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getProduct_id()))) {
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());
@@ -140,11 +141,19 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
 
-        List<String> productId = listMap.get(Constants.PRODUCT_FILTER);
-        if(productId != null && !productId.isEmpty()){
-            String id = productId.get(0);
-            Log.i("TAGFILTERVA", " product ID "+ id);
-            map.put(ArticleParams.PRODUCT_TYPE_ID, id);
+        List<String> productList = listMap.get(Constants.PRODUCT_FILTER);
+        if(productList != null && !productList.isEmpty()) {
+            String productIds = "";
+            for (int i = 0; i < productList.size(); i++) {
+                String productID = productList.get(i);
+                if (i < productList.size() - 1) {
+                    productIds = productIds + productID + ",";
+                } else {
+                    productIds = productIds + productID;
+                }
+            }
+            Log.i("TAGFILTERVA", " Product IDs "+ productIds);
+            map.put(ArticleParams.PRODUCT_TYPE_ID, productIds);
         }
 
         List<String> location = listMap.get(Constants.CITY_FILTER);
@@ -225,5 +234,10 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
     @Override
     public DataItem getBrandItem(int pos) {
         return mFilterBrandItems.get(pos);
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IShopView.loadFragment(fragmentName, bundle);
     }
 }

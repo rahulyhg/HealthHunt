@@ -45,6 +45,7 @@
         android:textColor="@color/hh_edit_profile_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_name"
+        android:background="?selectableItemBackground"
         android:text="@string/edit_profile"
         />
 

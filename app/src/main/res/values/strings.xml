@@ -81,7 +81,7 @@
     <string name="about">About</string>
     <string name="read_more">See more</string>
     <string name="read_less">See less</string>
-    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat, nunc eget volutpat viverra, lacus ligula venenatis nulla, in accumsan eros eros nec ipsum. Fusce eget massa id lorem blandit lobortis. Donec lacus ligula, commodo quis eleifend ac, rhoncus sed mi. Curabitur luctus justo vel consequat fermentum. Donec facilisis elit in sem suscipit pharetra. Curabitur porta et dolor eget pretium. Mauris quam augue, interdum nec tempor vitae, consectetur at erat.</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras feugiat, nunc eget volutpat viverra, lacus ligula venenatis nulla, in accumsan eros eros nec ipsum. Fusce eget massa author_id lorem blandit lobortis. Donec lacus ligula, commodo quis eleifend ac, rhoncus sed mi. Curabitur luctus justo vel consequat fermentum. Donec facilisis elit in sem suscipit pharetra. Curabitur porta et dolor eget pretium. Mauris quam augue, interdum nec tempor vitae, consectetur at erat.</string>
     <string name="comments">Comments</string>
     <string name="write_comments_here">Write your comment here</string>
     <string name="send">Send</string>
@@ -90,13 +90,14 @@
     <string name="read_time">%s min read</string>
     <string name="close_all">Close all</string>
     <string name="healthhunt_shop_content">Organic food, yoga practitioners, relaxing spa massages, healthy snacking items, reflexology sessions, and much more… you will find all of this at one place – healthhunt shop! Whether you are looking to connect with newer audience or for the latest, healthy products and services – healthhunt shop is for you! View your saved items and collections here!</string>
-
+    <string name="healthhunt_my_hunts_content">My hunts let you view your saved and received cards</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="buy">Buy</string>
     
     <string name="share">Share</string>
     <string name="download_this_article">Download this article</string>
+    <string name="download_this_product">Download this product</string>
     <string name="Shipping_charges_apply">Shipping charges apply</string>
     <string name="Loose_Square_Marketing">Loose Square Marketing Solutions</string>
 
@@ -123,10 +124,21 @@
     <string name="videos">Videos</string>
     <string name="questions">Questions</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="profile">Profile</string>
+    <string name="change_photo">Change profile photo</string>
 
     <!-- You Tube -->
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 
 
+    <string name="related_articles">Related articles</string>
+    <string name="related_products">Related products</string>
+    <string name="posted_in">posted in</string>
+    <string name="notifications">Notifications</string>
+    <string name="logout">Log Out</string>
+    <string name="tags">Tags</string>
+    <string name="options">Options</string>
+    <string name="selected_tags">Selected tags</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

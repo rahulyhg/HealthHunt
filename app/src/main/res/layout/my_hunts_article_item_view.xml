@@ -32,7 +32,8 @@
                 android:layout_height="100dp"
                 android:src="@mipmap/ic_play_icon"
                 android:layout_gravity="center"
-                android:scaleType="center"/>
+                android:scaleType="center"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/my_hunts_article_bookmark"
@@ -70,11 +71,10 @@
 
             <ImageView
                 android:id="@+id/my_hunts_category_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="left|center"
-                android:background="@mipmap/ic_exercise"
-                android:backgroundTint="@color/hh_blue_light" />
+                android:scaleType="centerInside"/>
 
             <TextView
                 android:id="@+id/my_hunts_category_name"
@@ -83,8 +83,6 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
-                android:text="Nutrition"
-                android:layout_gravity="left|center"
                 android:textColor="@color/hh_blue_light"
                 android:textSize="12sp" />
         </LinearLayout>

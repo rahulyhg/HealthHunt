@@ -88,13 +88,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         void onClick(View view) {
             if(mClickListener != null) {
                 DataItem id = mFilterList.get(getAdapterPosition());
+                String strID = id.getTerm_id();
 
-                if(IFilterPresenter.getProductID() != null &&
-                        IFilterPresenter.getProductID().equalsIgnoreCase(id.getTerm_id())){
-                    IFilterPresenter.setProductID(null);
+                if(!IFilterPresenter.isProductContain(strID)){
+                    IFilterPresenter.addProduct(strID);
                 }
                 else {
-                    IFilterPresenter.setProductID(id.getTerm_id());
+                    IFilterPresenter.removeProduct(strID);
                 }
                 mClickListener.ItemClicked();
                 notifyDataChanged();
@@ -146,8 +146,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         if(dataItem != null) {
             holder.mProductName.setText(dataItem.getTerm_name());
 
-            if(IFilterPresenter.getProductID() != null &&
-                    IFilterPresenter.getProductID().equalsIgnoreCase(dataItem.getTerm_id())){
+            if(IFilterPresenter.isProductContain(dataItem.getTerm_id())){
                 holder.mProductItemView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_background_item));
             }
             else {

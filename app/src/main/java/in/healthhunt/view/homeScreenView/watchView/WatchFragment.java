@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.IWatchPresenter;
@@ -114,9 +116,19 @@ public class WatchFragment extends Fragment implements IWatchView, WatchAdapter.
         ArticlePostItem postsItem = IWatchPresenter.getArticle(position);
         if(postsItem != null) {
             Intent intent = new Intent(getContext(), FullVideoActivity.class);
-            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
-            getContext().startActivity(intent);
+            startActivityForResult(intent, Constants.FULL_VIDEO_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.i("TAGRESULT ", " requestCode " + requestCode);
+        if(requestCode == Constants.FULL_VIDEO_REQUEST_CODE){
+            IHomeView.updateDownloadData();
         }
     }
 }

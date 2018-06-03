@@ -80,7 +80,7 @@ public class WatchViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.article_bookmark)
     void onBookMark(){
         ArticlePostItem postsItem = IWatchPresenter.getArticle(getAdapterPosition());
-        String id = String.valueOf(postsItem.getId());
+        String id = String.valueOf(postsItem.getArticle_Id());
         CurrentUser currentUser = postsItem.getCurrent_user();
         if(currentUser != null) {
             if(!currentUser.isBookmarked()){

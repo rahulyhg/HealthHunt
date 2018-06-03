@@ -12,11 +12,11 @@ import java.util.Map;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
-import in.healthhunt.model.articles.postProductResponse.ProductPost;
-import in.healthhunt.model.articles.postResponse.ArticlePost;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
@@ -41,14 +41,15 @@ import in.healthhunt.view.fullView.fullViewFragments.IFullFragment;
 
 public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFullViewFinishListener,
         IProductInteractor.OnFullViewFinishListener,  IBookMarkInteractor.OnFinishListener ,
-        ILikesInteractor.OnFinishListener, ICommentInteractor.OnFinishListener {
+        ILikesInteractor.OnFinishListener, ICommentInteractor.OnFinishListener, IArticleInteractor.OnRelatedFinishListener,
+        IProductInteractor.OnRelatedProductFinishListener{
 
     private String TAG = FullPresenterImp.class.getSimpleName();
     private IFullFragment IFullFragment;
     private Context mContext;
-    private ArticlePost mArticlePost;
-    private ProductPost mProductPost;
-   // private IFullInteractor IFullInteractor;
+    private ArticlePostItem mArticlePost;
+    private ProductPostItem mProductPost;
+    // private IFullInteractor IFullInteractor;
     private IBookMarkInteractor IBookMarkInteractor;
     private ILikesInteractor ILikesInteractor;
     private ICommentInteractor ICommentInteractor;
@@ -57,6 +58,10 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     private int mOffset = 0;
     private int mLimit = 10;
     private List<CommentsItem> mCommentsItems;
+    private List<ArticlePostItem> mRelatedArticleItems;
+    private List<ProductPostItem> mRelatedProductItems;
+    private int mArticleCount;
+    private int mProductCount;
 
     public FullPresenterImp(Context context, IFullFragment fullView) {
         mContext =  context;
@@ -71,41 +76,63 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void loadFragment(String tag, Bundle bundle) {
-
+        IFullFragment.loadFragment(tag, bundle);
     }
 
     @Override
     public void fetchArticle(String id) {
+        mArticleCount = 3;
         IFullFragment.showProgress();
         IArticleInteractor.fetchFullArticle(mContext, id, this);
+        fetchRelatedArticles(id);
+        fetchRelatedProducts(id, ArticleParams.ARTICLE);
+    }
+
+    private void fetchRelatedArticles(String id){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(ArticleParams.RELATED, id);
+        map.put(ArticleParams.OFFSET, String.valueOf(0));
+        map.put(ArticleParams.LIMIT, String.valueOf(2));
+        IArticleInteractor.fetchRelatedArticle(mContext, map, this);
+    }
+
+    private void fetchRelatedProducts(String id, int type){
+        Map<String, String> map = new HashMap<String, String>();
+        map.put(ArticleParams.RELATED, id);
+        map.put(ArticleParams.TYPE, ArticleParams.MARKET);
+        map.put(ArticleParams.OFFSET, String.valueOf(0));
+        map.put(ArticleParams.LIMIT, String.valueOf(2));
+        IProductInteractor.fetchRelatedProduct(mContext, type, map, this);
     }
 
     @Override
     public void fetchProduct(String id) {
+        mProductCount = 2;
         IFullFragment.showProgress();
         IProductInteractor.fetchFullProduct(mContext, id, this);
+        fetchRelatedProducts(id, ArticleParams.PRODUCT);
     }
 
     @Override
-    public ArticlePost getArticle() {
+    public ArticlePostItem getArticle() {
         return mArticlePost;
     }
 
     @Override
-    public ProductPost getProduct() {
+    public ProductPostItem getProduct() {
         return mProductPost;
     }
 
     @Override
-    public void bookmark(String id) {
+    public void bookmark(String id, int type) {
         IFullFragment.showProgress();
-        IBookMarkInteractor.bookmark(mContext, id, IFullFragment.getPostType(), this);
+        IBookMarkInteractor.bookmark(mContext, id, type, this);
     }
 
     @Override
-    public void unBookmark(String id) {
+    public void unBookmark(String id, int type) {
         IFullFragment.showProgress();
-        IBookMarkInteractor.unBookmark(mContext, id, IFullFragment.getPostType(), this);
+        IBookMarkInteractor.unBookmark(mContext, id, type, this);
     }
 
     @Override
@@ -178,18 +205,64 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     }
 
     @Override
-    public void onArticleSuccess(ArticlePost item) {
-        Log.i("TAGITEM", "ITEM " + item);
-        mArticlePost = item;
-        IFullFragment.hideProgress();
-        IFullFragment.setContent();
+    public ArticlePostItem getRelatedArticle(int pos) {
+        if(mRelatedArticleItems != null){
+            return mRelatedArticleItems.get(pos);
+        }
+        return null;
     }
 
     @Override
-    public void onProductSuccess(ProductPost item) {
+    public int getRelatedArticlesCount() {
+        int size = 0;
+        if(mRelatedArticleItems != null){
+            size = mRelatedArticleItems.size();
+        }
+        return size;
+    }
+
+    @Override
+    public ProductPostItem getRelatedProduct(int pos) {
+        if(mRelatedProductItems != null){
+            return mRelatedProductItems.get(pos);
+        }
+        return null;
+    }
+
+    @Override
+    public int getRelatedProductsCount() {
+        int size = 0;
+        if(mRelatedProductItems != null){
+            size = mRelatedProductItems.size();
+        }
+        return size;
+    }
+
+    @Override
+    public void updateArticle(ArticlePostItem articlePost) {
+        mArticlePost = articlePost;
+        updateArticleInfo();
+    }
+
+    @Override
+    public void updateProduct(ProductPostItem productPost) {
+        mProductPost = productPost;
+        updateProductInfo();
+    }
+
+    @Override
+    public void onArticleSuccess(ArticlePostItem item) {
+        Log.i("TAGITEM", "ITEM " + item);
+        mArticleCount--;
+        mArticlePost = item;
+        updateArticleInfo();
+    }
+
+    @Override
+    public void onProductSuccess(ProductPostItem item) {
+        mProductCount--;
         mProductPost = item;
-        IFullFragment.hideProgress();
-        IFullFragment.setContent();
+        updateProductInfo();
     }
 
     @Override
@@ -207,13 +280,41 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         switch (type){
             case ArticleParams.ARTICLE:
             case ArticleParams.VIDEO:
-                if(bookMarkInfo.getPost_id().equals(String.valueOf(mArticlePost.getId()))) {
+                if(bookMarkInfo.getPost_id().equals(String.valueOf(mArticlePost.getArticle_Id()))) {
                     currentUser = mArticlePost.getCurrent_user();
                 }
                 break;
+            case ArticleParams.RELATED_ARTICLES:
+                for (int i = 0; i < getRelatedArticlesCount(); i++) {
+                    ArticlePostItem postItem = getRelatedArticle(i);
+                    BookMarkInfo bookMark = markResponse.getBookMarkInfo();
+                    if (bookMark.getPost_id().equals(String.valueOf(postItem.getArticle_Id()))) {
+                        CurrentUser current = postItem.getCurrent_user();
+                        if (current != null) {
+                            current.setBookmarked(bookMarkInfo.isBookMark());
+                        }
+                        break;
+                    }
+                }
+                IFullFragment.updateRelatedArticleAdapter();
+                break;
+
+            case ArticleParams.RELATED_PRODUCTS:
+                for(int i = 0; i< getRelatedProductsCount(); i++){
+                    ProductPostItem postItem = getRelatedProduct(i);
+                    BookMarkInfo info = markResponse.getBookMarkInfo();
+                    if(info != null) {
+                        if (postItem.getProduct_id().equals(info.getPost_id())) {
+                            postItem.getCurrent_user().setBookmarked(info.isBookMark());
+                            break;
+                        }
+                    }
+                }
+                IFullFragment.updateRelatedProductAdapter();
+                break;
 
             case ArticleParams.PRODUCT:
-                if(bookMarkInfo.getPost_id().equals(String.valueOf(mProductPost.getId()))) {
+                if(bookMarkInfo.getPost_id().equals(String.valueOf(mProductPost.getProduct_id()))) {
                     currentUser = mProductPost.getCurrent_user();
                 }
                 break;
@@ -224,6 +325,26 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         }
 
         IFullFragment.updateBookMarkIcon();
+    }
+
+    @Override
+    public void onRelatedSuccess(List<ArticlePostItem> items) {
+        mArticleCount--;
+        mRelatedArticleItems = items;
+        updateArticleInfo();
+    }
+
+    @Override
+    public void onRelatedProductSuccess(List<ProductPostItem> items, int type) {
+        mRelatedProductItems = items;
+        if(type == ArticleParams.ARTICLE){
+            mArticleCount--;
+            updateArticleInfo();
+        }
+        else {
+            mProductCount--;
+            updateProductInfo();
+        }
     }
 
     @Override
@@ -240,6 +361,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
         CurrentUser currentUser = null;
 
+        Log.i("PostType " , "TYPE " + IFullFragment.getPostType());
         switch (IFullFragment.getPostType()){
             case ArticleParams.ARTICLE:
             case ArticleParams.VIDEO:
@@ -251,8 +373,11 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
                 break;
         }
 
+        Log.i("TAGUSERcurrentUser" , "currentUser " + currentUser);
+
         if(currentUser != null) {
             int likes = currentUser.getLike();
+            Log.i("TAGUSER" , "Likes " + likes);
             if(likes == 0){
                 likes = 1;
             }
@@ -329,7 +454,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     @Override
     public void onUpdateSuccess(CommentsItem commentsItem) {
-       // int pos = 0;
+        // int pos = 0;
         for(int i=0; i<mCommentsItems.size(); i++){
             CommentsItem item = mCommentsItems.get(i);
             if(item.getId() == commentsItem.getId()){
@@ -344,8 +469,22 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         item.getContent().setRendered(commentsItem.getContent().getRendered());
         mCommentsItems.set(pos, item);
 */
-      //  Log.i("TAGPOS " , "POS " + pos);
+        //  Log.i("TAGPOS " , "POS " + pos);
         IFullFragment.hideProgress();
         IFullFragment.updateCommentAdapter();
+    }
+
+    private void updateArticleInfo(){
+        if(mArticleCount == 0){
+            IFullFragment.hideProgress();
+            IFullFragment.setContent();
+        }
+    }
+
+    private void updateProductInfo(){
+        if(mProductCount == 0){
+            IFullFragment.hideProgress();
+            IFullFragment.setContent();
+        }
     }
 }

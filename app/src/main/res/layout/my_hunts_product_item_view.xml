@@ -50,8 +50,8 @@
             android:fontFamily="@string/font_family_regular"
             android:gravity="left|center"
             android:textColor="@color/hh_edittext_text_color"
-            android:text="Cookies"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/my_hunts_product_type"
@@ -60,8 +60,8 @@
             android:fontFamily="@string/font_family_regular"
             android:gravity="left|center"
             android:textColor="@color/hh_text_color"
-            android:text="Hungry"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:maxLines="1"/>
 
     </LinearLayout>
 
@@ -80,7 +80,6 @@
             android:fontFamily="@string/font_family_regular"
             android:gravity="right|center"
             android:textColor="@color/hh_green_light2"
-            android:text="@string/rs"
             android:textSize="16sp" />
 
         <TextView
@@ -91,7 +90,6 @@
             android:gravity="right|bottom"
             android:layout_marginStart="1dp"
             android:textColor="@color/hh_green_light2"
-            android:text="129/50gms"
             android:textSize="16sp" />
     </LinearLayout>
 </RelativeLayout>

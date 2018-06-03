@@ -20,6 +20,8 @@ public interface ArticleParams {
     int LATEST_ARTICLES = 1006;
     int WEBINARS_ARTICLES = 1007;
     int LATEST_PRODUCTS = 1008;
+    int RELATED_PRODUCTS = 1009;
+    int RELATED_ARTICLES = 1010;
 
     String ARTICLE_TYPE = "article_type";
 
@@ -31,6 +33,8 @@ public interface ArticleParams {
     String TEXT_LATEST_ARTICLES = "Latest articles";
     String TEXT_WEBINARS_ARTICLES = "Webinars";
     String TEXT_LATEST_PRODUCTS_ARTICLES = "Latest products";
+    String TEXT_RELATED_ARTICLES = "Related articles";
+    String TEXT_RELATED_PRODUCTS = "Related products";
 
 
     String TAGS = "tags";
@@ -67,6 +71,16 @@ public interface ArticleParams {
     int PRODUCT_SERVICE_REQUEST = 2;
     String FILTER_TYPE = "filter_type";
     String BRANDS = "brands";
+    String RELATED = "related";
+    String FILTER = "filter";
+    String COLLECTION = "collection";
+    String AUTHOR = "author";
+    String COLLECTION_SAVED = "saved";
+    String COLLECTION_CREATED = "created";
+    String COLLECTION_RECEIVED = "received";
+    String FETCH = "fetch";
+    String NOTI_ALL = "all";
+    String NOTI_MARK_AS_COMPLETED = "mark_as_completed";
 
     String PRODUCT_TYPE_ID = "productType";
     String BRAND = "brand";

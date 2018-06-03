@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.bumptech.glide.Glide;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -32,14 +34,18 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.Content;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
+import in.healthhunt.model.articles.commonResponse.Content;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Excerpt;
 import in.healthhunt.model.articles.commonResponse.Likes;
-import in.healthhunt.model.articles.postResponse.ArticlePost;
+import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Synopsis;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.model.utility.URLImageParser;
 import in.healthhunt.presenter.fullPresenter.FullPresenterImp;
@@ -111,6 +117,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
     int mPostType;
     private MyPlaybackEventListener playbackEventListener;
     private YouTubePlayer mYouTubePlayer;
+    private boolean isDownloaded;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,14 +127,27 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
         String mId = getIntent().getStringExtra(ArticleParams.ID);
         mPostType = getIntent().getIntExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
 
+        isDownloaded = getIntent().getBooleanExtra(Constants.IS_DOWNLOADED, false);
         mProgress = new ProgressDialog(this);
         mProgress.setIndeterminate(true);
         mProgress.setCancelable(false);
         mProgress.setMessage(getResources().getString(R.string.please_wait));
         IFullPresenter = new FullPresenterImp(this, this);
-        IFullPresenter.fetchArticle(mId);
+        if(!isDownloaded) {
+            IFullPresenter.fetchArticle(mId);
+        }
+        else {
+            fetchVideoFromDataBase(mId);
+        }
+
         playbackEventListener = new MyPlaybackEventListener();
         setStatusBarTranslucent(true);
+    }
+
+    private void fetchVideoFromDataBase(String id) {
+        mProgress.show();
+        FetchVideoTask productsTask = new FetchVideoTask(id);
+        productsTask.execute();
     }
 
     protected void setStatusBarTranslucent(boolean makeTranslucent) {
@@ -147,6 +167,10 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
                                                 boolean wasRestored) {
 
                 mYouTubePlayer = player;
+                if(IFullPresenter.getArticle().getPost_youtube_id() == null){
+                    Log.i("TAGYUBE", "Youtube id is null");
+                    return;
+                }
                 //if initialization success then load the video id to youtube player
                 if (!wasRestored) {
                     //set the player style here: like CHROMELESS, MINIMAL, DEFAULT
@@ -154,7 +178,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
                     mYouTubePlayer.setPlaybackEventListener(playbackEventListener);
 
                     //load the video
-                    //youTubePlayer.loadVideo(IFullPresenter.getArticle().getPost_youtube_id());
+                    //youTubePlayer.loadVideo(IFullPresenter.getVideo().getPost_youtube_id());
 
                     //OR
 
@@ -247,13 +271,13 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
 
     @Override
     public void setContent() {
-        ArticlePost articlePost = IFullPresenter.getArticle();
+        ArticlePostItem articlePost = IFullPresenter.getArticle();
 
         if (articlePost != null) {
             setTopImageContent(articlePost);
             setArticleContent(articlePost);
+            initializeYoutubePlayer();
         }
-        initializeYoutubePlayer();
     }
 
     @Override
@@ -264,10 +288,15 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
     @Override
     public void updateBookMarkIcon() {
         CurrentUser currentUser = null;
-        ArticlePost articlePost = IFullPresenter.getArticle();
+        ArticlePostItem articlePost = IFullPresenter.getArticle();
         currentUser = articlePost.getCurrent_user();
         if(currentUser != null) {
             updateBookMark(currentUser.isBookmarked());
+        }
+
+        if(isDownloaded & currentUser != null){
+            currentUser.save();
+            articlePost.save();
         }
     }
 
@@ -300,18 +329,33 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
         }
     }
 
+    @Override
+    public void updateRelatedArticleAdapter() {
+
+    }
+
+    @Override
+    public void updateRelatedProductAdapter() {
+
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+
+    }
+
     @OnClick(R.id.full_article_bookmark)
     void onBookMark(){
         CurrentUser currentUser = null;
-        ArticlePost articlePost = IFullPresenter.getArticle();
+        ArticlePostItem articlePost = IFullPresenter.getArticle();
         if(articlePost != null){
             currentUser = articlePost.getCurrent_user();
             if(currentUser != null ) {
                 if(!currentUser.isBookmarked()) {
-                    IFullPresenter.bookmark(String.valueOf(articlePost.getId()));
+                    IFullPresenter.bookmark(String.valueOf(articlePost.getArticle_Id()), ArticleParams.VIDEO);
                 }
                 else {
-                    IFullPresenter.unBookmark(String.valueOf(articlePost.getId()));
+                    IFullPresenter.unBookmark(String.valueOf(articlePost.getArticle_Id()), ArticleParams.VIDEO);
                 }
             }
         }
@@ -319,11 +363,11 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
 
     @OnClick(R.id.full_article_like)
     void onLikeClick(){
-        int id = IFullPresenter.getArticle().getId();
+        String id = IFullPresenter.getArticle().getArticle_Id();
         IFullPresenter.updateLike(String.valueOf(id));
     }
 
-    private void setArticleContent(ArticlePost articlePost) {
+    private void setArticleContent(ArticlePostItem articlePost) {
 
         Title title = articlePost.getTitle();
         String articleTitle = null;
@@ -379,7 +423,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
         }
     }
 
-    private void setTopImageContent(ArticlePost articlePost) {
+    private void setTopImageContent(ArticlePostItem articlePost) {
 
         Title title = articlePost.getTitle();
         if (title != null) {
@@ -460,7 +504,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-                //Toast.makeText(getContext(), "Download", Toast.LENGTH_SHORT).show();
+                storeArticle();
             }
         });
 
@@ -468,7 +512,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
     }
 
     private void shareArticle(){
-        ArticlePost articlePost = IFullPresenter.getArticle();
+        ArticlePostItem articlePost = IFullPresenter.getArticle();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, articlePost.getLink());
@@ -494,6 +538,133 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
         }
         else {
             mBookMark.setColorFilter(ContextCompat.getColor(this, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
+        }
+    }
+
+    private void storeArticle(){
+        ArticlePostItem articlePostItem = IFullPresenter.getArticle();
+
+        Log.i("TAGPOSTSINGLE", "Article " + articlePostItem);
+        Title title = articlePostItem.getTitle();
+        if(title != null){
+            title.save();
+        }
+
+        Content content = articlePostItem.getContent();
+        if(content != null){
+            content.save();
+        }
+
+        List<MediaItem> mediaItems = articlePostItem.getMedia();
+        if(mediaItems != null){
+
+            for(MediaItem item: mediaItems){
+                item.setParent_id(articlePostItem.getArticle_Id());
+                item.save();
+            }
+        }
+
+        List<CategoriesItem> categoriesItemList = articlePostItem.getCategories();
+        if(categoriesItemList != null){
+            for (CategoriesItem item : categoriesItemList){
+                item.setParent_id(articlePostItem.getArticle_Id());
+                item.save();
+            }
+        }
+
+        Likes likes = articlePostItem.getLikes();
+        if(likes != null){
+            likes.save();
+        }
+
+        CurrentUser currentUser = articlePostItem.getCurrent_user();
+        if(currentUser != null){
+            /*List<Collections> collections = currentUser.getCollections();
+            if(collections != null){
+                for(Collections collect: collections) {
+                    collect.setParent_id(productPost.getProduct_id());
+                    collect.save();
+                }
+            }*/
+            currentUser.save();
+        }
+
+        Author author = articlePostItem.getAuthor();
+        if(author != null){
+            author.save();
+        }
+
+        Synopsis synopsis = articlePostItem.getSynopsis();
+        if(synopsis != null){
+            synopsis.save();
+        }
+
+        List<TagsItem> tagsItems = articlePostItem.getTags();
+        if(tagsItems != null){
+            for(TagsItem tagsItem: tagsItems){
+                tagsItem.setParent_id(articlePostItem.getArticle_Id());
+                tagsItem.save();
+            }
+        }
+
+        Excerpt excerpt = articlePostItem.getExcerpt();
+        if(excerpt != null){
+            excerpt.save();
+        }
+
+        articlePostItem.setVideo(true);
+
+        articlePostItem.save();
+    }
+
+    private class FetchVideoTask extends AsyncTask<Void, Void, ArticlePostItem> {
+
+        private String mArticleID;
+        public FetchVideoTask(String id){
+            mArticleID = id;
+        }
+
+        @Override
+        protected ArticlePostItem doInBackground(Void... voids) {
+
+            ArticlePostItem articlePostItem = new Select().from(ArticlePostItem.class).
+                    where("article_id = ? AND is_Video = ?" , mArticleID, true).executeSingle();
+
+            if(articlePostItem == null){
+                Log.i("TAGPOS", "Article Post is null");
+                return null;
+            }
+
+            Log.i("TAGDATA", "articlePost " + articlePostItem);
+
+            /*List<MediaItem> mediaItem = new Select().from(MediaItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+            productPost.setMedia(mediaItem);
+
+            List<CategoriesItem> categoriesItems = new Select().from(CategoriesItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+
+            productPost.setCategories(categoriesItems);
+
+            List<TagsItem> tagsItems = new Select().from(TagsItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+            productPost.setTags(tagsItems);
+
+            CurrentUser currentUser = productPost.getCurrent_user();
+            if(currentUser != null) {
+                List<Collections> collections = new Select().from(Collections.class).
+                        where("parent_id = ?", productPost.getProduct_id()).execute();
+                currentUser.setCollections(collections);
+            }*/
+            return articlePostItem;
+        }
+
+        @Override
+        protected void onPostExecute(ArticlePostItem articlePostItem) {
+            super.onPostExecute(articlePostItem);
+            mProgress.dismiss();
+            Log.i("TAGPOSTARTICLE", "artc" + articlePostItem);
+            IFullPresenter.updateArticle(articlePostItem);
         }
     }
 }

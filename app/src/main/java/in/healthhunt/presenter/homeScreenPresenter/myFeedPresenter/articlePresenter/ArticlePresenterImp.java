@@ -12,14 +12,14 @@ import java.util.List;
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
 import in.healthhunt.presenter.interactor.bookMarkInteractor.IBookMarkInteractor;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.IArticleView;
@@ -99,7 +99,7 @@ public class ArticlePresenterImp implements IArticlePresenter, IBookMarkInteract
 
             bundle.putInt(ArticleParams.POSITION, pos);
 
-            bundle.putString(ArticleParams.ID, String.valueOf(postItem.getId()));
+            bundle.putString(ArticleParams.ID, String.valueOf(postItem.getArticle_Id()));
 
             String url = null;
             List<MediaItem> mediaItems = postItem.getMedia();
@@ -173,7 +173,7 @@ public class ArticlePresenterImp implements IArticlePresenter, IBookMarkInteract
         for(int i=0; i<IArticleView.getCount(); i++) {
             ArticlePostItem postItem = IArticleView.getArticle(i);
             BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
-            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
+            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getArticle_Id()))) {
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());

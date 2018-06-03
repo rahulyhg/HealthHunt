@@ -1,5 +1,6 @@
 package in.healthhunt.view.viewAll;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -14,4 +15,5 @@ public interface IViewAll {
     void updateAdapter();
     int getViewLayout();
     int getType();
+    void loadFragment(String fragmentName, Bundle bundle);
 }

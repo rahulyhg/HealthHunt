@@ -31,9 +31,9 @@ public class FilterPresenterImp implements IFilterPresenter, IFilterInteractor.O
     private List<DataItem> mFilterBrandItems;
     private List<String> mFilterCityItems;
     private int mFilterCount = 2;
-    private String mProductID;
     private String mCity;
     private List<String> mBrands;
+    private List<String> mProductTypes;
 
     public FilterPresenterImp(Context context, IFilterView filterView) {
         mContext =  context;
@@ -106,13 +106,29 @@ public class FilterPresenterImp implements IFilterPresenter, IFilterInteractor.O
     }
 
     @Override
-    public String getProductID() {
-        return mProductID;
+    public void addProduct(String id) {
+        if(mProductTypes == null){
+            mProductTypes = new ArrayList<String>();
+        }
+        mProductTypes.add(id);
     }
 
     @Override
-    public void setProductID(String id) {
-        mProductID = id;
+    public void removeProduct(String id) {
+        mProductTypes.remove(id);
+    }
+
+    @Override
+    public boolean isProductContain(String id) {
+        if(mProductTypes != null && mProductTypes.contains(id)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<String> getProductList() {
+        return mProductTypes;
     }
 
     @Override

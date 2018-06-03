@@ -17,8 +17,10 @@ public interface IFilterPresenter {
      DataItem getBrandItem(int pos);
      IFilterView getFilterView();
 
-     String getProductID();
-     void setProductID(String id);
+     void addProduct(String id);
+     void removeProduct(String id);
+     boolean isProductContain(String id);
+     List<String> getProductList();
 
      void addBrand(String id);
      void removeBrand(String id);

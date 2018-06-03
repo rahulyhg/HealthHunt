@@ -30,4 +30,8 @@ public interface IHomeView {
     void closeDrawer();
     void updateMyFeedArticles();
     void updateDrawerFragment();
+    void hideActionBar();
+    void showActionBar();
+    void setStatusBarTranslucent(boolean val);
+    void updateDownloadData();
 }

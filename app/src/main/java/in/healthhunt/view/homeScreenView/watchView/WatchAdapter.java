@@ -15,10 +15,10 @@ import java.util.List;
 
 import in.healthhunt.R;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.IWatchPresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;

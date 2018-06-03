@@ -92,7 +92,7 @@ public class ProductPresenterImp implements IProductPresenter, IBookMarkInteract
 
         if (postItem != null) {
 
-            bundle.putString(ArticleParams.ID, String.valueOf(postItem.getId()));
+            bundle.putString(ArticleParams.ID, String.valueOf(postItem.getProduct_id()));
 
             String url = null;
             List<MediaItem> mediaItems = postItem.getMedia();
@@ -142,7 +142,7 @@ public class ProductPresenterImp implements IProductPresenter, IBookMarkInteract
             ProductPostItem postItem = IProductView.getProduct(i);
             BookMarkInfo info = markResponse.getBookMarkInfo();
             if(info != null) {
-                if (postItem.getId().equals(info.getPost_id())) {
+                if (postItem.getProduct_id().equals(info.getPost_id())) {
                     postItem.getCurrent_user().setBookmarked(info.isBookMark());
                     break;
                 }

@@ -15,9 +15,9 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import in.healthhunt.R;
+import in.healthhunt.model.articles.commonResponse.Content;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
-import in.healthhunt.model.articles.productResponse.Content;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 

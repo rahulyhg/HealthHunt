@@ -1,5 +1,6 @@
 package in.healthhunt.view.homeScreenView.shopView;
 
+import android.os.Bundle;
 import android.view.View;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface IShopView extends IView {
     void showAlert(String msg);
     void handleFilterData(Map<Integer, List<String>> map);
     Map<Integer, List<String>> getFilterData();
+    void loadFragment(String fragmentName, Bundle bundle);
 }

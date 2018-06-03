@@ -318,7 +318,7 @@
                 android:layout_marginBottom="8dp"/>
         </LinearLayout>
         <!--<AutoCompleteTextView
-            android:id="@+id/city_search_view"
+            andridd:idmedia_category_tag_id@+id/city_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

@@ -17,12 +17,15 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.homeScreenView.HomeActivity;
+import in.healthhunt.view.homeScreenView.IHomeView;
+import in.healthhunt.view.profileView.ProfileFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
@@ -42,16 +45,16 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     TextView mUserName;
 
     private IHomePresenter IHomePresenter;
-
     private Unbinder mUnbinder;
-
     private CategoryAdapter mCategoryAdapter;
+    private IHomeView IHomeView;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IHomePresenter = ((HomeActivity)getActivity()).getHomePresenter();
+        IHomeView = (HomeActivity)getActivity();
     }
 
     @Nullable
@@ -65,15 +68,17 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     }
 
     private void setUserInfo() {
-        String name = HealthHuntPreference.getString(getContext(), Constants.USER_NAME);
+
+        User user = User.getUser();
+        String name = user.getUsername();//HealthHuntPreference.getString(getContext(), user.getUsername());
         if(name != null) {
             mUserName.setText(name);
         }
 
-        String url = HealthHuntPreference.getString(getContext(), Constants.USER_ID);
+        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
 
-        url = url.replace("\n", "");
         if(url != null) {
+            url = url.replace("\n", "");
             Glide.with(getContext())
                     .load(url)
                     .bitmapTransform(new CropCircleTransformation(getContext())).placeholder(R.mipmap.avatar)
@@ -122,5 +127,11 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
         if(mCategoryAdapter != null){
             mCategoryAdapter.notifyDataSetChanged();
         }
+    }
+
+    @OnClick(R.id.edit_profile)
+    void onEdit(){
+        IHomeView.closeDrawer();
+        IHomePresenter.loadNonFooterFragment(ProfileFragment.class.getSimpleName(), null);
     }
 }

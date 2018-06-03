@@ -24,9 +24,9 @@ public interface Constants {
     String GOOGLE = "google";
     String AUTHCODE = "authCode";
 
-    String USER_ID = "user_id";
+    /*String USER_ID = "user_id";
     String USER_URL = "user_url";
-    String USER_NAME = "user_name";
+    String USER_NAME = "user_name";*/
 
     String All = "All";
     String NUTRITION ="Nutrition";
@@ -38,6 +38,15 @@ public interface Constants {
     int PRODUCT_FILTER = 1000;
     int BRAND_FILTER = 2000;
     int CITY_FILTER = 3000;
+
+    int FRAGMENT_MY_FEED = 0;
+    int FRAGMENT_MY_HUNTS = 1;
+    int FRAGMENT_WATCH = 2;
+    int FRAGMENT_SHOP = 3;
+    int FULL_VIDEO_REQUEST_CODE = 1001;
+
+
+    String IS_DOWNLOADED = "is_Downloaded";
 
     String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     String TYPE_AUTOCOMPLETE = "/autocomplete";

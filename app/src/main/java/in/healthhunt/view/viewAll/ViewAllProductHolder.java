@@ -62,7 +62,7 @@ public class ViewAllProductHolder extends RecyclerView.ViewHolder{
     @OnClick(R.id.view_all_product_bookmark)
     void onBookMark(){
         ProductPostItem postsItem = IViewAllPresenter.getProduct(getAdapterPosition());
-        String id = String.valueOf(postsItem.getId());
+        String id = String.valueOf(postsItem.getProduct_id());
         CurrentUser currentUser = postsItem.getCurrent_user();
         if(currentUser != null) {
             if(!currentUser.isBookmarked()){

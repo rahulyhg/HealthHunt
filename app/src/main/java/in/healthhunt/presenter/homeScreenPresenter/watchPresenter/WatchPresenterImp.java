@@ -56,7 +56,7 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
         for(int i = 0; i< mVideoArticles.size(); i++) {
             ArticlePostItem postItem = mVideoArticles.get(i);
             BookMarkInfo bookMarkInfo = markResponse.getBookMarkInfo();
-            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
+            if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getArticle_Id()))) {
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());
@@ -111,7 +111,7 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
         IWatchView.showProgress();
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.OFFSET, String.valueOf(0));
-        map.put(ArticleParams.LIMIT, String.valueOf(2));
+        map.put(ArticleParams.LIMIT, String.valueOf(30));
         map.put(ArticleParams.FORMAT, ArticleParams.POST_FORMAT_VIDEO);
         IArticleInteractor.fetchAllArticle(mContext, map, this);
     }

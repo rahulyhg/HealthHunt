@@ -1,5 +1,6 @@
 package in.healthhunt.view.homeScreenView.myHuntsView;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -14,4 +15,5 @@ public interface IMyHuntsView extends IView {
     void updateAdapter();
     void showAlert(String msg);
     int getType();
+    void loadFragment(String fragmentName, Bundle bundle);
 }

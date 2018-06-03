@@ -4,9 +4,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -25,9 +25,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
+import in.healthhunt.presenter.tagPresenter.ITagPresenter;
 import in.healthhunt.presenter.tagPresenter.TagPresenterImp;
 import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.onBoardingView.OnBoardingActivity;
@@ -37,12 +37,6 @@ import in.healthhunt.view.onBoardingView.OnBoardingActivity;
  */
 
 public class TagActivity extends BaseActivity implements ITagView, TagAdapter.OnClickListener{
-
-    @BindView(R.id.tags_recycler_list)
-    public RecyclerView mRecyclerView;
-
-    @BindView(R.id.select_all)
-    public TextView mSelectAll;
 
     @BindView(R.id.spinner)
     public Spinner mSpinner;
@@ -55,11 +49,9 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
 
     private String[] spinnerItems = {"English", "Hindi", "Punjabi"};
 
-    private TagPresenterImp mTagPresenterImp;
+    private ITagPresenter ITagPresenter;
 
-    private TagAdapter mTagAdapter;
-
-    private boolean isSelectAll;
+    private TagFragment mTagFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,20 +60,10 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         ButterKnife.bind(this);
 
         addSpinnerAdapter();
-        mTagPresenterImp = new TagPresenterImp(getApplicationContext(), this);
-        addTagAdapter();
-        mTagPresenterImp.fetchTags();
-
-
-    }
-
-    private void addTagAdapter() {
-        mTagAdapter = new TagAdapter(getApplicationContext(), mTagPresenterImp);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        mRecyclerView.addItemDecoration(new SpaceDecoration(HealthHuntUtility.
-                dpToPx(8, getApplicationContext()), SpaceDecoration.GRID));
-        mRecyclerView.setAdapter(mTagAdapter);
+        ITagPresenter = new TagPresenterImp(getApplicationContext(), this);
+        ITagPresenter.loadFragment(TagFragment.class.getSimpleName(), null);
+        //addTagAdapter();
+        //mTagPresenterImp.fetchTags();
     }
 
     private void addSpinnerAdapter() {
@@ -92,14 +74,14 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
 
     @OnClick(R.id.done)
     void onDoneClick(){
-        List<TagItem> itemList = mTagPresenterImp.getSelectedTagList();
+        List<TagItem> itemList = ITagPresenter.getSelectedTagList();
         if(itemList.size() < 5) {
             Toast.makeText(getApplicationContext(), getString(R.string.select_at_least_5_tags),
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        mTagPresenterImp.storeSelectedTags();
+        ITagPresenter.storeSelectedTags();
         Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
         startActivity(intent);
         finish();
@@ -118,13 +100,13 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
 
     @Override
     public void updateAdapter() {
-        mTagAdapter.notifyDataSetChanged();
+        mTagFragment.updateAdapter();
         setSearchAdapter();
     }
 
     private void setSearchAdapter() {
 
-        List<TagItem> tagItemList = mTagPresenterImp.getTagList();
+        List<TagItem> tagItemList = ITagPresenter.getTagList();
         List<String> searchList = new ArrayList<String>();
 
         for(TagItem item: tagItemList){
@@ -146,21 +128,21 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
 
                 String selectedText = mSearchView.getText().toString();
-                for(TagItem fullTagItem: mTagPresenterImp.getTagList()){
+                for(TagItem fullTagItem: ITagPresenter.getTagList()){
                     if(fullTagItem.getName().equalsIgnoreCase(selectedText)){
                         fullTagItem.setPressed(!fullTagItem.isPressed());
 
                         boolean isPressed = fullTagItem.isPressed();
                         if(isPressed){
-                            mTagPresenterImp.addTag(fullTagItem);
+                            ITagPresenter.addTag(fullTagItem);
                         }
                         else {
-                            mTagPresenterImp.removeTag(fullTagItem);
+                            ITagPresenter.removeTag(fullTagItem);
                         }
                         break;
                     }
                 }
-                mTagAdapter.notifyDataSetChanged();
+                updateAdapter();
             }
         });
 
@@ -209,31 +191,34 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
 
     @Override
     public TagViewHolder createTagViewHolder(View view) {
-        return new TagViewHolder(view, mTagPresenterImp, this);
+        return new TagViewHolder(view, ITagPresenter, this);
     }
 
-    @OnClick(R.id.select_all)
-    void onSelectAll(){
-        isSelectAll = !isSelectAll;
-        if(isSelectAll) {
-            mTagPresenterImp.selectAll();
-            mTagAdapter.setSelectAll(true);
-        }
-        else {
-            mTagPresenterImp.unSelectAll();
-            mTagAdapter.setSelectAll(false);
-        }
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        mTagFragment = new TagFragment();
+        showFragment(mTagFragment);
+    }
+
+    @Override
+    public ITagPresenter getPresenter() {
+        return ITagPresenter;
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.tag_frame, fragment);
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onItemClick(int position) {
-        List<TagItem> itemList = mTagPresenterImp.getSelectedTagList();
+        List<TagItem> itemList = ITagPresenter.getSelectedTagList();
         if(itemList != null && !itemList.isEmpty()){
             mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_edittext_text_color));
         }
         else {
             mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_grey_dark));
         }
-
     }
 }

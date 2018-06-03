@@ -124,8 +124,8 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
         Map<Integer, List<String>> map = IHomeView.getFilterData();
         if(map != null && !map.isEmpty()){
             List<String> ids = map.get(Constants.PRODUCT_FILTER);
-            if(ids != null && !ids.isEmpty()){
-                IFilterPresenter.setProductID(ids.get(0));
+            for(String item: ids){
+                IFilterPresenter.addProduct(item);
             }
 
             ids = map.get(Constants.BRAND_FILTER);
@@ -267,10 +267,8 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     @OnClick(R.id.apply)
     void onApply(){
         Map<Integer, List<String>> map = new HashMap<Integer, List<String>>();
-        if(IFilterPresenter.getProductID() != null){
-            List<String> product = new ArrayList<String>();
-            product.add(IFilterPresenter.getProductID());
-            map.put(Constants.PRODUCT_FILTER, product);
+        if(IFilterPresenter.getProductList() != null){
+            map.put(Constants.PRODUCT_FILTER, IFilterPresenter.getProductList());
         }
 
         if(IFilterPresenter.getBrandList() != null){
@@ -355,7 +353,8 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     @Override
     public void ItemClicked() {
 
-        if(IFilterPresenter.getProductID() != null || IFilterPresenter.getCity() != null ||
+        if((IFilterPresenter.getProductList() != null && !IFilterPresenter.getProductList().isEmpty())
+            || IFilterPresenter.getCity() != null ||
                 (IFilterPresenter.getBrandList() != null && !IFilterPresenter.getBrandList().isEmpty())) {
             updateRemoveColor(R.color.hh_green_light2);
         }

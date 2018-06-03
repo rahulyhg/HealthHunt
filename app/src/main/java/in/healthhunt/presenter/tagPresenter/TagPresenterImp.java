@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.tagPresenter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -43,6 +44,7 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
         mSelectedList = new ArrayList<TagItem>();
     }
 
+    @Override
     public void fetchTags() {
         ITagView.onShowProgress();
         mPageNumber = 1;
@@ -82,7 +84,9 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
              mSelectedList = new ArrayList<TagItem>();
          }
         Log.d(TAG, "Select tag");
-         mSelectedList.add(tag);
+         if(!mSelectedList.contains(tag)) {
+             mSelectedList.add(tag);
+         }
     }
 
     @Override
@@ -135,6 +139,11 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     @Override
     public TagViewHolder createTagViewHolder(View view) {
         return ITagView.createTagViewHolder(view);
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        ITagView.loadFragment(fragmentName, bundle);
     }
 
     private TagRequest createTagRequest(int pageNumber) {

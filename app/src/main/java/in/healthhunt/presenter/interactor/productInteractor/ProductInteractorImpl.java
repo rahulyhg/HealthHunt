@@ -7,7 +7,7 @@ import java.util.Map;
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
-import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
+import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.response.HHResponse;
 import retrofit2.Response;
@@ -58,6 +58,36 @@ public class ProductInteractorImpl implements IProductInteractor {
             @Override
             public void onFailure(RestError error, String msg) {
                 productFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void fetchRelatedProduct(Context context, final int type, Map<String, String> queryMap, final OnRelatedProductFinishListener finishListener) {
+        WebServicesWrapper.getInstance(context).fetchProducts(queryMap, new ResponseResolver<HHResponse<ProductData>>() {
+            @Override
+            public void onSuccess(HHResponse<ProductData> productData, Response response2) {
+                finishListener.onRelatedProductSuccess(productData.getData().getPosts(), type);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                finishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void fetchCollectionProduct(Context context, int type, Map<String, String> queryMap, final OnCollectionProductFinishListener collectionProductFinishListener) {
+        WebServicesWrapper.getInstance(context).fetchProducts(queryMap, new ResponseResolver<HHResponse<ProductData>>() {
+            @Override
+            public void onSuccess(HHResponse<ProductData> productData, Response response2) {
+               // collectionProductFinishListener.onCollectionProductSuccess(productData.getData().getPosts());
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                collectionProductFinishListener.onError(error);
             }
         });
     }

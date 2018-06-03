@@ -16,12 +16,12 @@ import java.util.List;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.viewAllPresenter.IViewAllPresenter;
@@ -58,11 +58,13 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (mType) {
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
                 ArticlePostItem tagsItem = IViewAllPresenter.getArticle(position);
                 setArticleContent(((ViewAllArticleHolder) holder), tagsItem);
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
                 ProductPostItem postItem =  IViewAllPresenter.getProduct(position);
                 setProductContent(((ViewAllProductHolder) holder), postItem);
                 break;

@@ -58,7 +58,7 @@ public class TagViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.tag_view)
     public void onTagClick() {
         List<TagItem> itemList = ITagPresenter.getTagList();
-        TagItem tagItem = itemList.get(mViewHolderPos);
+        TagItem tagItem = itemList.get(getAdapterPosition());
         tagItem.setPressed(!tagItem.isPressed());
 
         updateTag(tagItem);
@@ -72,28 +72,25 @@ public class TagViewHolder extends RecyclerView.ViewHolder {
 
         if(isPressed){
             mTagView.setBackground(ContextCompat.getDrawable(mContext, R.mipmap.ic_check_bg));
-            Drawable mDrawable = mTagImage.getDrawable();
-            mDrawable.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
-            mTagImage.setBackground(mDrawable);
+            mTagImage.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+
             mTag.setTextColor(Color.WHITE);
             mPlus.setVisibility(View.GONE);
             mCheck.setVisibility(View.VISIBLE);
 
-            mDrawable = ContextCompat.getDrawable(mContext, R.mipmap.ic_check);
+            Drawable mDrawable = ContextCompat.getDrawable(mContext, R.mipmap.ic_check);
             mDrawable.setColorFilter(new PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP));
             mCheck.setBackground(mDrawable);
         }
         else {
             mTagView.setBackground(ContextCompat.getDrawable(mContext, R.drawable.tag_item_bg));
+            mTagImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_ATOP);
 
-            Drawable mDrawable = mTagImage.getDrawable();
-            mDrawable.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_ATOP));
-            mTagImage.setBackground(mDrawable);
             mTag.setTextColor(ContextCompat.getColor(mContext, R.color.hh_green_light2));
             mCheck.setVisibility(View.GONE);
             mPlus.setVisibility(View.VISIBLE);
 
-            mDrawable = ContextCompat.getDrawable(mContext, R.mipmap.ic_plus);
+            Drawable mDrawable = ContextCompat.getDrawable(mContext, R.mipmap.ic_plus);
             mDrawable.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(mContext, R.color.hh_grey_dark1), PorterDuff.Mode.SRC_ATOP));
             mPlus.setBackground(mDrawable);
         }

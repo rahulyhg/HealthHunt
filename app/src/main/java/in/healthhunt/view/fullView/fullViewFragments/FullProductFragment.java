@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
 import com.bumptech.glide.Glide;
 
 import java.io.UnsupportedEncodingException;
@@ -38,26 +40,36 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
+import in.healthhunt.model.articles.commonResponse.Content;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Excerpt;
 import in.healthhunt.model.articles.commonResponse.Likes;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
-import in.healthhunt.model.articles.postProductResponse.ProductPost;
-import in.healthhunt.model.articles.productResponse.Content;
+import in.healthhunt.model.articles.commonResponse.Synopsis;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.comment.CommentsItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.model.utility.URLImageParser;
 import in.healthhunt.presenter.fullPresenter.FullPresenterImp;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
-import in.healthhunt.view.fullView.FullViewActivity;
 import in.healthhunt.view.fullView.commentView.CommentAdapter;
 import in.healthhunt.view.fullView.commentView.CommentViewHolder;
+import in.healthhunt.view.homeScreenView.HomeActivity;
+import in.healthhunt.view.homeScreenView.IHomeView;
+import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
  * Created by abhishekkumar on 5/24/18.
  */
 
-public class FullProductFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener {
+public class FullProductFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener, RelatedProductAdapter.ClickListener {
 
     @BindView(R.id.full_product_name)
     TextView mProductName;
@@ -119,22 +131,54 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.top_product_unit)
     TextView mBuyProductUnit;
 
+    @BindView(R.id.related_product_recycler_list)
+    RecyclerView mRelatedProductViewer;
+
+    @BindView(R.id.related_product_view_all)
+    LinearLayout mProductViewAll;
+
+    @BindView(R.id.related_product_view)
+    LinearLayout mRelatedProductView;
+
+
     private IFullPresenter IFullPresenter;
-    private in.healthhunt.view.fullView.IFullView IFullView;
+    private IHomeView IHomeView;
     private Unbinder mUnbinder;
+    private int mType;
+    private boolean isDownloaded;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IFullPresenter = new FullPresenterImp(getContext(), this);
-        IFullView  =(FullViewActivity) getActivity();
-        IFullPresenter.fetchProduct(IFullView.getID());
+        IHomeView  =(HomeActivity) getActivity();
+
+
+        String id = getArguments().getString(ArticleParams.ID);
+        mType = getArguments().getInt(ArticleParams.POST_TYPE);
+        isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
+        if(!isDownloaded) {
+            IFullPresenter.fetchProduct(id);
+        }
+        else {
+            fetchProductFromDataBase(id);
+        }
+    }
+
+    private void fetchProductFromDataBase(String id) {
+        IHomeView.showProgress();
+        FetchProductsTask productsTask = new FetchProductsTask(id);
+        productsTask.execute();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_full_product_view, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        IHomeView.setStatusBarTranslucent(true);
+        IHomeView.hideBottomFooter();
+        IHomeView.hideActionBar();
+        setContent();
         return view;
     }
 
@@ -148,17 +192,17 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void showProgress() {
-        IFullView.showProgress();
+        IHomeView.showProgress();
     }
 
     @Override
     public void hideProgress() {
-        IFullView.hideProgress();
+        IHomeView.hideProgress();
     }
 
     @Override
     public void setContent() {
-        ProductPost productPost = IFullPresenter.getProduct();
+        ProductPostItem productPost = IFullPresenter.getProduct();
 
         if (productPost != null) {
             setTopImageContent(productPost);
@@ -167,21 +211,45 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             setBuyInfo(productPost);
             setAboutContent(productPost);
             setCommentContent(productPost);
+            setRelatedProductAdapter();
         }
+    }
+
+    private void setRelatedProductAdapter() {
+        if(IFullPresenter.getRelatedProductsCount() > 0){
+            mRelatedProductView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mRelatedProductView.setVisibility(View.GONE);
+        }
+
+        RelatedProductAdapter relatedProductAdapter = new RelatedProductAdapter(getContext(), IFullPresenter);
+        relatedProductAdapter.setClickListener(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRelatedProductViewer.setLayoutManager(layoutManager);
+        mRelatedProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
+        mRelatedProductViewer.setAdapter(relatedProductAdapter);
+        mRelatedProductViewer.setFocusableInTouchMode(false);
     }
 
     @Override
     public int getPostType() {
-        return IFullView.getProductType();
+        return mType;
     }
 
     @Override
     public void updateBookMarkIcon() {
         CurrentUser currentUser = null;
-        ProductPost productPost = IFullPresenter.getProduct();
+        ProductPostItem productPost = IFullPresenter.getProduct();
         currentUser = productPost.getCurrent_user();
         if(currentUser != null) {
             updateBookMark(currentUser.isBookmarked());
+        }
+
+        if(isDownloaded & currentUser != null){
+            currentUser.save();
+            productPost.save();
+            IHomeView.updateDownloadData();
         }
     }
 
@@ -228,8 +296,29 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
                 }
             }
 
-            mLikesCount.setText(String.valueOf(count));
+            ProductPostItem productPost = IFullPresenter.getProduct();
+            if(productPost != null && productPost.getLikes() != null){
+                productPost.getLikes().setLikes(String.valueOf(count));
+                mLikesCount.setText(String.valueOf(count));
+            }
         }
+    }
+
+    @Override
+    public void updateRelatedArticleAdapter() {
+
+    }
+
+    @Override
+    public void updateRelatedProductAdapter() {
+        if(mRelatedProductViewer != null){
+            mRelatedProductViewer.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IHomeView.getHomePresenter().loadNonFooterFragment(fragmentName, bundle);
     }
 
     @OnClick(R.id.buy)
@@ -265,8 +354,8 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
             CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
             if(adapter == null) {
-                ProductPost post = IFullPresenter.getProduct();
-                IFullPresenter.fetchComments(String.valueOf(post.getId()));
+                ProductPostItem post = IFullPresenter.getProduct();
+                IFullPresenter.fetchComments(String.valueOf(post.getProduct_id()));
                 mFullViewScroll.fullScroll(View.FOCUS_DOWN);
             }
         }
@@ -275,15 +364,15 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     @OnClick(R.id.full_product_bookmark)
     void onBookMark(){
         CurrentUser currentUser = null;
-        ProductPost productPost = IFullPresenter.getProduct();
+        ProductPostItem productPost = IFullPresenter.getProduct();
         if(productPost != null){
             currentUser = productPost.getCurrent_user();
             if(currentUser != null ) {
                 if(!currentUser.isBookmarked()) {
-                    IFullPresenter.bookmark(String.valueOf(productPost.getId()));
+                    IFullPresenter.bookmark(String.valueOf(productPost.getProduct_id()), ArticleParams.PRODUCT);
                 }
                 else {
-                    IFullPresenter.unBookmark(String.valueOf(productPost.getId()));
+                    IFullPresenter.unBookmark(String.valueOf(productPost.getProduct_id()), ArticleParams.PRODUCT);
                 }
             }
         }
@@ -304,9 +393,9 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        ProductPost productPost = IFullPresenter.getProduct();
+        ProductPostItem productPost = IFullPresenter.getProduct();
         if(productPost != null){
-            int post_id = productPost.getId();
+            String post_id = productPost.getProduct_id();
             if(!content.isEmpty()){
                 IFullPresenter.addNewComment(String.valueOf(post_id), content);
             }
@@ -315,11 +404,11 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     @OnClick(R.id.full_product_like)
     void onLikeClick(){
-        int id = IFullPresenter.getProduct().getId();
+        String id = IFullPresenter.getProduct().getProduct_id();
         IFullPresenter.updateLike(String.valueOf(id));
     }
 
-    private void setCommentContent(ProductPost productPost) {
+    private void setCommentContent(ProductPostItem productPost) {
         String commentCount = productPost .getComments();
         if(commentCount != null){
             int count = Integer.parseInt(commentCount);
@@ -332,10 +421,10 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         }
     }
 
-    private void setAboutContent(ProductPost productPost) {
+    private void setAboutContent(ProductPostItem productPost) {
     }
 
-    private void setProductContent(ProductPost productPost) {
+    private void setProductContent(ProductPostItem productPost) {
 
         Content content = productPost.getContent();
         Log.i("TAGCONTENT", "Content " + content.getRendered());
@@ -351,7 +440,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         }
     }
 
-    private void setBuyInfo(ProductPost productPost) {
+    private void setBuyInfo(ProductPostItem productPost) {
         String productName = productPost.getPost_name();
         if(productName != null){
             mBuyProductName.setText(productName);
@@ -376,7 +465,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         }
     }
 
-    private void setEmailInfo(ProductPost productPost) {
+    private void setEmailInfo(ProductPostItem productPost) {
         String email = productPost.getPost_email();
         if(email != null){
             mEmail.setText(email);
@@ -390,7 +479,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         }
     }
 
-    private void setTopImageContent(ProductPost productPost) {
+    private void setTopImageContent(ProductPostItem productPost) {
 
 
         String productName = productPost.getPost_name();
@@ -401,7 +490,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         CurrentUser currentUser = productPost.getCurrent_user();
         if(currentUser != null) {
             updateBookMark(currentUser.isBookmarked());
-
+            Log.i("TAGUSR", " user " + currentUser.getLike());
             int like = currentUser.getLike();
             if(like > 0){
                 updateLikeIcon(true);
@@ -446,6 +535,8 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     void onDownloadClick(){
         final Dialog mBottomSheetDialog = new Dialog(getContext(), R.style.MaterialDialogSheet);
         View customView = getLayoutInflater().inflate(R.layout.download_popup_window_view,null);
+        TextView textView = customView.findViewById(R.id.download_text);
+        textView.setText(getString(R.string.download_this_product));
         mBottomSheetDialog.setContentView(customView); // your custom view.
         mBottomSheetDialog.setCancelable(true);
         mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
@@ -458,7 +549,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-               // Toast.makeText(getContext(), "Share", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), "Share", Toast.LENGTH_SHORT).show();
                 shareProduct();
             }
         });
@@ -468,7 +559,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-                //Toast.makeText(getContext(), "Download", Toast.LENGTH_SHORT).show();
+                storeProduct();
             }
         });
 
@@ -476,7 +567,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void shareProduct(){
-        ProductPost productPost = IFullPresenter.getProduct();
+        ProductPostItem productPost = IFullPresenter.getProduct();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, productPost.getLink());
@@ -552,5 +643,153 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         // Spannable html = (Spannable) Html.fromHtml(commentsItem.getContent().getRendered());
         holder.mCommentEditText.setText(holder.mCommentText.getText().toString().trim());
         holder.mCommentEditText.requestFocus();
+    }
+
+    @Override
+    public void onRelatedItemClicked(View v, int position, int type) {
+        // Intent intent = new Intent(getContext(), FullViewActivity.class);
+        String id = null;
+        if(type == ArticleParams.PRODUCT){
+            ProductPostItem postItem = IFullPresenter.getRelatedProduct(position);
+            id = String.valueOf(postItem.getProduct_id());
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString(ArticleParams.ID, String.valueOf(id));
+        bundle.putInt(ArticleParams.POST_TYPE, type);
+        IFullPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
+    }
+
+    @OnClick(R.id.related_product_view_all)
+    void onRelatedProductViewAll(){
+        Bundle bundle = new Bundle();
+        String id = IFullPresenter.getProduct().getProduct_id();
+        bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.RELATED_PRODUCTS);
+        bundle.putString(ArticleParams.ID, String.valueOf(id));
+        IFullPresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
+    }
+
+    private void storeProduct(){
+        ProductPostItem productPost = IFullPresenter.getProduct();
+
+        Log.i("TAGPOSTSINGLE", "product " + productPost);
+        Title title = productPost.getTitle();
+        if(title != null){
+            title.save();
+        }
+
+        Content content = productPost.getContent();
+        if(content != null){
+            content.save();
+        }
+
+        List<MediaItem> mediaItems = productPost.getMedia();
+        if(mediaItems != null){
+
+            for(MediaItem item: mediaItems){
+                item.setParent_id(productPost.getProduct_id());
+                item.save();
+            }
+        }
+
+        List<CategoriesItem> categoriesItemList = productPost.getCategories();
+        if(categoriesItemList != null){
+            for (CategoriesItem item : categoriesItemList){
+                item.setParent_id(productPost.getProduct_id());
+                item.save();
+            }
+        }
+
+        Likes likes = productPost.getLikes();
+        if(likes != null){
+            likes.save();
+        }
+
+        CurrentUser currentUser = productPost.getCurrent_user();
+        if(currentUser != null){
+            /*List<Collections> collections = currentUser.getCollections();
+            if(collections != null){
+                for(Collections collect: collections) {
+                    collect.setParent_id(productPost.getProduct_id());
+                    collect.save();
+                }
+            }*/
+            currentUser.save();
+        }
+
+        Author author = productPost.getAuthor();
+        if(author != null){
+            author.save();
+        }
+
+        Synopsis synopsis = productPost.getSynopsis();
+        if(synopsis != null){
+            synopsis.save();
+        }
+
+        List<TagsItem> tagsItems = productPost.getTags();
+        if(tagsItems != null){
+            for(TagsItem tagsItem: tagsItems){
+                tagsItem.setParent_id(productPost.getProduct_id());
+                tagsItem.save();
+            }
+        }
+
+        Excerpt excerpt = productPost.getExcerpt();
+        if(excerpt != null){
+            excerpt.save();
+        }
+
+        productPost.save();
+        IHomeView.updateDownloadData();
+    }
+
+    private class FetchProductsTask extends AsyncTask<Void, Void, ProductPostItem> {
+
+        private String mProductID;
+        public FetchProductsTask(String id){
+            mProductID = id;
+        }
+
+        @Override
+        protected ProductPostItem doInBackground(Void... voids) {
+
+            ProductPostItem productPost = new Select().from(ProductPostItem.class).
+                    where("product_id = ?" , mProductID).executeSingle();
+
+            if(productPost == null){
+                Log.i("TAGPOS", "Product Post is null");
+                return null;
+            }
+
+            Log.i("TAGDATA", "productPost " + productPost);
+
+            /*List<MediaItem> mediaItem = new Select().from(MediaItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+            productPost.setMedia(mediaItem);
+
+            List<CategoriesItem> categoriesItems = new Select().from(CategoriesItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+
+            productPost.setCategories(categoriesItems);
+
+            List<TagsItem> tagsItems = new Select().from(TagsItem.class).
+                    where("parent_id = ?" , productPost.getProduct_id()).execute();
+            productPost.setTags(tagsItems);
+
+            CurrentUser currentUser = productPost.getCurrent_user();
+            if(currentUser != null) {
+                List<Collections> collections = new Select().from(Collections.class).
+                        where("parent_id = ?", productPost.getProduct_id()).execute();
+                currentUser.setCollections(collections);
+            }*/
+            return productPost;
+        }
+
+        @Override
+        protected void onPostExecute(ProductPostItem productPosts) {
+            super.onPostExecute(productPosts);
+            IHomeView.hideProgress();
+            IFullPresenter.updateProduct(productPosts);
+        }
     }
 }

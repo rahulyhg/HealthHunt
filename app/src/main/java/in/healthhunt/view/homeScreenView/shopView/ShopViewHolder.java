@@ -63,7 +63,7 @@ public class ShopViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.shop_article_bookmark)
     void onBookMark(){
         ProductPostItem postsItem = IShopPresenter.getProduct(getAdapterPosition());
-        String id = String.valueOf(postsItem.getId());
+        String id = String.valueOf(postsItem.getProduct_id());
         CurrentUser currentUser = postsItem.getCurrent_user();
         if(currentUser != null) {
             if(!currentUser.isBookmarked()){

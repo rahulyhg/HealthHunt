@@ -268,7 +268,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
                 if(mCategoryViewer.getChildCount() == 0){
                     mHorizontalScrollView.setVisibility(View.GONE);
                 }
-                updateArticlesList();
+                updateData();
                 IHomeView.updateDrawerFragment();
             }
         });
@@ -358,7 +358,7 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
         super.onStop();
     }
 
-    public void updateArticlesList(){
+    public void updateData(){
         IMyFeedPresenter.fetchData();
     }
 }

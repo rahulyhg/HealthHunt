@@ -181,11 +181,12 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     }
 
     private void storeUserInfo(User user) {
-        Log.i("TAG", "IMAGE " + user.getUser_image() + " ID " + user.getId());
-        Log.i("TAG", "URL " + user.getUrl());
-        HealthHuntPreference.putString(mContext, Constants.USER_ID, String.valueOf(user.getId()));
+        user.save();
+       // Log.i("TAG", "IMAGE " + user.getUser_image() + " ID " + user.getId());
+        //Log.i("TAG", "URL " + user.getUrl());
+       /* HealthHuntPreference.putString(mContext, Constants.USER_ID, String.valueOf(user.getId()));
         HealthHuntPreference.putString(mContext, Constants.USER_NAME, String.valueOf(user.getName()));
-        HealthHuntPreference.putString(mContext, Constants.USER_URL, String.valueOf(user.getUrl()));
+        HealthHuntPreference.putString(mContext, Constants.USER_URL, String.valueOf(user.getUrl()));*/
     }
 
     @Override

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import framework.retrofit.RestError;
-import in.healthhunt.model.articles.postProductResponse.ProductPost;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 
 /**
@@ -21,7 +20,7 @@ public interface IProductInteractor {
     }
 
     interface OnFullViewFinishListener {
-        void onProductSuccess(ProductPost item);
+        void onProductSuccess(ProductPostItem item);
         void onError(RestError errorInfo);
     }
 
@@ -30,8 +29,20 @@ public interface IProductInteractor {
         void onError(RestError errorInfo);
     }
 
+    interface OnRelatedProductFinishListener {
+        void onRelatedProductSuccess(List<ProductPostItem> items, int type);
+        void onError(RestError errorInfo);
+    }
+
+    interface OnCollectionProductFinishListener {
+        void onCollectionProductSuccess(List<ProductPostItem> items, int type);
+        void onError(RestError errorInfo);
+    }
+
 
     void fetchAllProduct(Context context, Map<String, String> queryMap, OnViewAllFinishListener finishListener);
     void fetchFullProduct(Context context, String id, OnFullViewFinishListener finishListener);
     void fetchProduct(Context context, int type, Map<String, String> queryMap, OnProductFinishListener productFinishListener);
+    void fetchRelatedProduct(Context context, int type, Map<String, String> queryMap, OnRelatedProductFinishListener finishListener);
+    void fetchCollectionProduct(Context context, int type, Map<String, String> queryMap, OnCollectionProductFinishListener collectionProductFinishListener);
 }

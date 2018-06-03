@@ -22,12 +22,12 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -220,7 +220,7 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @OnClick(R.id.article_bookmark)
         void onBookMark(){
             ArticlePostItem postsItem = IArticlePresenter.getArticle(getAdapterPosition());
-            String id = String.valueOf(postsItem.getId());
+            String id = String.valueOf(postsItem.getArticle_Id());
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){

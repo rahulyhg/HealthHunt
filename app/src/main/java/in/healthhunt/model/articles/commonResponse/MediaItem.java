@@ -1,13 +1,50 @@
 package in.healthhunt.model.articles.commonResponse;
 
-public class MediaItem{
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.SerializedName;
+
+@Table(name = "MediaItems")
+public class MediaItem extends Model {
+
+	@Column(name = "featured")
 	private boolean featured;
+
+	@Column(name = "heading")
 	private String heading;
+
+	@Column(name = "media_type")
 	private String media_type;
+
+	@Column(name = "description")
 	private String description;
+
+	@Column(name = "modified")
 	private String modified;
-	private String id;
+
+	@Column(name = "media_id")
+	@SerializedName("id")
+	private String media_id;
+
+	@Column(name = "url")
 	private String url;
+
+	public MediaItem(){
+		super();
+	}
+
+	@Column(name = "parent_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE, onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+	private String parent_id;
+
+	public String getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(String parent_id) {
+		this.parent_id = parent_id;
+	}
 
 	public void setFeatured(boolean featured){
 		this.featured = featured;
@@ -49,12 +86,12 @@ public class MediaItem{
 		return modified;
 	}
 
-	public void setId(String id){
-		this.id = id;
+	public void setMedia_id(String media_id){
+		this.media_id = media_id;
 	}
 
-	public String getId(){
-		return id;
+	public String getMedia_id(){
+		return media_id;
 	}
 
 	public void setUrl(String url){
@@ -74,8 +111,12 @@ public class MediaItem{
 			",media_type = '" + media_type + '\'' +
 			",description = '" + description + '\'' + 
 			",modified = '" + modified + '\'' + 
-			",id = '" + id + '\'' + 
+			",media_id = '" + media_id + '\'' +
 			",url = '" + url + '\'' + 
 			"}";
 		}
+
+	public boolean getFeatured() {
+					return this.featured;
+	}
 }

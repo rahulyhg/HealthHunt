@@ -1,7 +1,6 @@
 package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,7 +29,7 @@ import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 
 /**
@@ -165,15 +164,20 @@ public class LatestProductFragment extends Fragment {
     }
 
     private void openFullView() {
-        Intent intent = new Intent(getContext(), FullViewActivity.class);
-        intent.putExtra(ArticleParams.ID, String.valueOf(mProductPostItem.getId()));
+        /*Intent intent = new Intent(getContext(), FullViewActivity.class);
+        intent.putExtra(ArticleParams.ID, String.valueOf(mProductPostItem.getMedia_id()));
         intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
-        startActivity(intent);
+        startActivity(intent);*/
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
+        bundle.putString(ArticleParams.ID, String.valueOf(mProductPostItem.getProduct_id()));
+        IProductPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
     }
 
     @OnClick(R.id.product_bookmark)
     void onBookMark(){
-        String id = String.valueOf(mProductPostItem.getId());
+        String id = String.valueOf(mProductPostItem.getProduct_id());
         CurrentUser currentUser = mProductPostItem.getCurrent_user();
         if(currentUser != null) {
             if(!currentUser.isBookmarked()){

@@ -10,7 +10,7 @@ import java.util.List;
 
 import in.healthhunt.R;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.IMyHuntsArticlesPresenter;
 
 /**
  * Created by abhishekkumar on 5/21/18.
@@ -18,12 +18,12 @@ import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticle
 
 public class MyHuntsQuesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private IMyHuntsArticlePresenter IMyHuntsArticlePresenter;
+    private IMyHuntsArticlesPresenter IMyHuntsArticlePresenter;
     private Context mContext;
     private ClickListener mClickListener;
     private List<ArticlePostItem> mArticleList;
 
-    public MyHuntsQuesAdapter(Context context, IMyHuntsArticlePresenter myHuntsArticlePresenter) {
+    public MyHuntsQuesAdapter(Context context, IMyHuntsArticlesPresenter myHuntsArticlePresenter) {
         mContext = context;
         IMyHuntsArticlePresenter = myHuntsArticlePresenter;
     }

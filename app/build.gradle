@@ -1,16 +1,15 @@
 apply plugin: 'com.android.application'
 
-
 android {
     signingConfigs {
         debug {
-            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_debug.jks')
+            storeFile file('/Users/abhishekkumar/Desktop/Sandeep_Sample_Project/Projects/Heathhunt/healthhunt_debug.jks')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
         }
         release {
-            storeFile file('/Users/abhishekkumar/Desktop/Sandeep Sample Project/Projects/Heathhunt/healthhunt_keystore')
+            storeFile file('/Users/abhishekkumar/Desktop/Sandeep_Sample_Project/Projects/Heathhunt/healthhunt_keystore')
             keyAlias 'healthhunt'
             keyPassword 'healthhunt@123'
             storePassword 'healthhunt@123'
@@ -74,4 +73,8 @@ dependencies {
     compile 'com.google.apis:google-api-services-youtube:v3-rev198-1.23.0'
     //implementation 'com.squareup.picasso:picasso:2.71828'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    //implementation 'org.greenrobot:greendao:3.2.0'
+    //compile 'org.greenrobot:greendao:3.2.2'
+    compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
+
 }

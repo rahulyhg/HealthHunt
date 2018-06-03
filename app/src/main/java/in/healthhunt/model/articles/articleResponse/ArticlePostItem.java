@@ -1,45 +1,136 @@
 package in.healthhunt.model.articles.articleResponse;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
+import in.healthhunt.model.articles.commonResponse.Content;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.model.articles.commonResponse.Excerpt;
 import in.healthhunt.model.articles.commonResponse.Likes;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Synopsis;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 
-public class ArticlePostItem {
+@Table(name = "ArticlePosts")
+public class ArticlePostItem extends Model{
+
+	@Column(name = "date")
 	private String date;
+
+	@Column(name = "trending")
 	private int trending;
+
+	@Column(name = "link")
 	private String link;
+
+	@Column(name = "post_youtube_id")
 	private String post_youtube_id;
+
+	@Column(name = "media", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private List<MediaItem> media;
+
+	@Column(name = "type")
 	private String type;
+
+	@Column(name = "title", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private Title title;
+
+	@Column(name = "content", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private Content content;
+
+	@Column(name = "is_commented")
 	private int is_commented;
+
+	@Column(name = "modified")
 	private String modified;
-	private int id;
+
+	@Column(name = "article_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	@SerializedName("id")
+	private String article_id;
+
+	@Column(name = "categories", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private List<CategoriesItem> categories;
+
+	@Column(name = "date_gmt")
 	private String date_gmt;
+
+	@Column(name = "slug")
 	private String slug;
+
+	@Column(name = "post_currency")
 	private String post_currency;
+
+	@Column(name = "video_thumbnail_icon")
 	private String video_thumbnail_icon;
+
+	@Column(name = "Likes", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private Likes likes;
+
+	@Column(name = "tss_loved")
 	private int tss_loved;
+
+	@Column(name = "CurrentUsers", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private CurrentUser current_user;
+
+	@Column(name = "comments")
 	private String comments;
+
+	@Column(name = "modified_gmt")
 	private String modified_gmt;
+
+	@Column(name = "Authors", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private Author author;
+
+	@Column(name = "format")
 	private String format;
+
+	@Column(name = "Synopsis", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
+	private Synopsis synopsis;
+
+	@Column(name = "comment_status")
 	private String comment_status;
+
+	@Column(name = "tags", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private List<TagsItem> tags;
+
+	@Column(name = "share_count")
 	private int share_count;
+
+	@Column(name = "video_thumbnail")
 	private String video_thumbnail;
+
+	@Column(name = "ping_status")
 	private String ping_status;
+
+	@Column(name = "read_time")
 	private String read_time;
+
+	@Column(name = "sticky")
 	private boolean sticky;
+
+	@Column(name = "Excerpts", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private Excerpt excerpt;
+
+	@Column(name = "is_free_trial")
 	private String is_free_trial;
+
+	@Column(name = "is_Video")
+	private boolean isVideo;
+
+	public boolean isVideo() {
+		return isVideo;
+	}
+
+	public void setVideo(boolean video) {
+		isVideo = video;
+	}
 
 	public void setDate(String date){
 		this.date = date;
@@ -121,12 +212,12 @@ public class ArticlePostItem {
 		return modified;
 	}
 
-	public void setId(int id){
-		this.id = id;
+	public void setArticle_Id(String id){
+		this.article_id = id;
 	}
 
-	public int getId(){
-		return id;
+	public String getArticle_Id(){
+		return article_id;
 	}
 
 	public void setCategories(List<CategoriesItem> categories){
@@ -297,42 +388,52 @@ public class ArticlePostItem {
 		return is_free_trial;
 	}
 
+	public void setSynopsis(Synopsis synopsis){
+		this.synopsis = synopsis;
+	}
+
+	public Synopsis getSynopsis(){
+		return synopsis;
+	}
+
+
 	@Override
- 	public String toString(){
-		return 
-			"ProductPostItem{" +
-			"date = '" + date + '\'' + 
-			",trending = '" + trending + '\'' + 
-			",link = '" + link + '\'' + 
-			",post_youtube_id = '" + post_youtube_id + '\'' +
-			",media = '" + media + '\'' + 
-			",type = '" + type + '\'' + 
-			",title = '" + title + '\'' + 
-			",content = '" + content + '\'' + 
-			",is_commented = '" + is_commented + '\'' +
-			",modified = '" + modified + '\'' + 
-			",id = '" + id + '\'' + 
-			",categories = '" + categories + '\'' + 
-			",date_gmt = '" + date_gmt + '\'' +
-			",slug = '" + slug + '\'' + 
-			",post_currency = '" + post_currency + '\'' +
-			",video_thumbnail_icon = '" + video_thumbnail_icon + '\'' +
-			",likes = '" + likes + '\'' + 
-			",tss_loved = '" + tss_loved + '\'' +
-			",current_user = '" + current_user + '\'' +
-			",comments = '" + comments + '\'' + 
-			",modified_gmt = '" + modified_gmt + '\'' +
-			",author = '" + author + '\'' + 
-			",format = '" + format + '\'' + 
-			",comment_status = '" + comment_status + '\'' +
-			",tags = '" + tags + '\'' + 
-			",share_count = '" + share_count + '\'' +
-			",video_thumbnail = '" + video_thumbnail + '\'' +
-			",ping_status = '" + ping_status + '\'' +
-			",read_time = '" + read_time + '\'' +
-			",sticky = '" + sticky + '\'' + 
-			",excerpt = '" + excerpt + '\'' + 
-			",is_free_trial = '" + is_free_trial + '\'' +
-			"}";
-		}
+	public String toString(){
+		return
+				"ArticlePostItem{" +
+						"date = '" + date + '\'' +
+						",trending = '" + trending + '\'' +
+						",link = '" + link + '\'' +
+						",post_youtube_id = '" + post_youtube_id + '\'' +
+						",media = '" + media + '\'' +
+						",type = '" + type + '\'' +
+						",title = '" + title + '\'' +
+						",content = '" + content + '\'' +
+						",is_commented = '" + is_commented + '\'' +
+						",modified = '" + modified + '\'' +
+						",id = '" + article_id + '\'' +
+						",categories = '" + categories + '\'' +
+						",date_gmt = '" + date_gmt + '\'' +
+						",slug = '" + slug + '\'' +
+						",post_currency = '" + post_currency + '\'' +
+						",video_thumbnail_icon = '" + video_thumbnail_icon + '\'' +
+						",likes = '" + likes + '\'' +
+						",tss_loved = '" + tss_loved + '\'' +
+						",current_user = '" + current_user + '\'' +
+						",comments = '" + comments + '\'' +
+						",modified_gmt = '" + modified_gmt + '\'' +
+						",author = '" + author + '\'' +
+						",format = '" + format + '\'' +
+						",synopsis = '" + synopsis + '\'' +
+						",comment_status = '" + comment_status + '\'' +
+						",tags = '" + tags + '\'' +
+						",share_count = '" + share_count + '\'' +
+						",video_thumbnail = '" + video_thumbnail + '\'' +
+						",ping_status = '" + ping_status + '\'' +
+						",read_time = '" + read_time + '\'' +
+						",sticky = '" + sticky + '\'' +
+						",excerpt = '" + excerpt + '\'' +
+						",is_free_trial = '" + is_free_trial + '\'' +
+						"}";
+	}
 }

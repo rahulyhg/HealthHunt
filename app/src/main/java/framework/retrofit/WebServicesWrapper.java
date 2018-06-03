@@ -14,8 +14,8 @@ import java.util.Map;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postProductResponse.FullProductResponse;
-import in.healthhunt.model.articles.postResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.comment.AllCommentInfo;
@@ -29,6 +29,7 @@ import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
 import in.healthhunt.model.login.UserData;
+import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
@@ -89,7 +90,7 @@ public class WebServicesWrapper {
 
                 String requestUrl = null;
                 if(url.contains(authUrl)) {
-                     requestUrl = url.substring(url.indexOf(authUrl));
+                    requestUrl = url.substring(url.indexOf(authUrl));
                 }
 
                 Log.i("TAGHHHHHH", " EndPoint " + requestUrl);
@@ -351,6 +352,16 @@ public class WebServicesWrapper {
 
     }
 
+    public Call<HHResponse<NotificationData>> fetchNotifications(Map<String, String> params, ResponseResolver<HHResponse<NotificationData>> responseResponseResolver) {
+
+        Call<HHResponse<NotificationData>> loginResponseCall = webServices.fetchNotifications(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
 
 /*
     public Call<UserInfo> getMyProfile(ResponseResolver<UserInfo> responseResponseResolver) {
@@ -564,13 +575,13 @@ public class WebServicesWrapper {
     }
 
     public Call<AddFriendFavourite> setFavourite(ResponseResolver<AddFriendFavourite> addFavouriteCallee, AddFriendFavourite addFriendFavourite) {
-        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFavourite(getAuthKey(), addFriendFavourite.isFavorited(), addFriendFavourite.getId());
+        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFavourite(getAuthKey(), addFriendFavourite.isFavorited(), addFriendFavourite.getMedia_id());
         setFriedFavouriteDetailsCall.enqueue(addFavouriteCallee);
         return setFriedFavouriteDetailsCall;
     }
 
     public Call<AddFriendFavourite> setFriend(ResponseResolver<AddFriendFavourite> addFriendCallee, AddFriendFavourite addFriendFavourite) {
-        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFriends(getAuthKey(), addFriendFavourite.is_friend(), addFriendFavourite.getId());
+        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFriends(getAuthKey(), addFriendFavourite.is_friend(), addFriendFavourite.getMedia_id());
         setFriedFavouriteDetailsCall.enqueue(addFriendCallee);
         return setFriedFavouriteDetailsCall;
     }

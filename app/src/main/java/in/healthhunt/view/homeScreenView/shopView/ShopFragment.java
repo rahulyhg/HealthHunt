@@ -1,6 +1,5 @@
 package in.healthhunt.view.homeScreenView.shopView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +32,7 @@ import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.ShopPresenterImp;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.homeScreenView.filterView.FilterFragment;
 
@@ -145,6 +144,11 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     }
 
     @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {
@@ -183,10 +187,15 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     public void ItemClicked(View v, int position) {
         ProductPostItem postsItem = IShopPresenter.getProduct(position);
         if(postsItem != null) {
-            Intent intent = new Intent(getContext(), FullViewActivity.class);
-            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            /*Intent intent = new Intent(getContext(), FullViewActivity.class);
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getMedia_id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
-            getContext().startActivity(intent);
+            getContext().startActivity(intent);*/
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
+            bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getProduct_id()));
+            IShopPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
         }
     }
 }
