@@ -45,6 +45,7 @@ import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.commonResponse.Synopsis;
 import in.healthhunt.model.articles.commonResponse.TagsItem;
 import in.healthhunt.model.articles.commonResponse.Title;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.model.utility.URLImageParser;
@@ -167,7 +168,9 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
                                                 boolean wasRestored) {
 
                 mYouTubePlayer = player;
-                if(IFullPresenter.getArticle().getPost_youtube_id() == null){
+                String youTubeId = IFullPresenter.getArticle().getPost_youtube_id();
+                Log.i("TAGYUBE", "YubeID " + youTubeId);
+                if(youTubeId == null || youTubeId.isEmpty()){
                     Log.i("TAGYUBE", "Youtube id is null");
                     return;
                 }
@@ -341,6 +344,16 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
+
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+
+    }
+
+    @Override
+    public void updateArticleSaved(ArticlePostItem articlePostItem) {
 
     }
 

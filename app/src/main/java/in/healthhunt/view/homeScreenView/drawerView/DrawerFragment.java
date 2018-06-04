@@ -70,7 +70,7 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     private void setUserInfo() {
 
         User user = User.getUser();
-        String name = user.getUsername();//HealthHuntPreference.getString(getContext(), user.getUsername());
+        String name = user.getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
         if(name != null) {
             mUserName.setText(name);
         }

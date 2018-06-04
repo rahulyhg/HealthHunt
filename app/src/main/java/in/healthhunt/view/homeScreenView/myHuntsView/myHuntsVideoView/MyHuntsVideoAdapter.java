@@ -58,6 +58,7 @@ public class MyHuntsVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public interface ClickListener {
         void ItemClicked(View v, int position);
+        void onLongClicked(int position);
     }
 
     private void setContent(MyHuntsVideoHolder holder, int pos) {

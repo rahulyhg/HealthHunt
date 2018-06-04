@@ -9,6 +9,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
@@ -55,6 +56,14 @@ public class MyHuntsShopHolder extends RecyclerView.ViewHolder {
         if(mClickListener != null) {
             mClickListener.ItemClicked(view, getAdapterPosition());
         }
+    }
+
+    @OnLongClick(R.id.my_hunts_product_image)
+    boolean onLongClick(){
+        if(mClickListener != null) {
+            mClickListener.onLongClicked(getAdapterPosition());
+        }
+        return true;
     }
 
     @OnClick(R.id.my_hunts_product_bookmark)

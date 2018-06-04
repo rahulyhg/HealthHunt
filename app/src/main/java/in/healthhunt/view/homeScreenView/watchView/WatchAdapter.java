@@ -67,8 +67,8 @@ public class WatchAdapter extends RecyclerView.Adapter<WatchViewHolder> {
         ArticlePostItem postsItem = IWatchPresenter.getArticle(pos);
         if(postsItem != null) {
             String url = postsItem.getVideo_thumbnail_icon();
-            if(url != null) {
-                Log.i("TAG11", "url " + url);
+            Log.i("TAG11", "url " + url);
+            if(url != null && !url.isEmpty()) {
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
             }
             else {

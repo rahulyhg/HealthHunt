@@ -9,6 +9,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
@@ -59,6 +60,16 @@ public class MyHuntsArticleHolder extends RecyclerView.ViewHolder {
             mClickListener.ItemClicked(view, getAdapterPosition());
         }
     }
+
+
+    @OnLongClick(R.id.my_hunts_article_item_view)
+    boolean onLongClick(){
+        if(mClickListener != null) {
+            mClickListener.onLongClicked(getAdapterPosition());
+        }
+        return true;
+    }
+
     @OnClick(R.id.my_hunts_article_bookmark)
     void onBookMark(){
         ArticlePostItem postsItem = IMyHuntsArticlePresenter.getArticle(getAdapterPosition());

@@ -1,6 +1,7 @@
 package in.healthhunt.view.homeScreenView.myHuntsView.myHuntsShopView;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -176,6 +178,48 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     }
 
     @Override
+    public void onLongClicked(int position) {
+        if(mNavigationType == ArticleParams.DOWNLOADED) {
+            showDialog(position);
+        }
+    }
+
+    private void showDialog(final int position) {
+
+        AlertDialog alertDialog =new AlertDialog.Builder(getContext())
+                //set message, title, and icon
+                .setTitle(getString(R.string.delete))
+                .setMessage(getString(R.string.delete_message))
+
+                .setPositiveButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //your deleting code
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        List<ProductPostItem> productPostItems = IMyHuntsProductsPresenter.getProductList();
+                        if(productPostItems != null && !productPostItems.isEmpty()){
+                            productPostItems.remove(position);
+                            updateAdapter();
+                        }
+
+                    }
+                })
+                .create();
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {
@@ -265,5 +309,10 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
 
     public void updateDownloadData(){
         fetchDownloadProducts();
+    }
+
+    public void updateSavedData(ProductPostItem postItem){
+        IMyHuntsProductsPresenter.updateProductSaved(postItem);
+        updateAdapter();
     }
 }

@@ -41,6 +41,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.Content;
@@ -319,6 +320,16 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IHomeView.getHomePresenter().loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IHomeView.updateProductSavedData(postItem);
+    }
+
+    @Override
+    public void updateArticleSaved(ArticlePostItem articlePostItem) {
+        IHomeView.updateArticleSavedData(articlePostItem);
     }
 
     @OnClick(R.id.buy)
@@ -672,40 +683,42 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         ProductPostItem productPost = IFullPresenter.getProduct();
 
         Log.i("TAGPOSTSINGLE", "product " + productPost);
-        Title title = productPost.getTitle();
-        if(title != null){
-            title.save();
-        }
 
-        Content content = productPost.getContent();
-        if(content != null){
-            content.save();
-        }
-
-        List<MediaItem> mediaItems = productPost.getMedia();
-        if(mediaItems != null){
-
-            for(MediaItem item: mediaItems){
-                item.setParent_id(productPost.getProduct_id());
-                item.save();
+        if(productPost != null) {
+            Title title = productPost.getTitle();
+            if (title != null) {
+                title.save();
             }
-        }
 
-        List<CategoriesItem> categoriesItemList = productPost.getCategories();
-        if(categoriesItemList != null){
-            for (CategoriesItem item : categoriesItemList){
-                item.setParent_id(productPost.getProduct_id());
-                item.save();
+            Content content = productPost.getContent();
+            if (content != null) {
+                content.save();
             }
-        }
 
-        Likes likes = productPost.getLikes();
-        if(likes != null){
-            likes.save();
-        }
+            List<MediaItem> mediaItems = productPost.getMedia();
+            if (mediaItems != null) {
 
-        CurrentUser currentUser = productPost.getCurrent_user();
-        if(currentUser != null){
+                for (MediaItem item : mediaItems) {
+                    item.setParent_id(productPost.getProduct_id());
+                    item.save();
+                }
+            }
+
+            List<CategoriesItem> categoriesItemList = productPost.getCategories();
+            if (categoriesItemList != null) {
+                for (CategoriesItem item : categoriesItemList) {
+                    item.setParent_id(productPost.getProduct_id());
+                    item.save();
+                }
+            }
+
+            Likes likes = productPost.getLikes();
+            if (likes != null) {
+                likes.save();
+            }
+
+            CurrentUser currentUser = productPost.getCurrent_user();
+            if (currentUser != null) {
             /*List<Collections> collections = currentUser.getCollections();
             if(collections != null){
                 for(Collections collect: collections) {
@@ -713,34 +726,35 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
                     collect.save();
                 }
             }*/
-            currentUser.save();
-        }
-
-        Author author = productPost.getAuthor();
-        if(author != null){
-            author.save();
-        }
-
-        Synopsis synopsis = productPost.getSynopsis();
-        if(synopsis != null){
-            synopsis.save();
-        }
-
-        List<TagsItem> tagsItems = productPost.getTags();
-        if(tagsItems != null){
-            for(TagsItem tagsItem: tagsItems){
-                tagsItem.setParent_id(productPost.getProduct_id());
-                tagsItem.save();
+                currentUser.save();
             }
-        }
 
-        Excerpt excerpt = productPost.getExcerpt();
-        if(excerpt != null){
-            excerpt.save();
-        }
+            Author author = productPost.getAuthor();
+            if (author != null) {
+                author.save();
+            }
 
-        productPost.save();
-        IHomeView.updateDownloadData();
+            Synopsis synopsis = productPost.getSynopsis();
+            if (synopsis != null) {
+                synopsis.save();
+            }
+
+            List<TagsItem> tagsItems = productPost.getTags();
+            if (tagsItems != null) {
+                for (TagsItem tagsItem : tagsItems) {
+                    tagsItem.setParent_id(productPost.getProduct_id());
+                    tagsItem.save();
+                }
+            }
+
+            Excerpt excerpt = productPost.getExcerpt();
+            if (excerpt != null) {
+                excerpt.save();
+            }
+
+            productPost.save();
+            IHomeView.updateDownloadData();
+        }
     }
 
     private class FetchProductsTask extends AsyncTask<Void, Void, ProductPostItem> {

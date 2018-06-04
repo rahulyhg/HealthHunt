@@ -243,6 +243,8 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            IViewAll.updateArticleSaved(postItem);
+                            break;
                         }
                     }
                 }
@@ -255,6 +257,8 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            IViewAll.updateProductSaved(postItem);
+                            break;
                         }
                     }
                 }

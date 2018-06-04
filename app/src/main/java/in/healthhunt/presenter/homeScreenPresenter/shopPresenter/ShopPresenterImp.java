@@ -68,6 +68,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                    IShopView.updateProductSaved(postItem);
                 }
                 break;
             }

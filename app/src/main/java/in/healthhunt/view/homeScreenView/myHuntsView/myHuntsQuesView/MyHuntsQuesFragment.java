@@ -60,6 +60,7 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_hunts_article_view, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        mNavigation.setVisibility(View.GONE);
         removeShiftMode(mNavigation);
         mNavigationType = ArticleParams.SAVED;
 
@@ -168,6 +169,11 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
         intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
         getContext().startActivity(intent);*/
         // }
+    }
+
+    @Override
+    public void onLongClicked(int position) {
+
     }
 
     @Override

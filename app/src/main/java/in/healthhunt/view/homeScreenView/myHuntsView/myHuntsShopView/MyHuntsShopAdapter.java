@@ -56,6 +56,7 @@ public class MyHuntsShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface ClickListener {
         void ItemClicked(View v, int position);
+        void onLongClicked(int position);
     }
 
     public void updateAdapter(){

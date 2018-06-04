@@ -112,6 +112,11 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     }
 
     @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IMyFeedView.updateProductSaved(postItem);
+    }
+
+    @Override
     public void ItemClicked(View v, int position) {
         ProductPostItem postsItem = ITopProductPresenter.getProduct(position);
         if(postsItem != null) {

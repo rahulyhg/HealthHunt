@@ -20,4 +20,5 @@ public interface IMyHuntsArticlesPresenter extends IPostPresenter{
      ArticlePostItem getArticle(int pos);
      void loadFragment(String fragmentName, Bundle bundle);
      void fetchArticles(String userId);
+     void updateSavedArticles(ArticlePostItem articlePostItem);
 }

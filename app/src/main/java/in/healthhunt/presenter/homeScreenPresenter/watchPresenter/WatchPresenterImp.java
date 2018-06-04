@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.homeScreenPresenter.watchPresenter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -60,6 +61,7 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                    IWatchView.updateVideoSaved(postItem);
                 }
                 break;
             }
@@ -123,5 +125,10 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
          postItem = mVideoArticles.get(pos);
         }
         return postItem;
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IWatchView.loadFragment(fragmentName, bundle);
     }
 }

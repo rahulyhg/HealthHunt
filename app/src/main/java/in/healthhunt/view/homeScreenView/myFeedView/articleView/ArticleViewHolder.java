@@ -114,6 +114,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
         mArticlePager.getAdapter().notifyDataSetChanged();
     }
 
+    @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
+    }
+
     private void openViewAllFragment() {
         IMyFeedView.updateBottomNavigation();
         Bundle bundle = new Bundle();

@@ -1,6 +1,8 @@
 package in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -180,6 +182,48 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
     }
 
     @Override
+    public void onLongClicked(int position) {
+        if(mNavigationType == ArticleParams.DOWNLOADED) {
+            showDialog(position);
+        }
+    }
+
+    private void showDialog(final int position) {
+
+        AlertDialog alertDialog =new AlertDialog.Builder(getContext())
+                //set message, title, and icon
+                .setTitle(getString(R.string.delete))
+                .setMessage(getString(R.string.delete_message))
+
+                .setPositiveButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //your deleting code
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+
+                .setNegativeButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        List<ArticlePostItem> articlePostItems = IMyHuntsArticlePresenter.getArticleList();
+                        if(articlePostItems != null && !articlePostItems.isEmpty()){
+                            articlePostItems.remove(position);
+                            updateAdapter();
+                        }
+
+                    }
+                })
+                .create();
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {
@@ -226,7 +270,7 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
         protected List<ArticlePostItem> doInBackground(Void... voids) {
 
             List<ArticlePostItem> articlePostItems = new Select().from(ArticlePostItem.class).
-            where("is_Video = ?" , false).execute();
+                    where("is_Video = ?" , false).execute();
 
             for(ArticlePostItem article: articlePostItems) {
                 Log.i("TAGDATA", "Myhunt Article " + article);
@@ -258,12 +302,17 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
         @Override
         protected void onPostExecute(List<ArticlePostItem> articlePosts) {
             super.onPostExecute(articlePosts);
-           // IHomeView.hideProgress();
+            // IHomeView.hideProgress();
             IMyHuntsArticlePresenter.updateDownloadList(articlePosts);
         }
     }
 
     public void updateDownloadData(){
         fetchDownloadArticles();
+    }
+
+    public void updateSavedData(ArticlePostItem postItem){
+        IMyHuntsArticlePresenter.updateSavedArticles(postItem);
+        updateAdapter();
     }
 }

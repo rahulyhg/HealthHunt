@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,9 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                         if (currentUser != null) {
                             Log.i("TAGBOOK", " USER" );
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            if(!bookMarkInfo.isBookMark()){
+                                updateProductSaved(postItem);
+                            }
                         }
                         break;
                     }
@@ -76,6 +80,11 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
     @Override
     public void onProductSuccess(List<ProductPostItem> items, int type) {
         mProductCount--;
+
+        if(items == null || items.isEmpty()){
+            Log.i("TAGITEMS", "Product Data is empty");
+            return;
+        }
 
         Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
@@ -240,6 +249,29 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
         fetchSavedProducts(userId);
         fetchApprovedProducts(userId);
         fetchReceivedProducts(userId);
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem productPostItem) {
+        if(mProductSavedList == null){
+            mProductSavedList = new ArrayList<ProductPostItem>();
+        }
+
+        boolean isContained = false;
+        for(ProductPostItem postItem: mProductSavedList){
+            if(postItem.getProduct_id().equalsIgnoreCase(productPostItem.getProduct_id())){
+                isContained = true;
+                mProductSavedList.remove(postItem);
+                break;
+            }
+        }
+
+        if(!isContained){
+            CurrentUser currentUser = productPostItem.getCurrent_user();
+            if(currentUser.isBookmarked()) {
+                mProductSavedList.add(productPostItem);
+            }
+        }
     }
 
     private void fetchSavedProducts(String userId) {

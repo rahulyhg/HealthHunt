@@ -110,6 +110,11 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     }
 
     @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
+    }
+
+    @Override
     public void ItemClicked(View v, int position) {
         ArticlePostItem postsItem = IArticlePresenter.getArticle(position);
         if(postsItem != null) {

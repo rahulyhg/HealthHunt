@@ -140,5 +140,8 @@
     <string name="options">Options</string>
     <string name="selected_tags">Selected tags</string>
     <string name="cancel">Cancel</string>
+    <string name="delete_message">Do you want to delete?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

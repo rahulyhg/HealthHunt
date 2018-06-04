@@ -16,6 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.viewAllPresenter.IViewAllPresenter;
@@ -150,6 +152,16 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateArticleSaved(ArticlePostItem postItem) {
+        IHomeView.updateArticleSavedData(postItem);
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IHomeView.updateProductSavedData(postItem);
     }
 
 

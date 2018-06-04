@@ -5,9 +5,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
@@ -139,7 +141,9 @@ public class WebServicesWrapper {
 
                 .addConverterFactory(new RetrofitConverter())
 
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .create())/*GsonConverterFactory.create()*/)
 
                 .baseUrl(baseUrl)
 

@@ -97,6 +97,11 @@ public class WebinarsArticleViewHolder extends RecyclerView.ViewHolder implement
 
     }
 
+    @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+
+    }
+
     //@OnClick(R.id.webinars_view_all)
     void onViewAll(){
         Bundle bundle = new Bundle();

@@ -374,6 +374,16 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         IHomeView.getHomePresenter().loadNonFooterFragment(fragmentName, bundle);
     }
 
+    @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IHomeView.updateProductSavedData(postItem);
+    }
+
+    @Override
+    public void updateArticleSaved(ArticlePostItem articlePostItem) {
+        IHomeView.updateArticleSavedData(articlePostItem);
+    }
+
     public void updateLikeIcon(boolean isLike) {
         if(!isLike){
             mLikeImage.setColorFilter(null);

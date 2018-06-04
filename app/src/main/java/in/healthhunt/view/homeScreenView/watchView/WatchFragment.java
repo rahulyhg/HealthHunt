@@ -93,6 +93,16 @@ public class WatchFragment extends Fragment implements IWatchView, WatchAdapter.
     }
 
     @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateVideoSaved(ArticlePostItem postItem) {
+        IHomeView.updateVideoSavedData(postItem);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {
@@ -119,6 +129,11 @@ public class WatchFragment extends Fragment implements IWatchView, WatchAdapter.
             intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
             startActivityForResult(intent, Constants.FULL_VIDEO_REQUEST_CODE);
+
+            /*Bundle bundle = new Bundle();
+            bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
+            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
+            IWatchPresenter.loadFragment(FullVideoFragment.class.getSimpleName(), bundle);*/
         }
     }
 

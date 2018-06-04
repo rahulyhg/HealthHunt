@@ -112,6 +112,11 @@ public class LatestArticleViewHolder extends RecyclerView.ViewHolder implements 
         mArticlePager.getAdapter().notifyDataSetChanged();
     }
 
+    @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
+    }
+
     @OnClick(R.id.latest_view_all)
     void onViewAll(){
         openViewAllFragment();

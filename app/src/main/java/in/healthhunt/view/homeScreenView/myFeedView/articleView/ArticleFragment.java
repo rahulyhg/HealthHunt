@@ -108,7 +108,9 @@ public class ArticleFragment extends Fragment {
             boolean isLast = bundle.getBoolean(ArticleParams.IS_LAST_PAGE);
             mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
             mPos = bundle.getInt(ArticleParams.POSITION);
-            mArticlePostItem = IArticlePresenter.getArticle(mPos);
+            if(IArticlePresenter != null) {
+                mArticlePostItem = IArticlePresenter.getArticle(mPos);
+            }
 
             if(!isLast) {
                 mTagItemView.setVisibility(View.VISIBLE);

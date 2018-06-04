@@ -80,6 +80,11 @@ public class LatestProductViewHolder extends RecyclerView.ViewHolder implements 
     }
 
     @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IMyFeedView.updateProductSaved(postItem);
+    }
+
+    @Override
     public int getCount() {
         List<ProductPostItem> list = IMyFeedView.getLatestProductArticles();
         int count = 0;

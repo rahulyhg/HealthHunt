@@ -5,6 +5,8 @@ import android.os.Bundle;
 import java.util.List;
 import java.util.Map;
 
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 
 /**
@@ -34,4 +36,7 @@ public interface IHomeView {
     void showActionBar();
     void setStatusBarTranslucent(boolean val);
     void updateDownloadData();
+    void updateArticleSavedData(ArticlePostItem  articlePostItem);
+    void updateVideoSavedData(ArticlePostItem  articlePostItem);
+    void updateProductSavedData(ProductPostItem productPostItem);
 }

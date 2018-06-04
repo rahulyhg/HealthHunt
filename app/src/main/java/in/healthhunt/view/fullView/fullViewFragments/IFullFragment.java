@@ -3,6 +3,8 @@ package in.healthhunt.view.fullView.fullViewFragments;
 import android.os.Bundle;
 import android.view.View;
 
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.view.fullView.commentView.CommentViewHolder;
 
 /**
@@ -21,4 +23,7 @@ public interface IFullFragment {
     void updateRelatedArticleAdapter();
     void updateRelatedProductAdapter();
     void loadFragment(String fragmentName, Bundle bundle);
+    void updateProductSaved(ProductPostItem postItem);
+    void updateArticleSaved(ArticlePostItem articlePostItem);
 }
+

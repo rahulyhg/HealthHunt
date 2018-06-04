@@ -177,6 +177,7 @@ public class ArticlePresenterImp implements IArticlePresenter, IBookMarkInteract
                 CurrentUser currentUser = postItem.getCurrent_user();
                 if (currentUser != null) {
                     currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                    IArticleView.updateSavedData(postItem);
                 }
                 break;
             }

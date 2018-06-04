@@ -115,6 +115,11 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     }
 
     @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
+    }
+
+    @Override
     public void ItemClicked(View v, int position) {
         ArticlePostItem postsItem = IArticlePresenter.getArticle(position);
         if(postsItem != null) {

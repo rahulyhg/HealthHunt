@@ -344,6 +344,16 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     }
 
     @Override
+    public void updateArticleSaved(ArticlePostItem postItem) {
+        IHomeView.updateArticleSavedData(postItem);
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem productPostItem) {
+        IHomeView.updateProductSavedData(productPostItem);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }

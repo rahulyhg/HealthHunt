@@ -61,6 +61,7 @@ public class MyHuntsArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public interface ClickListener {
         void ItemClicked(View v, int position);
+        void onLongClicked(int position);
     }
 
     private void setContent(MyHuntsArticleHolder holder, int pos) {

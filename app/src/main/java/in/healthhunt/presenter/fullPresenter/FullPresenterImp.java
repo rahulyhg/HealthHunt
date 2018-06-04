@@ -282,6 +282,10 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
             case ArticleParams.VIDEO:
                 if(bookMarkInfo.getPost_id().equals(String.valueOf(mArticlePost.getArticle_Id()))) {
                     currentUser = mArticlePost.getCurrent_user();
+                    if (currentUser != null) {
+                        currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                        IFullFragment.updateArticleSaved(mArticlePost);
+                    }
                 }
                 break;
             case ArticleParams.RELATED_ARTICLES:
@@ -292,6 +296,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
                         CurrentUser current = postItem.getCurrent_user();
                         if (current != null) {
                             current.setBookmarked(bookMarkInfo.isBookMark());
+                            IFullFragment.updateArticleSaved(postItem);
                         }
                         break;
                     }
@@ -306,6 +311,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
                     if(info != null) {
                         if (postItem.getProduct_id().equals(info.getPost_id())) {
                             postItem.getCurrent_user().setBookmarked(info.isBookMark());
+                            IFullFragment.updateProductSaved(postItem);
                             break;
                         }
                     }
@@ -316,12 +322,12 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
             case ArticleParams.PRODUCT:
                 if(bookMarkInfo.getPost_id().equals(String.valueOf(mProductPost.getProduct_id()))) {
                     currentUser = mProductPost.getCurrent_user();
+                    if (currentUser != null) {
+                        currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                        IFullFragment.updateProductSaved(mProductPost);
+                    }
                 }
                 break;
-        }
-
-        if (currentUser != null) {
-            currentUser.setBookmarked(bookMarkInfo.isBookMark());
         }
 
         IFullFragment.updateBookMarkIcon();

@@ -19,6 +19,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleFragment;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsQuesView.MyHuntsQuesFragment;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsShopView.MyHuntsShopFragment;
@@ -101,5 +103,21 @@ public class MyHuntFragment extends Fragment {
                 ((MyHuntsShopFragment)fragment).updateDownloadData();
                 break;
         }
+    }
+
+    public void updateSavedArticleData(ArticlePostItem articlePostItem){
+        Fragment fragment = ((MyHuntsPagerAdapter)mHuntPager.getAdapter()).getItem(0);
+        ((MyHuntsArticleFragment)fragment).updateSavedData(articlePostItem);
+
+    }
+
+    public void updateSavedVideoData(ArticlePostItem articlePostItem){
+        Fragment fragment = ((MyHuntsPagerAdapter)mHuntPager.getAdapter()).getItem(1);
+        ((MyHuntsVideoFragment)fragment).updateSavedData(articlePostItem);
+    }
+
+    public void updateSavedProductData(ProductPostItem productPostItem){
+        Fragment fragment = ((MyHuntsPagerAdapter)mHuntPager.getAdapter()).getItem(2);
+        ((MyHuntsShopFragment)fragment).updateSavedData(productPostItem);
     }
 }

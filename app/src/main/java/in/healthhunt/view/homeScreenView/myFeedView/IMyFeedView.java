@@ -28,4 +28,6 @@ public interface IMyFeedView extends IView {
     void showAlert(String msg);
     int getView(int type);
     void loadNonFooterFragment(String fragmentName, Bundle bundle);
+    void updateArticleSaved(ArticlePostItem postItem);
+    void updateProductSaved(ProductPostItem productPostItem);
 }

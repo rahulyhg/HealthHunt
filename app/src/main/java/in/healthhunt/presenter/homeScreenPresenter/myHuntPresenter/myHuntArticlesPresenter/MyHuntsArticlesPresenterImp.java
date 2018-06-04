@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,10 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
     public void onArticleSuccess(List<ArticlePostItem> items, int type) {
         mArticleCount--;
 
+        if(items == null || items.isEmpty()){
+            Log.i("TAGITEMS", "Article Data is empty");
+            return;
+        }
         Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
             case ArticleParams.SAVED:
@@ -92,6 +97,9 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            if(!bookMarkInfo.isBookMark()){
+                                updateSavedArticles(postItem);
+                            }
                         }
                         break;
                     }
@@ -238,6 +246,29 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
         fetchSavedArticles(userId);
         fetchApprovedArticles(userId);
         fetchReceivedArticles(userId);
+    }
+
+    @Override
+    public void updateSavedArticles(ArticlePostItem articlePostItem) {
+        if(mArticleSavedList == null){
+            mArticleSavedList = new ArrayList<ArticlePostItem>();
+        }
+
+        boolean isContained = false;
+        for(ArticlePostItem postItem: mArticleSavedList){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                isContained = true;
+                mArticleSavedList.remove(postItem);
+                break;
+            }
+        }
+
+        if(!isContained){
+            CurrentUser currentUser = articlePostItem.getCurrent_user();
+            if(currentUser.isBookmarked()) {
+                mArticleSavedList.add(articlePostItem);
+            }
+        }
     }
 
     private void fetchSavedArticles(String userId) {

@@ -149,6 +149,11 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     }
 
     @Override
+    public void updateProductSaved(ProductPostItem productPostItem) {
+        IHomeView.updateProductSavedData(productPostItem);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if(mUnbinder != null) {

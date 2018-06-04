@@ -20,4 +20,5 @@ public interface IMyHuntsVideoPresenter extends IPostPresenter{
      ArticlePostItem getVideo(int pos);
      void loadFragment(String fragmentName, Bundle bundle);
      void fetchVideos(String userId);
+     void updateVideoSaved(ArticlePostItem postItem);
 }

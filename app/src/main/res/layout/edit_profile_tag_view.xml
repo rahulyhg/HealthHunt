@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/edit_profile_tag_view_item"
     android:background="@android:color/white">
 
@@ -58,7 +58,6 @@
                 android:text="@string/saved"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
                 android:textColor="@color/hh_edittext_hint_color"/>
 
         </LinearLayout>

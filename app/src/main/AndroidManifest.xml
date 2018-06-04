@@ -25,7 +25,8 @@
         <activity android:name=".view.tagView.TagActivity"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".view.onBoardingView.OnBoardingActivity"></activity>
-        <activity android:name=".view.homeScreenView.HomeActivity" android:theme="@style/AppTheme.NoActionBar" android:windowSoftInputMode="adjustPan"></activity>
+        <activity android:name=".view.homeScreenView.HomeActivity" android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"></activity>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"

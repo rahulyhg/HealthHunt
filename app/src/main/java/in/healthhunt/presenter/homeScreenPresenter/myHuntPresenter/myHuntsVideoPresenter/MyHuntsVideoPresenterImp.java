@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,10 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
     public void onArticleSuccess(List<ArticlePostItem> items, int type) {
         mVideoCount--;
 
+        if(items == null || items.isEmpty()){
+            Log.i("TAGITEMS", "Video Data is empty");
+            return;
+        }
         Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
             case ArticleParams.SAVED:
@@ -92,6 +97,9 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            if(!bookMarkInfo.isBookMark()){
+                                updateVideoSaved(postItem);
+                            }
                         }
                         break;
                     }
@@ -238,6 +246,29 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
         fetchSavedArticles(userId);
         fetchApprovedArticles(userId);
         fetchReceivedArticles(userId);
+    }
+
+    @Override
+    public void updateVideoSaved(ArticlePostItem articlePostItem) {
+        if(mVideoSavedList == null){
+            mVideoSavedList = new ArrayList<ArticlePostItem>();
+        }
+
+        boolean isContained = false;
+        for(ArticlePostItem postItem: mVideoSavedList){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                isContained = true;
+                mVideoSavedList.remove(postItem);
+                break;
+            }
+        }
+
+        if(!isContained){
+            CurrentUser currentUser = articlePostItem.getCurrent_user();
+            if(currentUser.isBookmarked()) {
+                mVideoSavedList.add(articlePostItem);
+            }
+        }
     }
 
     private void fetchSavedArticles(String userId) {

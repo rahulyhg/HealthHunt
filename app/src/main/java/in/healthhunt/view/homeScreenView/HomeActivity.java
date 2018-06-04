@@ -36,7 +36,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
@@ -244,6 +246,30 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
         if(fragment != null && fragment instanceof MyHuntFragment){
             ((MyHuntFragment)fragment).updateDownloadData();
+        }
+    }
+
+    @Override
+    public void updateArticleSavedData(ArticlePostItem articlePostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
+        if(fragment != null && fragment instanceof MyHuntFragment){
+            ((MyHuntFragment)fragment).updateSavedArticleData(articlePostItem);
+        }
+    }
+
+    @Override
+    public void updateVideoSavedData(ArticlePostItem articlePostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
+        if(fragment != null && fragment instanceof MyHuntFragment){
+            ((MyHuntFragment)fragment).updateSavedVideoData(articlePostItem);
+        }
+    }
+
+    @Override
+    public void updateProductSavedData(ProductPostItem productPostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
+        if(fragment != null && fragment instanceof MyHuntFragment){
+            ((MyHuntFragment)fragment).updateSavedProductData(productPostItem);
         }
     }
 
@@ -517,12 +543,17 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     @Override
     public void showProgress(){
-        mProgress.show();;
+        if(mProgress != null) {
+            mProgress.show();
+            ;
+        }
     }
 
     @Override
     public void hideProgress(){
-        mProgress.dismiss();
+        if(mProgress != null) {
+            mProgress.dismiss();
+        }
     }
 
     @Override
