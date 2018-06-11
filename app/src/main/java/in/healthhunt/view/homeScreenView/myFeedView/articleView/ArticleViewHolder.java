@@ -106,12 +106,17 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements IArtic
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        IMyFeedView.loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override
     public void updateAdapter() {
         mArticlePager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
     }
 
     private void openViewAllFragment() {

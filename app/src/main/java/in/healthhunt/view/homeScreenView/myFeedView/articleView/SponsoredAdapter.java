@@ -22,12 +22,12 @@ import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -83,7 +83,7 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
             }
             else {
-                holder.mArticleImage.setBackgroundResource(R.drawable.artical);
+                holder.mArticleImage.setImageResource(R.drawable.artical);
             }
 
 
@@ -91,9 +91,17 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             List<CategoriesItem> categories = postsItem.getCategories();
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
+                holder.mCategoryName.setText(categoryName);
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+                int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                if(res != 0){
+                    holder.mCategoryImage.setImageResource(res);
+                }
+                else {
+                    holder.mCategoryImage.setImageResource(R.mipmap.ic_fitness);
+                }
             }
 
-            holder.mCategoryName.setText(categoryName);
 
             Author author = postsItem.getAuthor();
             if(author != null){
@@ -208,7 +216,7 @@ public class SponsoredAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @OnClick(R.id.article_bookmark)
         void onBookMark(){
             ArticlePostItem postsItem = IArticlePresenter.getArticle(getAdapterPosition());
-            String id = String.valueOf(postsItem.getId());
+            String id = String.valueOf(postsItem.getArticle_Id());
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
                 if(!currentUser.isBookmarked()){

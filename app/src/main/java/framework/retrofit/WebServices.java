@@ -6,18 +6,21 @@ import java.util.Map;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.comment.AllCommentInfo;
+import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.comment.NewComment;
+import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
-import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
+import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
 import retrofit2.Call;
@@ -35,10 +38,10 @@ public interface WebServices {
  //@POST("/api/account-login")
  //Call<LoginResponse> login(@Field("access_token") String token);
  @POST("login")
- Call<HHResponse<User>> login(@Body LoginRequest loginRequest);
+ Call<HHResponse<UserData>> login(@Body LoginRequest loginRequest);
 
  @POST("signup")
- Call<HHResponse<User>> signUp(@Body SignUpRequest signUpRequest);
+ Call<HHResponse<UserData>> signUp(@Body SignUpRequest signUpRequest);
 
  @POST("forgot_password")
  Call<String> forgotPassword(@Body ForgotPasswordRequest forgotPasswordRequest);
@@ -53,7 +56,10 @@ public interface WebServices {
  Call<HHResponse<ProductData>> fetchProducts(@QueryMap Map<String, String> params);
 
  @GET("posts/{id}")
- Call<PostResponse> fetchFullArticle(@Path("id") String id);
+ Call<FullArticleResponse> fetchFullArticle(@Path("id") String id);
+
+ @GET("posts/{id}")
+ Call<FullProductResponse> fetchFullProduct(@Path("id") String id);
 
  @POST("posts/{id}/save")
  Call<List<BookMarkResponse>>bookmark(@Path("id") String id);
@@ -67,12 +73,20 @@ public interface WebServices {
  @POST("comments/{id}/delete")
  Call<HHResponse<CommentsItem>> deleteComment(@Path("id") String id);
 
+ @POST("comments/{id}")
+ Call<HHResponse<CommentData>> updateComment(@Path("id") String id, @Body CommentRequest commentRequest);
+
  @POST("comments")
- Call<HHResponse<NewComment>> addNewComment(@Body CommentRequest commentRequest);
+ Call<HHResponse<CommentData>> addNewComment(@Body CommentRequest commentRequest);
 
  @POST("likes/{id}")
  Call<HHResponse<LikesInfo>> updateLikes(@Path("id") String id, @Body LikesRequest likesRequest);
 
+ @GET("filters/")
+ Call<FilterData> fetchFilters(@QueryMap Map<String, String> params);
+
+ @GET("notifications")
+ Call<HHResponse<NotificationData>> fetchNotifications(@QueryMap Map<String, String> params);
 
     /*@Header("authToken") String token,*/
 

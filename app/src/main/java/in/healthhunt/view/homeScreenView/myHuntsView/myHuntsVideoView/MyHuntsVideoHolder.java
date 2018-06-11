@@ -9,8 +9,12 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsVideoPresenter.IMyHuntsVideoPresenter;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -27,23 +31,21 @@ public class MyHuntsVideoHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.my_hunts_article_bookmark)
     public ImageView mBookMark;
 
-    @BindView(R.id.my_hunts_article_content)
-    public TextView mShopContent;
-
     @BindView(R.id.my_hunts_category_image)
     public ImageView mCategoryImage;
 
     @BindView(R.id.my_hunts_category_name)
     TextView mCategoryView;
 
-
+    @BindView(R.id.my_hunts_article_content)
+    public TextView mArticleTitle;
 
     private Context mContext;
-    private IMyHuntsArticlePresenter IMyHuntsArticlePresenter;
+    private IMyHuntsVideoPresenter IMyHuntsVideoPresenter;
     private MyHuntsVideoAdapter.ClickListener mClickListener;
-    public MyHuntsVideoHolder(View itemView, IMyHuntsArticlePresenter myHuntsArticlePresenter, MyHuntsVideoAdapter.ClickListener clickListener) {
+    public MyHuntsVideoHolder(View itemView, IMyHuntsVideoPresenter myHuntsVideoPresenter, MyHuntsVideoAdapter.ClickListener clickListener) {
         super(itemView);
-        IMyHuntsArticlePresenter = myHuntsArticlePresenter;
+        IMyHuntsVideoPresenter = myHuntsVideoPresenter;
         mClickListener = clickListener;
         mContext = itemView.getContext();
         ButterKnife.bind(this, itemView);
@@ -57,9 +59,27 @@ public class MyHuntsVideoHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    @OnClick(R.id.my_hunts_play_icon)
-    void onPlayClick(){
+    @OnLongClick(R.id.my_hunts_article_item_view)
+    boolean onLongClick(){
+        if(mClickListener != null) {
+            mClickListener.onLongClicked(getAdapterPosition());
+        }
+        return true;
+    }
 
+    @OnClick(R.id.my_hunts_article_bookmark)
+    void onBookMark(){
+        ArticlePostItem postsItem = IMyHuntsVideoPresenter.getVideo(getAdapterPosition());
+        String id = String.valueOf(postsItem.getArticle_Id());
+        CurrentUser currentUser = postsItem.getCurrent_user();
+        if(currentUser != null) {
+            if(!currentUser.isBookmarked()){
+                IMyHuntsVideoPresenter.bookmark(id, ArticleParams.VIDEO);
+            }
+            else {
+                IMyHuntsVideoPresenter.unBookmark(id, ArticleParams.VIDEO);
+            }
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package in.healthhunt.view.homeScreenView.myHuntsView.myHuntsQuesView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -25,9 +24,8 @@ import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.MyHuntsArticlePresenterImp;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.IMyHuntsArticlesPresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.MyHuntsArticlesPresenterImp;
 import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleAdapter;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleHolder;
@@ -35,7 +33,7 @@ import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsA
 public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHuntsArticleAdapter.ClickListener{
 
 
-    private IMyHuntsArticlePresenter IMyHuntsArticlePresenter;
+    private IMyHuntsArticlesPresenter IMyHuntsArticlePresenter;
     private Unbinder mUnbinder;
 
     @BindView(R.id.recycler_view)
@@ -49,7 +47,7 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
 
 
     public MyHuntsQuesFragment() {
-        IMyHuntsArticlePresenter = new MyHuntsArticlePresenterImp(getContext(), this);
+        IMyHuntsArticlePresenter = new MyHuntsArticlesPresenterImp(getContext(), this);
     }
 
     @Override
@@ -62,6 +60,7 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_hunts_article_view, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        mNavigation.setVisibility(View.GONE);
         removeShiftMode(mNavigation);
         mNavigationType = ArticleParams.SAVED;
 
@@ -119,6 +118,11 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
     }
 
     @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+
+    }
+
+    @Override
     public int getCount() {
         int count = 8;
         switch (mNavigationType){
@@ -158,13 +162,18 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
 
     @Override
     public void ItemClicked(View v, int position) {
-// ArticlePostItem postsItem = IShopPresenter.getArticle(position);
+// ArticlePostItem postsItem = IShopPresenter.getVideo(position);
         //if(postsItem != null) {
-        Intent intent = new Intent(getContext(), FullViewActivity.class);
+        /*Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, "");
         intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
-        getContext().startActivity(intent);
+        getContext().startActivity(intent);*/
         // }
+    }
+
+    @Override
+    public void onLongClicked(int position) {
+
     }
 
     @Override

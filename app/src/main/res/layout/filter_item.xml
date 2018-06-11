@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:id="@+id/filter_item_view"
+    android:layout_height="40dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <TextView
+        android:id="@+id/filter_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@string/font_family_regular"
+        android:textSize="16sp"
+        android:gravity="left"
+        android:text="hhkh"
+        android:textColor="@color/hh_text_color"
+        android:layout_gravity="center"
+        />
+
+</LinearLayout>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="370dp">
+    android:layout_height="wrap_content"
+    android:id="@+id/related_article_root_view"
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
             android:gravity="left|center"
             android:layout_gravity="left"
             android:fontFamily="@string/font_family_medium"
-            android:text="Latest articles"
+            android:text="@string/related_articles"
             android:layout_weight="1"
             android:textColor="@color/hh_edittext_text_color"
             android:paddingTop="24dp"
@@ -52,11 +54,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/related_article_pager"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/related_recycler_list"
         android:layout_width="match_parent"
-        android:layout_height="310dp"
-        android:layout_marginStart="6dp"
-        android:layout_gravity="top|center"/>
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
 </LinearLayout>

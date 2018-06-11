@@ -1,7 +1,6 @@
 package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,15 +26,15 @@ import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.articleResponse.CategoriesItem;
-import in.healthhunt.model.articles.articleResponse.TagsItem;
-import in.healthhunt.model.articles.articleResponse.Title;
 import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -109,7 +108,9 @@ public class ArticleFragment extends Fragment {
             boolean isLast = bundle.getBoolean(ArticleParams.IS_LAST_PAGE);
             mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
             mPos = bundle.getInt(ArticleParams.POSITION);
-            mArticlePostItem = IArticlePresenter.getArticle(mPos);
+            if(IArticlePresenter != null) {
+                mArticlePostItem = IArticlePresenter.getArticle(mPos);
+            }
 
             if(!isLast) {
                 mTagItemView.setVisibility(View.VISIBLE);
@@ -140,21 +141,25 @@ public class ArticleFragment extends Fragment {
     void onViewAll(){
         Bundle bundle = new Bundle();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, mType);
-        IArticlePresenter.updateBottomNavigation();
         IArticlePresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
     private void openFullView() {
-        Intent intent = new Intent(getContext(), FullViewActivity.class);
-        intent.putExtra(ArticleParams.ID, String.valueOf(mArticlePostItem.getId()));
+       /* Intent intent = new Intent(getContext(), FullViewActivity.class);
+        intent.putExtra(ArticleParams.ID, String.valueOf(mArticlePostItem.getMedia_id()));
         intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
         startActivity(intent);
+*/
+        Bundle bundle = new Bundle();
+        bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+        bundle.putString(ArticleParams.ID, String.valueOf(mArticlePostItem.getArticle_Id()));
+        IArticlePresenter.loadFragment(FullArticleFragment.class.getSimpleName(), bundle);
     }
 
     @OnClick(R.id.article_bookmark)
     void onBookMark(){
         Log.i("TAGBOOK","On Bookmark Click");
-        String id = String.valueOf(mArticlePostItem.getId());
+        String id = String.valueOf(mArticlePostItem.getArticle_Id());
         CurrentUser currentUser = mArticlePostItem.getCurrent_user();
         Log.i("TAGBOOK","currentUser " + currentUser);
         if(currentUser != null) {
@@ -176,6 +181,14 @@ public class ArticleFragment extends Fragment {
         }
         if(categoryName != null) {
             mCategoryName.setText(categoryName);
+            int res = HealthHuntUtility.getCategoryIcon(categoryName);
+            mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+            if(res != 0){
+                mCategoryImage.setImageResource(res);
+            }
+            else {
+                mCategoryImage.setImageResource(R.mipmap.ic_fitness);
+            }
         }
 
 
@@ -195,7 +208,7 @@ public class ArticleFragment extends Fragment {
                         .into(mAuthorImage);
             }
             else {
-                mAuthorImage.setBackgroundResource(R.mipmap.default_profile);
+                mAuthorImage.setImageResource(R.mipmap.default_profile);
             }
         }
 
@@ -249,7 +262,7 @@ public class ArticleFragment extends Fragment {
             Glide.with(this).load(articleUrl).placeholder(R.drawable.artical).into(mArticleImage);
         }
         else {
-            mArticleImage.setBackgroundResource(R.drawable.artical);
+            mArticleImage.setImageResource(R.drawable.artical);
         }
     }
 

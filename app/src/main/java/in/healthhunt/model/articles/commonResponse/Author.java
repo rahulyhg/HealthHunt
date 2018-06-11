@@ -1,9 +1,38 @@
 package in.healthhunt.model.articles.commonResponse;
 
-public class Author{
+
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.google.gson.annotations.SerializedName;
+
+@Table(name = "Authors")
+public class Author extends Model{
+
+	@Column(name = "name")
 	private String name;
-	private int id;
+
+	@Column(name = "author_id")
+	@SerializedName("id")
+	private long author_id;
+
+	/*@Column(name = "parent_id", onDelete = Column.ForeignKeyAction.CASCADE)
+	private long parent_id;
+
+	public long getParent_id() {
+		return parent_id;
+	}
+
+	public void setParent_id(int parent_id) {
+		this.parent_id = parent_id;
+	}
+*/
+	@Column(name = "url")
 	private String url;
+
+	public Author() {
+		super();
+	}
 
 	public void setName(String name){
 		this.name = name;
@@ -13,12 +42,12 @@ public class Author{
 		return name;
 	}
 
-	public void setId(int id){
-		this.id = id;
+	public void setAuthor_id(long author_id){
+		this.author_id = author_id;
 	}
 
-	public int getId(){
-		return id;
+	public long getAuthor_id(){
+		return author_id;
 	}
 
 	public void setUrl(String url){
@@ -34,7 +63,7 @@ public class Author{
 		return 
 			"Author{" + 
 			"name = '" + name + '\'' + 
-			",id = '" + id + '\'' + 
+			",author_id = '" + author_id + '\'' +
 			",url = '" + url + '\'' + 
 			"}";
 		}

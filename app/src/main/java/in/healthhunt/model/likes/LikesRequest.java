@@ -6,13 +6,13 @@ package in.healthhunt.model.likes;
 
 public class LikesRequest {
 
-    int like_type;
+    String like_type;
 
-    public int getLike_type() {
+    public String getLike_type() {
         return like_type;
     }
 
-    public void setLike_type(int like_type) {
+    public void setLike_type(String like_type) {
         this.like_type = like_type;
     }
 }

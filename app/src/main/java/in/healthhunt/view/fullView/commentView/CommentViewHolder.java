@@ -3,6 +3,8 @@ package in.healthhunt.view.fullView.commentView;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,13 +27,19 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     public TextView mUserName;
 
     @BindView(R.id.commented_date)
-    TextView mCommentDate;
+    public TextView mCommentDate;
 
     @BindView(R.id.comment_edit)
-    ImageView mCommentEdit;
+    public ImageView mCommentEdit;
 
     @BindView(R.id.comment_text)
-    TextView mCommentText;
+    public TextView mCommentText;
+
+    @BindView(R.id.edit_comment_text)
+    public EditText mCommentEditText;
+
+    @BindView(R.id.update_comment)
+    public Button mCommentUpdate;
 
     private Context mContext;
     private IFullPresenter IFullPresenter;
@@ -47,5 +55,10 @@ public class CommentViewHolder extends RecyclerView.ViewHolder {
     @OnClick(R.id.comment_edit)
     void onMoreClick(View view){
         mClickListener.onMore(view, getAdapterPosition());
+    }
+
+    @OnClick(R.id.update_comment)
+    void onUpdate(View view){
+        mClickListener.update(view, getAdapterPosition());
     }
 }

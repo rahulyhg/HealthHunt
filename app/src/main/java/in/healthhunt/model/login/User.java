@@ -1,50 +1,83 @@
 package in.healthhunt.model.login;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
-public class User{
-	private int user_status;
-	private String gender;
-	private Object user_image;
+@Table(name = "Users")
+public class User extends Model{
+
+	//@Column(name = "capabilities")
+	//private Capabilities capabilities;
+
+	@Column(name = "userImage")
+	private String userImage;
+
+	//@Column(name = "roles")
 	private List<String> roles;
+
+	@Column(name = "link")
 	private String link;
-	private String last_name;
+
+	@Column(name = "lastName")
+	private String lastName;
+
+	@Column(name = "description")
 	private String description;
+
+	@Column(name = "url")
 	private String url;
-	private Collections collections;
+	//private Collections collections;
+
+	//@Column(name = "popularity")
 	private Popularity popularity;
+
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "nickname")
 	private String nickname;
-	private int id;
-	private String user_activation_key;
-	private String registered_date;
-	private String first_name;
+
+	@Column(name = "user_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	@SerializedName("id")
+	private String user_id;
+
+	@Column(name = "registeredDate")
+	private String registeredDate;
+
+	//@Column(name = "extraCapabilities")
+	//private ExtraCapabilities extraCapabilities;
+
+	@Column(name = "firstName")
+	private String firstName;
+
+	@Column(name = "email")
 	private String email;
+
+	@Column(name = "slug")
 	private String slug;
+
+	@Column(name = "username")
 	private String username;
 
-	public void setUser_status(int user_status){
-		this.user_status = user_status;
+	/*public void setCapabilities(Capabilities capabilities){
+		this.capabilities = capabilities;
 	}
 
-	public int getUser_status(){
-		return user_status;
+	public Capabilities getCapabilities(){
+		return capabilities;
+	}
+*/
+	public void setUserImage(String  userImage){
+		this.userImage = userImage;
 	}
 
-	public void setGender(String gender){
-		this.gender = gender;
-	}
-
-	public String getGender(){
-		return gender;
-	}
-
-	public void setUser_image(Object user_image){
-		this.user_image = user_image;
-	}
-
-	public Object getUser_image(){
-		return user_image;
+	public String getUserImage(){
+		return userImage;
 	}
 
 	public void setRoles(List<String> roles){
@@ -63,12 +96,12 @@ public class User{
 		return link;
 	}
 
-	public void setLast_name(String last_name){
-		this.last_name = last_name;
+	public void setLastName(String lastName){
+		this.lastName = lastName;
 	}
 
-	public String getLast_name(){
-		return last_name;
+	public String getLastName(){
+		return lastName;
 	}
 
 	public void setDescription(String description){
@@ -87,14 +120,14 @@ public class User{
 		return url;
 	}
 
-	public void setCollections(Collections collections){
+	/*public void setCollections(Collections collections){
 		this.collections = collections;
 	}
 
 	public Collections getCollections(){
 		return collections;
 	}
-
+*/
 	public void setPopularity(Popularity popularity){
 		this.popularity = popularity;
 	}
@@ -119,36 +152,36 @@ public class User{
 		return nickname;
 	}
 
-	public void setId(int id){
-		this.id = id;
+	public void setUserId(String id){
+		this.user_id = id;
 	}
 
-	public int getId(){
-		return id;
+	public String getUserId(){
+		return user_id;
 	}
 
-	public void setUser_activation_key(String user_activation_key){
-		this.user_activation_key = user_activation_key;
+	public void setRegisteredDate(String registeredDate){
+		this.registeredDate = registeredDate;
 	}
 
-	public String getUser_activation_key(){
-		return user_activation_key;
+	public String getRegisteredDate(){
+		return registeredDate;
 	}
 
-	public void setRegistered_date(String registered_date){
-		this.registered_date = registered_date;
+	/*public void setExtraCapabilities(ExtraCapabilities extraCapabilities){
+		this.extraCapabilities = extraCapabilities;
 	}
 
-	public String getRegistered_date(){
-		return registered_date;
+	public ExtraCapabilities getExtraCapabilities(){
+		return extraCapabilities;
+	}*/
+
+	public void setFirstName(String firstName){
+		this.firstName = firstName;
 	}
 
-	public void setFirst_name(String first_name){
-		this.first_name = first_name;
-	}
-
-	public String getFirst_name(){
-		return first_name;
+	public String getFirstName(){
+		return firstName;
 	}
 
 	public void setEmail(String email){
@@ -175,29 +208,32 @@ public class User{
 		return username;
 	}
 
+	public static User getUser(){
+		return new Select().from(User.class).executeSingle();
+	}
+
 	@Override
- 	public String toString(){
-		return 
-			"User{" + 
-			"user_status = '" + user_status + '\'' +
-			",gender = '" + gender + '\'' + 
-			",user_image = '" + user_image + '\'' +
-			",roles = '" + roles + '\'' + 
-			",link = '" + link + '\'' + 
-			",last_name = '" + last_name + '\'' +
-			",description = '" + description + '\'' + 
-			",url = '" + url + '\'' + 
-			",collections = '" + collections + '\'' + 
-			",popularity = '" + popularity + '\'' + 
-			",name = '" + name + '\'' + 
-			",nickname = '" + nickname + '\'' + 
-			",id = '" + id + '\'' + 
-			",user_activation_key = '" + user_activation_key + '\'' +
-			",registered_date = '" + registered_date + '\'' +
-			",first_name = '" + first_name + '\'' +
-			",email = '" + email + '\'' + 
-			",slug = '" + slug + '\'' + 
-			",username = '" + username + '\'' + 
-			"}";
-		}
+	public String toString(){
+		return
+				"User{" +
+						//"capabilities = '" + capabilities + '\'' +
+						",user_image = '" + userImage + '\'' +
+						",roles = '" + roles + '\'' +
+						",link = '" + link + '\'' +
+						",last_name = '" + lastName + '\'' +
+						",description = '" + description + '\'' +
+						",url = '" + url + '\'' +
+						//'" + collections + '\'' +
+						",popularity = '" + popularity + '\'' +
+						",name = '" + name + '\'' +
+						",nickname = '" + nickname + '\'' +
+						",userid = '" + user_id + '\'' +
+						",registered_date = '" + registeredDate + '\'' +
+						//",extra_capabilities = '" + extraCapabilities + '\'' +
+						",first_name = '" + firstName + '\'' +
+						",email = '" + email + '\'' +
+						",slug = '" + slug + '\'' +
+						",username = '" + username + '\'' +
+						"}";
+	}
 }

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hh_background_light">
+
+    <include layout="@layout/profile_info"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="12sp"
+            android:textColor="@color/hh_edittext_hint_color"
+            android:gravity="left|center"
+            android:text="@string/username"
+            android:paddingStart="4dp"
+            />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:textSize="16sp"
+            android:fontFamily="@string/font_family_regular"
+            android:textColorHint="@color/hh_edittext_hint_color"
+            android:textColor="@color/hh_edittext_text_color"
+            android:completionThreshold="100"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="12sp"
+            android:textColor="@color/hh_edittext_hint_color"
+            android:gravity="left|center"
+            android:text="@string/email"
+            android:layout_marginTop="16dp"
+            android:paddingStart="4dp"
+            />
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:textSize="16sp"
+            android:fontFamily="@string/font_family_regular"
+            android:textColorHint="@color/hh_edittext_hint_color"
+            android:textColor="@color/hh_edittext_text_color"
+            android:inputType="textEmailAddress"
+            android:completionThreshold="100"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:textSize="12sp"
+            android:textColor="@color/hh_edittext_hint_color"
+            android:gravity="left|center"
+            android:text="@string/password"
+            android:layout_marginTop="16dp"
+            android:paddingStart="4dp"
+            />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:textSize="16sp"
+            android:fontFamily="@string/font_family_regular"
+            android:textColorHint="@color/hh_edittext_hint_color"
+            android:textColor="@color/hh_edittext_text_color"
+            android:inputType="textVisiblePassword"
+            android:text="**********"
+            android:enabled="false"
+            android:completionThreshold="100"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

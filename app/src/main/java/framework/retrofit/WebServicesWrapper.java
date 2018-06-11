@@ -5,28 +5,33 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
-import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
+import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.comment.AllCommentInfo;
+import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
-import in.healthhunt.model.comment.NewComment;
+import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
-import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
+import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
@@ -85,7 +90,10 @@ public class WebServicesWrapper {
 
                 String url = request.build().url().toString();
 
-                String requestUrl = url.substring(url.indexOf(authUrl));
+                String requestUrl = null;
+                if(url.contains(authUrl)) {
+                    requestUrl = url.substring(url.indexOf(authUrl));
+                }
 
                 Log.i("TAGHHHHHH", " EndPoint " + requestUrl);
 
@@ -133,7 +141,9 @@ public class WebServicesWrapper {
 
                 .addConverterFactory(new RetrofitConverter())
 
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .create())/*GsonConverterFactory.create()*/)
 
                 .baseUrl(baseUrl)
 
@@ -180,9 +190,9 @@ public class WebServicesWrapper {
 //    }
 
 
-    public Call<HHResponse<User>> login(LoginRequest loginRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
+    public Call<HHResponse<UserData>> login(LoginRequest loginRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
 
-        Call<HHResponse<User>> loginResponseCall = webServices.login(loginRequest);
+        Call<HHResponse<UserData>> loginResponseCall = webServices.login(loginRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -190,9 +200,9 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<HHResponse<User>> signUp(SignUpRequest signUpRequest, ResponseResolver<HHResponse<User>> responseResponseResolver) {
+    public Call<HHResponse<UserData>> signUp(SignUpRequest signUpRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
 
-        Call<HHResponse<User>> loginResponseCall = webServices.signUp(signUpRequest);
+        Call<HHResponse<UserData>> loginResponseCall = webServices.signUp(signUpRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -240,6 +250,16 @@ public class WebServicesWrapper {
 
     }
 
+    public Call<FullProductResponse> fetchFullProduct(String id, ResponseResolver<FullProductResponse> responseResponseResolver) {
+
+        Call<FullProductResponse> loginResponseCall = webServices.fetchFullProduct(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
     public Call<List<BookMarkResponse>> bookmark(String id, ResponseResolver<List<BookMarkResponse>> responseResponseResolver) {
 
         Log.i("TAGBookmark", "Bookmark");
@@ -263,15 +283,17 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<PostResponse> fetchFullArticle(String id, ResponseResolver<PostResponse> responseResponseResolver) {
+    public Call<FullArticleResponse> fetchFullArticle(String id, ResponseResolver<FullArticleResponse> responseResponseResolver) {
 
-        Call<PostResponse> loginResponseCall = webServices.fetchFullArticle(id);
+        Call<FullArticleResponse> loginResponseCall = webServices.fetchFullArticle(id);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
         return loginResponseCall;
 
     }
+
+
 
     public Call<HHResponse<AllCommentInfo>> fetchComments(Map<String, String> params, ResponseResolver<HHResponse<AllCommentInfo>> responseResponseResolver) {
 
@@ -293,10 +315,20 @@ public class WebServicesWrapper {
 
     }
 
-    public Call<HHResponse<NewComment>> addNewComment(CommentRequest commentRequest, ResponseResolver<HHResponse<NewComment>> responseResponseResolver) {
+    public Call<HHResponse<CommentData>> updateComment(String id, CommentRequest commentRequest, ResponseResolver<HHResponse<CommentData>> responseResponseResolver) {
+
+        Call<HHResponse<CommentData>> loginResponseCall = webServices.updateComment(id, commentRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<CommentData>> addNewComment(CommentRequest commentRequest, ResponseResolver<HHResponse<CommentData>> responseResponseResolver) {
 
         Log.i("TAGPOSTIDIII", " ID " + commentRequest.getPost_id() + "Con " + commentRequest.getContent());
-        Call<HHResponse<NewComment>> loginResponseCall = webServices.addNewComment(commentRequest);
+        Call<HHResponse<CommentData>> loginResponseCall = webServices.addNewComment(commentRequest);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -307,6 +339,26 @@ public class WebServicesWrapper {
     public Call<HHResponse<LikesInfo>> updateLikes(String id, LikesRequest likesRequest, ResponseResolver<HHResponse<LikesInfo>> responseResponseResolver) {
 
         Call<HHResponse<LikesInfo>> loginResponseCall = webServices.updateLikes(id, likesRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<FilterData> fetchFilters(Map<String, String> params, ResponseResolver<FilterData> responseResponseResolver) {
+
+        Call<FilterData> loginResponseCall = webServices.fetchFilters(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<NotificationData>> fetchNotifications(Map<String, String> params, ResponseResolver<HHResponse<NotificationData>> responseResponseResolver) {
+
+        Call<HHResponse<NotificationData>> loginResponseCall = webServices.fetchNotifications(params);
 
         loginResponseCall.enqueue(responseResponseResolver);
 
@@ -527,13 +579,13 @@ public class WebServicesWrapper {
     }
 
     public Call<AddFriendFavourite> setFavourite(ResponseResolver<AddFriendFavourite> addFavouriteCallee, AddFriendFavourite addFriendFavourite) {
-        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFavourite(getAuthKey(), addFriendFavourite.isFavorited(), addFriendFavourite.getId());
+        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFavourite(getAuthKey(), addFriendFavourite.isFavorited(), addFriendFavourite.getMedia_id());
         setFriedFavouriteDetailsCall.enqueue(addFavouriteCallee);
         return setFriedFavouriteDetailsCall;
     }
 
     public Call<AddFriendFavourite> setFriend(ResponseResolver<AddFriendFavourite> addFriendCallee, AddFriendFavourite addFriendFavourite) {
-        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFriends(getAuthKey(), addFriendFavourite.is_friend(), addFriendFavourite.getId());
+        Call<AddFriendFavourite> setFriedFavouriteDetailsCall = webServices.setFriends(getAuthKey(), addFriendFavourite.is_friend(), addFriendFavourite.getMedia_id());
         setFriedFavouriteDetailsCall.enqueue(addFriendCallee);
         return setFriedFavouriteDetailsCall;
     }

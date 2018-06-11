@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@color/hh_background_light">
 
-   <include layout="@layout/suggestion_view"/>
+    <include layout="@layout/suggestion_view"/>
     <include layout="@layout/filter_view"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@drawable/shadow">
+        android:background="@drawable/shadow_down">
 
     </View>
 

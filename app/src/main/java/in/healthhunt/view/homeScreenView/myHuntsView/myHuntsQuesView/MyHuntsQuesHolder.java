@@ -10,7 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
-import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlePresenter.IMyHuntsArticlePresenter;
+import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.IMyHuntsArticlesPresenter;
 import in.healthhunt.view.homeScreenView.myHuntsView.myHuntsArticleView.MyHuntsArticleAdapter;
 
 /**
@@ -40,9 +40,9 @@ public class MyHuntsQuesHolder extends RecyclerView.ViewHolder {
 
 
     private Context mContext;
-    private IMyHuntsArticlePresenter IMyHuntsArticlePresenter;
+    private IMyHuntsArticlesPresenter IMyHuntsArticlePresenter;
     private MyHuntsArticleAdapter.ClickListener mClickListener;
-    public MyHuntsQuesHolder(View itemView, IMyHuntsArticlePresenter myHuntsArticlePresenter, MyHuntsArticleAdapter.ClickListener clickListener) {
+    public MyHuntsQuesHolder(View itemView, IMyHuntsArticlesPresenter myHuntsArticlePresenter, MyHuntsArticleAdapter.ClickListener clickListener) {
         super(itemView);
         IMyHuntsArticlePresenter = myHuntsArticlePresenter;
         mClickListener = clickListener;

@@ -109,6 +109,11 @@ public class ContinueArticleViewHolder extends RecyclerView.ViewHolder implement
 
     }
 
+    @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+
+    }
+
     @OnClick(R.id.continue_cross_image)
     void onCrossClick() {
         IMyFeedView.onClickCrossView(mIndex);

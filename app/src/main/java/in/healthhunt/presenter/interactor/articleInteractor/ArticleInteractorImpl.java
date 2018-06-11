@@ -8,7 +8,7 @@ import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
-import in.healthhunt.model.articles.postResponse.PostResponse;
+import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
 import in.healthhunt.model.response.HHResponse;
 import retrofit2.Response;
 
@@ -34,9 +34,9 @@ public class ArticleInteractorImpl implements IArticleInteractor {
 
     @Override
     public void fetchFullArticle(Context context, String id, final OnFullViewFinishListener finishListener) {
-        WebServicesWrapper.getInstance(context).fetchFullArticle(id, new ResponseResolver<PostResponse>() {
+        WebServicesWrapper.getInstance(context).fetchFullArticle(id, new ResponseResolver<FullArticleResponse>() {
             @Override
-            public void onSuccess(PostResponse postResponse, Response response) {
+            public void onSuccess(FullArticleResponse postResponse, Response response) {
                 finishListener.onArticleSuccess(postResponse.getData().getPost());
             }
 
@@ -53,6 +53,21 @@ public class ArticleInteractorImpl implements IArticleInteractor {
             @Override
             public void onSuccess(HHResponse<ArticleData> articleData, Response response) {
                 articleFinishListener.onArticleSuccess(articleData.getData().getPosts(), type);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                articleFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void fetchRelatedArticle(Context context, Map<String, String> queryMap, final OnRelatedFinishListener articleFinishListener) {
+        WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<HHResponse<ArticleData>>() {
+            @Override
+            public void onSuccess(HHResponse<ArticleData> articleDat, Response response2) {
+                articleFinishListener.onRelatedSuccess(articleDat.getData().getPosts());
             }
 
             @Override

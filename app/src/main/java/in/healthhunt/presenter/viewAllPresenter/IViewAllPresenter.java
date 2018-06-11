@@ -1,5 +1,6 @@
 package in.healthhunt.presenter.viewAllPresenter;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -19,8 +20,9 @@ public interface IViewAllPresenter{
     List<ProductPostItem> getAllProduct();
     ArticlePostItem getArticle(int pos);
     ProductPostItem getProduct(int pos);
-    void fetchAll(int type);
+    void fetchAll(int type, String id);
     int getView();
     void bookmark(String id);
     void unBookmark(String id);
+    void loadFragment(String fragmentName, Bundle bundle);
 }

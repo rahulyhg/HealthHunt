@@ -1,5 +1,8 @@
 package in.healthhunt.model.comment;
 
+import in.healthhunt.model.articles.commonResponse.Author;
+import in.healthhunt.model.articles.commonResponse.Content;
+
 public class CommentsItem{
 	private String date;
 	private int parent;

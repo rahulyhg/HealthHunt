@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/article_item_view"
     android:layout_width="match_parent"
-    android:layout_height="310dp"
+    android:layout_height="312dp"
     android:background="@mipmap/ic_trending_sponsored_article_bg">
 
 
@@ -45,11 +45,10 @@
 
             <ImageView
                 android:id="@+id/category_image"
-                android:layout_width="21dp"
-                android:layout_height="12dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_gravity="left|center"
-                android:background="@mipmap/ic_exercise"
-                android:backgroundTint="@color/hh_blue_light" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/category_name"
@@ -58,7 +57,6 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
-                android:text="Nutrition"
                 android:textColor="@color/hh_blue_light"
                 android:textSize="12sp" />
 
@@ -111,7 +109,7 @@
 
 
             <!--<TextView
-                android:id="@+id/notes_about"
+                andrauthor_idd:idauthor_media_category_tag_id@+id/notes_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"

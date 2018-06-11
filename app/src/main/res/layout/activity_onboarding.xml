@@ -29,7 +29,7 @@
             app:tabIndicatorHeight="0dp"/>
 
         <!--<LinearLayout-->
-        <!--android:id="@+id/scroll_indicator"-->
+        <!--andrauthor_idd:idauthor_media_category_tag_id@+id/scroll_indicator"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_marginStart="160dp"-->

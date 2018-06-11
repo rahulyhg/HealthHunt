@@ -8,6 +8,7 @@ public interface Constants {
     int GMAIL_REQUEST_CODE = 1001;
     int ON_BOARDING_SCREEN_COUNT = 3;
     String VIEWPAGER_FRAGMENT_NO_KEY = "fragment_no_key";
+    String SHOP_FRAGMENT_SUGG_KEY = "shop_fragment_sugg_key";
 
     String DEVICE_TYPE = "deviceType";
     String AUTH_TOKEN = "authToken";
@@ -15,7 +16,6 @@ public interface Constants {
     String TIME_STAMP = "timestamp";
     String CONTENT_TYPE = "Content-Type";
     String SESSION_TOKEN = "sessionToken";
-    String USER_NAME = "username";
     String SELECTED_TAGS_KEY = "selected_tags_key";
     String IS_LOGIN_FIRST_KEY = "is_login_first_key";
     String IS_LOGIN_NORMAL = "is_login_normal_key";
@@ -23,5 +23,33 @@ public interface Constants {
     String FACEBOOK = "facebook";
     String GOOGLE = "google";
     String AUTHCODE = "authCode";
+
+    /*String USER_ID = "user_id";
+    String USER_URL = "user_url";
+    String USER_NAME = "user_name";*/
+
+    String All = "All";
+    String NUTRITION ="Nutrition";
+    String FITNESS ="Fitness";
+    String ORGANIC_BEAUTY ="Organic Beauty";
+    String MENTAL_WELLBEING = "Mental Wellbeing";
+    String LOVE ="Love";
+
+    int PRODUCT_FILTER = 1000;
+    int BRAND_FILTER = 2000;
+    int CITY_FILTER = 3000;
+
+    int FRAGMENT_MY_FEED = 0;
+    int FRAGMENT_MY_HUNTS = 1;
+    int FRAGMENT_WATCH = 2;
+    int FRAGMENT_SHOP = 3;
+    int FULL_VIDEO_REQUEST_CODE = 1001;
+
+
+    String IS_DOWNLOADED = "is_Downloaded";
+
+    String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+    String TYPE_AUTOCOMPLETE = "/autocomplete";
+    String OUT_JSON = "/json";
 
 }

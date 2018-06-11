@@ -1,7 +1,6 @@
 package in.healthhunt.view.viewAll;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +16,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.viewAllPresenter.IViewAllPresenter;
 import in.healthhunt.presenter.viewAllPresenter.ViewAllPresenterImp;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
+import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
 
 /**
@@ -37,6 +40,7 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     private IViewAllPresenter IViewAllPresenter;
     private ProgressDialog mProgress;
     private int mType;
+    private IHomeView IHomeView;
 
 
     @Override
@@ -48,14 +52,17 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         mProgress.setCancelable(false);
         mProgress.setMessage(getResources().getString(R.string.please_wait));
         IViewAllPresenter = new ViewAllPresenterImp(getContext(), this);
+        IHomeView  =(HomeActivity) getActivity();
 
         Bundle bundle = getArguments();
+        String id = null;
         if(bundle != null) {
             mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
+            id = bundle.getString(ArticleParams.ID);
         }
 
         Log.i("TAGTYPE " , "TYPE " + mType);
-        IViewAllPresenter.fetchAll(mType);
+        IViewAllPresenter.fetchAll(mType, id);
     }
 
     @Nullable
@@ -63,14 +70,11 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_all, container, false);
         ButterKnife.bind(this, view);
-
-        Bundle bundle = getArguments();
-        if(bundle != null) {
-            mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
-            IHomeView homeView = (IHomeView) getActivity();
-            homeView.updateTitle(getArticleName());
-        }
-
+        IHomeView.updateTitle(getArticleName());
+        IHomeView.setStatusBarTranslucent(false);
+        IHomeView.hideBottomNavigationSelection();
+        IHomeView.showBottomFooter();
+        IHomeView.showActionBar();
         setAdapter();
         return view;
     }
@@ -94,9 +98,11 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         switch (mType){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
                 viewHolder = new ViewAllArticleHolder(view, this, IViewAllPresenter);
                 break;
             case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
                 viewHolder = new ViewAllProductHolder(view, this, IViewAllPresenter);
                 break;
         }
@@ -124,21 +130,38 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         switch (mType) {
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
                 layout = R.layout.view_all_article_item_view;
                 break;
 
 
             case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
                 layout = R.layout.view_all_product_item_view;
                 break;
         }
 
         return layout;
-        }
+    }
 
     @Override
     public int getType() {
         return mType;
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateArticleSaved(ArticlePostItem postItem) {
+        IHomeView.updateArticleSavedData(postItem);
+    }
+
+    @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IHomeView.updateProductSavedData(postItem);
     }
 
 
@@ -154,6 +177,13 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
             case ArticleParams.LATEST_PRODUCTS:
                 name = ArticleParams.TEXT_LATEST_PRODUCTS_ARTICLES;
                 break;
+            case ArticleParams.RELATED_ARTICLES:
+                name = ArticleParams.TEXT_RELATED_ARTICLES;
+                break;
+            case ArticleParams.RELATED_PRODUCTS:
+                name = ArticleParams.TEXT_RELATED_PRODUCTS;
+                break;
+
         }
 
         return name;
@@ -162,23 +192,33 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     @Override
     public void ItemClicked(View v, int position) {
         String id = null;
+        String fragmentTag = FullArticleFragment.class.getSimpleName();
         int postType = ArticleParams.ARTICLE;
         switch (mType){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
-                id = String.valueOf(IViewAllPresenter.getArticle(position).getId());
+            case ArticleParams.RELATED_ARTICLES:
+                id = String.valueOf(IViewAllPresenter.getArticle(position).getArticle_Id());
                 postType = ArticleParams.ARTICLE;
+                fragmentTag = FullArticleFragment.class.getSimpleName();
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
-                id = String.valueOf(IViewAllPresenter.getProduct(position).getId());
+            case ArticleParams.RELATED_PRODUCTS:
+                id = String.valueOf(IViewAllPresenter.getProduct(position).getProduct_id());
                 postType = ArticleParams.PRODUCT;
+                fragmentTag = FullProductFragment.class.getSimpleName();
                 break;
         }
 
-        Intent intent = new Intent(getContext(), FullViewActivity.class);
+        /*Intent intent = new Intent(getContext(), FullViewActivity.class);
         intent.putExtra(ArticleParams.ID, id);
         intent.putExtra(ArticleParams.POST_TYPE, postType);
-        startActivity(intent);
+        startActivity(intent);*/
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(ArticleParams.POST_TYPE, postType);
+        bundle.putString(ArticleParams.ID, id);
+        IViewAllPresenter.loadFragment(fragmentTag, bundle);
     }
 }

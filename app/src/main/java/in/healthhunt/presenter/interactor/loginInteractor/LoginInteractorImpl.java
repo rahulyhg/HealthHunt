@@ -21,7 +21,7 @@ import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
-import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.presenter.loginPresenter.Facebook;
@@ -35,11 +35,11 @@ import retrofit2.Response;
 public class LoginInteractorImpl implements ILoginInteractor {
     @Override
     public void login(final Context context, LoginRequest loginRequest, final OnLoginFinishListener loginFinishListener) {
-        WebServicesWrapper.getInstance(context).login(loginRequest, new ResponseResolver<HHResponse<User>>() {
+        WebServicesWrapper.getInstance(context).login(loginRequest, new ResponseResolver<HHResponse<UserData>>() {
             @Override
-            public void onSuccess(HHResponse<User> loginResponse, Response response) {
+            public void onSuccess(HHResponse<UserData> loginResponse, Response response) {
                 storeSessionToken(context, response);
-                loginFinishListener.onSuccess();
+                loginFinishListener.onSuccess(loginResponse.getData().getUser());
                 Log.i("TAGLoginInte", "response " + loginResponse + "Response " + response);
             }
 
@@ -86,12 +86,12 @@ public class LoginInteractorImpl implements ILoginInteractor {
 
     @Override
     public void signUp(final Context context, SignUpRequest signUpRequest, final OnLoginFinishListener onLoginFinishListener) {
-            WebServicesWrapper.getInstance(context).signUp(signUpRequest, new ResponseResolver<HHResponse<User>>() {
+            WebServicesWrapper.getInstance(context).signUp(signUpRequest, new ResponseResolver<HHResponse<UserData>>() {
                 @Override
-                public void onSuccess(HHResponse<User> user, Response response) {
+                public void onSuccess(HHResponse<UserData> user, Response response) {
                     storeSessionToken(context, response);
                     //onLoginFinishListener.onSuccess();
-                    onLoginFinishListener.onNewUserSuccess(response.message());
+                    onLoginFinishListener.onNewUserSuccess(user);
                 }
 
                 @Override

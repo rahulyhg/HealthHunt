@@ -110,7 +110,7 @@ public class SignUpFragment extends Fragment {
         mListPopupWindow.setHeight(HealthHuntUtility.dpToPx(144, getContext()));
 
 
-        mListPopupWindow.setModal(true);
+        //mListPopupWindow.setModal(true);
         mListPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {

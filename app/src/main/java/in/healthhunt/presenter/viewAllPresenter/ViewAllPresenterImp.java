@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.viewAllPresenter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -60,12 +61,14 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
         switch (type){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
                 if(mArticlePosts != null) {
                     count = mArticlePosts.size();
                 }
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
                 if(mProductPosts != null) {
                     count = mProductPosts.size();
                 }
@@ -81,7 +84,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
     }
 
     @Override
-    public void fetchAll(int type) {
+    public void fetchAll(int type, String id) {
 
         IViewAll.showProgress();
         Map<String, String> map = new HashMap<String, String>();
@@ -93,6 +96,22 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                 map.put(ArticleParams.LIMIT, String.valueOf(30));
                 IArticleInteractor.fetchAllArticle(mContext, map,this);
                 break;
+
+            case ArticleParams.RELATED_ARTICLES:
+                map.put(ArticleParams.OFFSET, String.valueOf(0));
+                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                map.put(ArticleParams.RELATED, id);
+                IArticleInteractor.fetchAllArticle(mContext, map,this);
+                break;
+
+
+
+            /*case ArticleParams.RELATED_ARTICLES:
+                map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
+                map.put(ArticleParams.OFFSET, String.valueOf(0));
+                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                IArticleInteractor.fetchAllArticle(mContext, map,this);
+                break;*/
             case ArticleParams.BASED_ON_TAGS:
                 Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
                 String tags = "";
@@ -117,6 +136,22 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                 map.put(ArticleParams.LIMIT, String.valueOf(30));
                 IProductInteractor.fetchAllProduct(mContext, map, this);
                 break;
+            case ArticleParams.RELATED_PRODUCTS:
+                map.put(ArticleParams.TYPE, ArticleParams.MARKET);
+                map.put(ArticleParams.OFFSET, String.valueOf(0));
+                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                map.put(ArticleParams.RELATED, id);
+                IProductInteractor.fetchAllProduct(mContext, map, this);
+                break;
+
+            /*case ArticleParams.RELATED_PRODUCTS:
+                map.put(ArticleParams.TYPE, ArticleParams.MARKET);
+                map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+                map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
+                map.put(ArticleParams.OFFSET, String.valueOf(0));
+                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                IProductInteractor.fetchAllProduct(mContext, map, this);
+                break;*/
         }
     }
 
@@ -135,6 +170,11 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
     public void unBookmark(String id) {
         IViewAll.showProgress();
         IBookMarkInteractor.unBookmark(mContext, id, IViewAll.getType(), this);
+    }
+
+    @Override
+    public void loadFragment(String fragmentName, Bundle bundle) {
+        IViewAll.loadFragment(fragmentName, bundle);
     }
 
     @Override
@@ -171,6 +211,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
         IViewAll.hideProgress();
         mArticlePosts = items;
         IViewAll.updateAdapter();
+        Log.i("TAGVIEWLALL", "VIEQLL " + mArticlePosts);
     }
 
     @Override
@@ -194,23 +235,30 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
         switch (type){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
+
 
                 for(ArticlePostItem postItem : mArticlePosts) {
-                    if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getId()))) {
+                    if(bookMarkInfo.getPost_id().equals(String.valueOf(postItem.getArticle_Id()))) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            IViewAll.updateArticleSaved(postItem);
+                            break;
                         }
                     }
                 }
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
                 for(ProductPostItem postItem : mProductPosts) {
-                    if(bookMarkInfo.getPost_id().equals(postItem.getId())) {
+                    if(bookMarkInfo.getPost_id().equals(postItem.getProduct_id())) {
                         CurrentUser currentUser = postItem.getCurrent_user();
                         if (currentUser != null) {
                             currentUser.setBookmarked(bookMarkInfo.isBookMark());
+                            IViewAll.updateProductSaved(postItem);
+                            break;
                         }
                     }
                 }

@@ -23,8 +23,12 @@ import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.ForgotPasswordRequest;
 import in.healthhunt.model.login.LoginRequest;
 import in.healthhunt.model.login.SignUpRequest;
+import in.healthhunt.model.login.User;
+import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.presenter.interactor.loginInteractor.ILoginInteractor;
+import in.healthhunt.presenter.interactor.loginInteractor.LoginInteractorImpl;
 import in.healthhunt.view.loginView.ILoginView;
 
 /**
@@ -38,10 +42,10 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     ILoginInteractor ILoginInteractor;
     private Context mContext;
 
-    public LoginPresenterImpl(Activity activity, ILoginInteractor loginInteractor) {
+    public LoginPresenterImpl(Activity activity) {
          mContext = activity.getApplicationContext();
         ILoginView = (ILoginView) activity;
-        ILoginInteractor = loginInteractor;
+        ILoginInteractor = new LoginInteractorImpl();
     }
 
     @Override
@@ -162,8 +166,9 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess(User user) {
         ILoginView.onHideProgress();
+        storeUserInfo(user);
 
         Set<String> tags = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
         if(tags != null && !tags.isEmpty()) {
@@ -175,18 +180,29 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         }
     }
 
+    private void storeUserInfo(User user) {
+        user.save();
+       // Log.i("TAG", "IMAGE " + user.getUser_image() + " ID " + user.getId());
+        //Log.i("TAG", "URL " + user.getUrl());
+       /* HealthHuntPreference.putString(mContext, Constants.USER_ID, String.valueOf(user.getId()));
+        HealthHuntPreference.putString(mContext, Constants.USER_NAME, String.valueOf(user.getName()));
+        HealthHuntPreference.putString(mContext, Constants.USER_URL, String.valueOf(user.getUrl()));*/
+    }
+
     @Override
     public void onError(RestError errorInfo) {
         ILoginView.onHideProgress();
+        HealthHuntPreference.clear(mContext);
         if(errorInfo != null) {
             ILoginView.showLoginAlert(errorInfo.getMessage());
         }
     }
 
     @Override
-    public void onNewUserSuccess(String msg) {
+    public void onNewUserSuccess(HHResponse<UserData> user) {
         ILoginView.onHideProgress();
-        ILoginView.showLoginAlert(msg);
+        storeUserInfo(user.getData().getUser());
+        ILoginView.showLoginAlert(user.getMessage());
     }
 
     @Override

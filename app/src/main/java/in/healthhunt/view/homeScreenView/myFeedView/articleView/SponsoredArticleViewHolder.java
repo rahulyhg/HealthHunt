@@ -1,7 +1,6 @@
 package in.healthhunt.view.homeScreenView.myFeedView.articleView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +20,7 @@ import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
 
 /**
@@ -35,7 +34,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     TextView mSponsoredArticleName;
 
     @BindView(R.id.sponsored_recycler_list)
-    RecyclerView mSponsoredViewer;
+    public RecyclerView mSponsoredViewer;
 
     private IArticlePresenter IArticlePresenter;
     private in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView IMyFeedView;
@@ -57,6 +56,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
         mSponsoredViewer.setLayoutManager(layoutManager);
         mSponsoredViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mSponsoredViewer.setAdapter(sponsoredAdapter);
+        mSponsoredViewer.setFocusableInTouchMode(false);
     }
 
     @OnClick(R.id.cross_image)
@@ -106,7 +106,7 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        IMyFeedView.loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override
@@ -115,13 +115,22 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     }
 
     @Override
+    public void updateSavedData(ArticlePostItem articlePostItem) {
+        IMyFeedView.updateArticleSaved(articlePostItem);
+    }
+
+    @Override
     public void ItemClicked(View v, int position) {
         ArticlePostItem postsItem = IArticlePresenter.getArticle(position);
         if(postsItem != null) {
-            Intent intent = new Intent(mContext, FullViewActivity.class);
-            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            /*Intent intent = new Intent(mContext, FullViewActivity.class);
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getMedia_id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
-            mContext.startActivity(intent);
+            mContext.startActivity(intent);*/
+            Bundle bundle = new Bundle();
+            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+            bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
+            IArticlePresenter.loadFragment(FullArticleFragment.class.getSimpleName(), bundle);
         }
     }
 }

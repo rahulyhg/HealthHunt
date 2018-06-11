@@ -1,5 +1,6 @@
 package in.healthhunt.presenter.tagPresenter;
 
+import android.os.Bundle;
 import android.view.View;
 
 import java.util.List;
@@ -20,5 +21,8 @@ public interface ITagPresenter {
     void selectAll();
     void unSelectAll();
     void storeSelectedTags();
-    TagViewHolder createTagViewHolder(View view, ITagPresenter tagPresenter);
+    TagItem getTag(int pos);
+    TagViewHolder createTagViewHolder(View view);
+    void loadFragment(String fragmentName, Bundle bundle);
+    void fetchTags();
 }

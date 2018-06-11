@@ -15,6 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import in.healthhunt.R;
+import in.healthhunt.model.beans.Constants;
+
 /**
  * Created by abhishekkumar on 4/22/18.
  */
@@ -113,5 +116,32 @@ public class HealthHuntUtility {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static int getCategoryIcon(String categoryName){
+
+        int res = 0;
+        if(categoryName != null){
+
+            if(categoryName.equalsIgnoreCase(Constants.NUTRITION)){
+                res = R.mipmap.ic_nutrition_icon;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.FITNESS)){
+                res = R.mipmap.ic_fitness;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.ORGANIC_BEAUTY)){
+                res = R.mipmap.ic_organic_beauty;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.MENTAL_WELLBEING)){
+                res = R.mipmap.ic_mental_well;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.LOVE)){
+                res = R.mipmap.ic_love_icon;
+            }
+            else {
+                res = R.mipmap.ic_all;
+            }
+        }
+        return res;
     }
 }

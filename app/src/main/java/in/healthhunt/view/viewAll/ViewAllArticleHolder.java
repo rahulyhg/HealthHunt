@@ -38,10 +38,10 @@ public class ViewAllArticleHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.view_all_category_name)
     TextView mCategoryName;
 
-    @BindView(R.id.view_all_author_pic)
+    @BindView(R.id.view_all_pic)
     ImageView mAuthorImage;
 
-    @BindView(R.id.view_all_author_name)
+    @BindView(R.id.view_all_name)
     TextView mAuthorName;
 
     @BindView(R.id.view_all_article_content)
@@ -77,7 +77,7 @@ public class ViewAllArticleHolder extends RecyclerView.ViewHolder{
     @OnClick(R.id.view_all_bookmark)
     void onBookMark(){
         ArticlePostItem postsItem = IViewAllPresenter.getArticle(getAdapterPosition());
-        String id = String.valueOf(postsItem.getId());
+        String id = String.valueOf(postsItem.getArticle_Id());
         CurrentUser currentUser = postsItem.getCurrent_user();
         if(currentUser != null) {
             if(!currentUser.isBookmarked()){

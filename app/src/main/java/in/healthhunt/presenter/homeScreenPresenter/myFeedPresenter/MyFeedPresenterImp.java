@@ -133,7 +133,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
+        map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
         IProductInteractor.fetchProduct(mContext, ArticleParams.LATEST_PRODUCTS, map, this);
 
     }
@@ -175,6 +175,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchData() {
+        IMyFeedView.showProgress();
         fetchCount = 6;
         fetchTagsArticle(0, 5);
         fetchTrendingArticle(0, 2);
@@ -228,7 +229,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
         if(fetchCount == 0) {
             buildMap();
-            IMyFeedView.onLoadComplete();
+            IMyFeedView.hideProgress();
             IMyFeedView.updateAdapter();
         }
     }
@@ -249,7 +250,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
         if(fetchCount == 0) {
             buildMap();
-            IMyFeedView.onLoadComplete();
+            IMyFeedView.hideProgress();
             IMyFeedView.updateAdapter();
         }
     }

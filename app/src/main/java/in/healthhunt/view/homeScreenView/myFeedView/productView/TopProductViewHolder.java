@@ -1,7 +1,6 @@
 package in.healthhunt.view.homeScreenView.myFeedView.productView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +19,7 @@ import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.ProductPresenterImp;
-import in.healthhunt.view.fullView.FullViewActivity;
+import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
 
 /**
@@ -34,7 +33,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     TextView mTopArticleName;
 
     @BindView(R.id.top_product_recycler_list)
-    RecyclerView mTopProductViewer;
+    public RecyclerView mTopProductViewer;
 
 
     private IProductPresenter ITopProductPresenter;
@@ -58,6 +57,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
         mTopProductViewer.setLayoutManager(layoutManager);
         mTopProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTopProductViewer.setAdapter(topProductAdapter);
+        mTopProductViewer.setFocusableInTouchMode(false);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
-        IMyFeedView.loadFragment(fragmentName, bundle);
+        IMyFeedView.loadNonFooterFragment(fragmentName, bundle);
     }
 
     @Override
@@ -112,13 +112,23 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     }
 
     @Override
+    public void updateProductSaved(ProductPostItem postItem) {
+        IMyFeedView.updateProductSaved(postItem);
+    }
+
+    @Override
     public void ItemClicked(View v, int position) {
         ProductPostItem postsItem = ITopProductPresenter.getProduct(position);
         if(postsItem != null) {
-            Intent intent = new Intent(mContext, FullViewActivity.class);
-            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getId()));
+            /*Intent intent = new Intent(mContext, FullViewActivity.class);
+            intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getMedia_id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
-            mContext.startActivity(intent);
+            mContext.startActivity(intent);*/
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
+            bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getProduct_id()));
+            ITopProductPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
         }
     }
 }
