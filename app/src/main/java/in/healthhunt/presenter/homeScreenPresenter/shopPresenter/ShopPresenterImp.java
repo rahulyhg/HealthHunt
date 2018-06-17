@@ -128,6 +128,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(ArticleParams.PRODUCT_SERVICES));
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IProductInteractor.fetchAllProduct(mContext, map, this);
@@ -139,6 +140,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(ArticleParams.PRODUCT_SERVICES));
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
 

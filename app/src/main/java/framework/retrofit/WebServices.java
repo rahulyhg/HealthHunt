@@ -3,6 +3,7 @@ package framework.retrofit;
 import java.util.List;
 import java.util.Map;
 
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
@@ -53,6 +54,9 @@ public interface WebServices {
  Call<HHResponse<ArticleData>> fetchArticles(@QueryMap Map<String, String> params);
 
  @GET("posts")
+ Call<HHResponse<ArticleData>> fetchArticlesCategory(@QueryMap Map<String, String> params, @Query(ArticleParams.TAGS_FILTER) List<String> categories);
+
+ @GET("posts")
  Call<HHResponse<ProductData>> fetchProducts(@QueryMap Map<String, String> params);
 
  @GET("posts/{id}")
@@ -87,6 +91,13 @@ public interface WebServices {
 
  @GET("notifications")
  Call<HHResponse<NotificationData>> fetchNotifications(@QueryMap Map<String, String> params);
+
+ @GET("posts")
+ Call<HHResponse<ArticleData>> searchArticles(@QueryMap Map<String, String> params);
+
+ @GET("tags")
+ Call<HHResponse<TagData>> fetchCategories(@QueryMap Map<String, String> params);
+
 
     /*@Header("authToken") String token,*/
 

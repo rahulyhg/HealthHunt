@@ -19,6 +19,7 @@ import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.watchPresenter.IWatchPresenter;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -66,7 +67,7 @@ public class WatchAdapter extends RecyclerView.Adapter<WatchViewHolder> {
 
         ArticlePostItem postsItem = IWatchPresenter.getArticle(pos);
         if(postsItem != null) {
-            String url = postsItem.getVideo_thumbnail_icon();
+            String url = postsItem.getVideo_thumbnail();
             Log.i("TAG11", "url " + url);
             if(url != null && !url.isEmpty()) {
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
@@ -81,8 +82,10 @@ public class WatchAdapter extends RecyclerView.Adapter<WatchViewHolder> {
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryName.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryName.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }
@@ -105,12 +108,12 @@ public class WatchAdapter extends RecyclerView.Adapter<WatchViewHolder> {
 
             }
 
-           /* Title title = postsItem.getTitle();
+            Title title = postsItem.getTitle();
             String articleTitle = null;
             if(title != null) {
                 articleTitle = title.getRendered();
             }
-            holder.mArticleTitle.setText(articleTitle);*/
+            holder.mArticleTitle.setText(articleTitle);
 
 
             String tagsName = "";

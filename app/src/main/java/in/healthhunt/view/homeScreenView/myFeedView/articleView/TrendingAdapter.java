@@ -63,20 +63,28 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         ArticlePostItem postsItem = IArticlePresenter.getArticle(pos);
         if(postsItem != null) {
-            String url = null;
-            List<MediaItem> mediaItems = postsItem.getMedia();
-            if(mediaItems != null && !mediaItems.isEmpty()) {
-                MediaItem media = mediaItems.get(0);
-                if("image".equals(media.getMedia_type())) {
-                    url = media.getUrl();
+            String url = postsItem.getVideo_thumbnail();
 
+            if(url == null || url.isEmpty()) {
+                List<MediaItem> mediaItems = postsItem.getMedia();
+                if (mediaItems != null && !mediaItems.isEmpty()) {
+                    MediaItem media = mediaItems.get(0);
+                    if ("image".equals(media.getMedia_type())) {
+                        url = media.getUrl();
+
+                    }
                 }
-            }
-            if(url != null) {
-                Log.i("TAG11", "url " + url);
-                Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
+                holder.mPlayImage.setVisibility(View.GONE);
             }
             else {
+                holder.mPlayImage.setVisibility(View.VISIBLE);
+            }
+
+
+            if (url != null) {
+                Log.i("TAG11", "url " + url);
+                Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
+            } else {
                 holder.mArticleImage.setImageResource(R.drawable.artical);
             }
 
@@ -86,8 +94,10 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryName.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryName.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }
@@ -173,6 +183,9 @@ public class TrendingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         @BindView(R.id.article_image)
         ImageView mArticleImage;
+
+        @BindView(R.id.play_icon)
+        ImageView mPlayImage;
 
         @BindView(R.id.article_bookmark)
         ImageView mArticleBookMark;

@@ -21,11 +21,12 @@
             android:layout_gravity="left|center"
             android:fontFamily="@string/font_family_regular"
             android:text="Sponsored"
+            android:textStyle="bold"
             android:layout_weight="1"
             android:textColor="@color/hh_edittext_hint_color"
             />
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:id="@+id/cross_image"
             android:layout_width="0dp"
             android:layout_height="24dp"
@@ -40,7 +41,7 @@
                 android:src="@mipmap/ic_cross"
                 android:layout_gravity="center"
                 />
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

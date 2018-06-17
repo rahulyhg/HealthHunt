@@ -39,5 +39,6 @@ public interface IArticleInteractor {
     void fetchFullArticle(Context context, String id,  OnFullViewFinishListener finishListener);
     void fetchArticle(Context context, int type, Map<String, String> queryMap, OnArticleFinishListener articleFinishListener);
     void fetchRelatedArticle(Context context, Map<String, String> queryMap, OnRelatedFinishListener finishListener);
-
+    void fetchArticlesCategory(Context context, int type, Map<String, String> queryMap, List<String> category, OnArticleFinishListener articleFinishListener);
+    void fetchAllArticleCategory(Context context, Map<String, String> queryMap, List<String> category, OnViewAllFinishListener finishListener);
 }

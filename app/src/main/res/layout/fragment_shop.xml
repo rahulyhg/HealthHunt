@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/hh_background_light">
 
-    <include layout="@layout/suggestion_view"/>
-    <include layout="@layout/filter_view"/>
-
-    <View
+    <LinearLayout
+        android:id="@+id/shop_view"
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@drawable/shadow_down">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+        <include layout="@layout/suggestion_view"/>
+        <include layout="@layout/filter_view" />
 
-    </View>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/shadow_down">
 
-    <include layout="@layout/recycler_grid_view"></include>
+        </View>
 
-</LinearLayout>
+    </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/shop_view"
+        layout="@layout/recycler_grid_view"></include>
+
+    <TextView
+        android:id="@+id/no_records"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/no_records_found"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/shop_view"
+        android:gravity="center"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -21,9 +21,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 
 /**
@@ -94,15 +97,21 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
 
-            String productName = postsItem.getProduct_type_other_name();
+            /*String productName = postsItem.getProduct_type_other_name();
             if(productName != null) {
                 holder.mProductName.setText(productName);
+            }*/
+
+            Title title = postsItem.getTitle();
+            if(title != null){
+                String render = title.getRendered();
+                holder.mProductName.setText(render);
             }
 
-            String brandName = postsItem.getBrand_other_name();
-            Log.i("TAGPRODU", "type " + brandName);
-            if(brandName != null) {
-                holder.mProductType.setText(brandName);
+            Author author = postsItem.getAuthor();
+            if(author != null) {
+                String authorName = author.getName();
+                holder.mProductType.setText(authorName);
             }
 
             CurrentUser currentUser = postsItem.getCurrent_user();
@@ -120,6 +129,7 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if(price != null) {
                 String postQuantity = postsItem.getPost_quantity();
                 String rs = mContext.getString(R.string.rs);
+                price = HealthHuntUtility.addSeparator(price);
                 rs = rs + " " + price + "/" + postQuantity;
                 holder.mProductPrice.setText(rs);
             }

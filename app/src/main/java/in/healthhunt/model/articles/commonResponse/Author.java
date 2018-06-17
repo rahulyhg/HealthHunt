@@ -30,8 +30,19 @@ public class Author extends Model{
 	@Column(name = "url")
 	private String url;
 
+	@Column(name = "info")
+	private String info;
+
 	public Author() {
 		super();
+	}
+
+	public String getInfo() {
+		return info;
+	}
+
+	public void setInfo(String info) {
+		this.info = info;
 	}
 
 	public void setName(String name){

@@ -101,6 +101,15 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     @BindView(R.id.city_search_view)
     EditText mCitySearch;
 
+    @BindView(R.id.cross_product)
+    ImageView mCrossProduct;
+
+    @BindView(R.id.cross_brand)
+    ImageView mCrossBrand;
+
+    @BindView(R.id.cross_city)
+    ImageView mCrossCity;
+
 
     @BindView(R.id.remove)
     TextView mRemove;
@@ -124,8 +133,10 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
         Map<Integer, List<String>> map = IHomeView.getFilterData();
         if(map != null && !map.isEmpty()){
             List<String> ids = map.get(Constants.PRODUCT_FILTER);
-            for(String item: ids){
-                IFilterPresenter.addProduct(item);
+            if(ids != null && !ids.isEmpty()) {
+                for (String item : ids) {
+                    IFilterPresenter.addProduct(item);
+                }
             }
 
             ids = map.get(Constants.BRAND_FILTER);
@@ -148,6 +159,7 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        IHomeView.hideDrawerMenu();
         mProductSearch.setHint(R.string.search_by_product_type);
         mBrandSearch.setHint(R.string.search_by_brand_name);
 
@@ -225,7 +237,10 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
         }
         updateProductViewVisibility(View.GONE);
         updateBrandViewVisibility(View.GONE);
-
+        String city = IFilterPresenter.getCity();
+        if(city != null){
+            mCitySearch.setText(city);
+        }
         mCityViewer.setLayoutManager(new LinearLayoutManager(getContext()));
         if(mLocationAdapter == null) {
             mLocationAdapter = new LocationAdapter(getContext(), IFilterPresenter);
@@ -291,7 +306,14 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 System.out.println("Text ["+s+"]");
 
-                mProductAdapter.getFilter().filter(s.toString());
+                String str = s.toString();
+                mProductAdapter.getFilter().filter(str);
+                if(str.isEmpty()){
+                    mCrossProduct.setVisibility(View.GONE);
+                }
+                else {
+                    mCrossProduct.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -313,7 +335,15 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 System.out.println("Text ["+s+"]");
 
-                mBrandAdapter.getFilter().filter(s.toString());
+                String str = s.toString();
+                mBrandAdapter.getFilter().filter(str);
+
+                if(str.isEmpty()){
+                    mCrossBrand.setVisibility(View.GONE);
+                }
+                else {
+                    mCrossBrand.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -334,8 +364,15 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 System.out.println("Text ["+s+"]");
+                String str = s.toString();
+                mLocationAdapter.getFilter().filter(str);
 
-                mLocationAdapter.getFilter().filter(s.toString());
+                if(str.isEmpty()){
+                    mCrossCity.setVisibility(View.GONE);
+                }
+                else {
+                    mCrossCity.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -354,7 +391,7 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     public void ItemClicked() {
 
         if((IFilterPresenter.getProductList() != null && !IFilterPresenter.getProductList().isEmpty())
-            || IFilterPresenter.getCity() != null ||
+                || IFilterPresenter.getCity() != null ||
                 (IFilterPresenter.getBrandList() != null && !IFilterPresenter.getBrandList().isEmpty())) {
             updateRemoveColor(R.color.hh_green_light2);
         }
@@ -430,5 +467,20 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
             mCityArrow.setImageResource(R.mipmap.ic_chevron_down);
             mCityViewer.setVisibility(View.GONE);
         }
+    }
+
+    @OnClick(R.id.cross_product)
+    void onCrossProduct(){
+        mProductSearch.setText("");
+    }
+
+    @OnClick(R.id.cross_brand)
+    void onCrossBrand(){
+        mBrandSearch.setText("");
+    }
+
+    @OnClick(R.id.cross_city)
+    void onCrossCity(){
+        mCitySearch.setText("");
     }
 }

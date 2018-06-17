@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +14,12 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import in.healthhunt.R;
-import in.healthhunt.model.articles.commonResponse.Content;
+import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.shopPresenter.IShopPresenter;
 
 /**
@@ -98,17 +99,30 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
                 }
             }*/
 
-            /*postsItem.getC
+            //postsItem.getC
             Title title = postsItem.getTitle();
             String articleTitle = null;
             if(title != null) {
                 articleTitle = title.getRendered();
-            }*/
+                holder.mProductName.setText(articleTitle);
+            }
 
-            Content content = postsItem.getContent();
+            /*Content content = postsItem.getContent();
             if(content != null) {
                 holder.mShopContent.setText(Html.fromHtml(content.getRendered()));
+            }*/
+
+           /* String productName = postsItem.getPost_name();//getProduct_type_other_name();
+            if(productName != null) {
+                holder.mProductName.setText(productName);
+            }*/
+
+            Author author = postsItem.getAuthor();
+            if(author != null) {
+                String authorName = author.getName();
+                holder.mProductType.setText(authorName);
             }
+
 
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {
@@ -119,6 +133,20 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
                 else {
                     holder.mBookMark.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_green_light2), PorterDuff.Mode.SRC_IN);
                 }
+            }
+
+            String price = postsItem.getPost_price();
+            if(price != null) {
+                String postQuantity = postsItem.getPost_quantity();
+                String rs = mContext.getString(R.string.rs);
+                price = HealthHuntUtility.addSeparator(price);
+                rs = rs + " " + price + "/" + postQuantity;
+                holder.mProductPrice.setText(rs);
+            }
+
+            String postUnit = postsItem.getPost_unit();
+            if(postUnit != null) {
+                holder.mProductUnit.setText(postUnit);
             }
         }
     }

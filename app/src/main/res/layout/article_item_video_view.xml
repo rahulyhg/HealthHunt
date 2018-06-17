@@ -65,7 +65,6 @@
                 android:layout_marginStart="8dp"
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
-                android:textColor="@color/hh_blue_light"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -110,6 +109,7 @@
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
                 android:maxLines="3"
+                android:ellipsize="end"
                 android:textColor="@color/hh_edittext_text_color"
                 android:textSize="18sp" />
 
@@ -147,6 +147,8 @@
             android:fontFamily="@string/font_family_regular"
             android:layout_marginBottom="12dp"
             android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/hh_green_light2" />
 
         <LinearLayout

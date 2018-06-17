@@ -9,36 +9,35 @@
         android:layout_height="240dp"
         android:layout_gravity="top">
 
-        <com.google.android.youtube.player.YouTubePlayerView
-            android:id="@+id/youtube_player_view"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_gravity="center" />
-
+        <!-- <com.google.android.youtube.player.YouTubePlayerView
+             android:id="@+id/youtube_player_view"
+             android:layout_width="match_parent"
+             android:layout_height="240dp"
+             android:layout_gravity="center" />
+ -->
         <FrameLayout
             android:id="@+id/youtube_fragment"
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:visibility="gone"
             android:layout_gravity="center" />
 
-       <!-- <ImageView
-            andridd:idmedia_category_tag_id@+id/full_video_image"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:scaleType="centerCrop"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            />
+        <!-- <ImageView
+             andridd:idmedia_category_tag_id@+id/full_video_image"
+             android:layout_width="match_parent"
+             android:layout_height="240dp"
+             android:scaleType="centerCrop"
+             android:layout_gravity="center"
+             android:visibility="gone"
+             />
 
-        <ImageView
-            andridd:idmedia_category_tag_id@+id/play_icon"
-            android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:src="@mipmap/ic_play_icon"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:scaleType="center"/>-->
+         <ImageView
+             andridd:idmedia_category_tag_id@+id/play_icon"
+             android:layout_width="match_parent"
+             android:layout_height="240dp"
+             android:src="@mipmap/ic_play_icon"
+             android:layout_gravity="center"
+             android:visibility="gone"
+             android:scaleType="center"/>-->
 
         <RelativeLayout
             android:id="@+id/overlay_video_view"
@@ -117,6 +116,7 @@
                     android:textColor="@android:color/white"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="top"
+                    android:maxLength="6"
                     />
 
             </LinearLayout>

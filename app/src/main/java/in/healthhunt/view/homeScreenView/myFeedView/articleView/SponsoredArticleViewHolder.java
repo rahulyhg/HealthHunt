@@ -12,7 +12,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
@@ -52,18 +51,23 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
     private void setAdapter() {
         SponsoredAdapter sponsoredAdapter = new SponsoredAdapter(mContext, IArticlePresenter);
         sponsoredAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mSponsoredViewer.setLayoutManager(layoutManager);
         mSponsoredViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mSponsoredViewer.setAdapter(sponsoredAdapter);
         mSponsoredViewer.setFocusableInTouchMode(false);
     }
 
-    @OnClick(R.id.cross_image)
+   /* @OnClick(R.id.cross_image)
     void onCrossClick() {
         IMyFeedView.onClickCrossView(getAdapterPosition());
     }
-
+*/
     @Override
     public Fragment getFragmentArticleItem(int position) {
         return null;
@@ -131,6 +135,12 @@ public class SponsoredArticleViewHolder extends RecyclerView.ViewHolder implemen
             bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
             bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
             IArticlePresenter.loadFragment(FullArticleFragment.class.getSimpleName(), bundle);
+        }
+    }
+
+    public void notifyDataChanged(){
+        if(mSponsoredViewer != null && mSponsoredViewer.getAdapter() != null){
+            mSponsoredViewer.getAdapter().notifyDataSetChanged();
         }
     }
 }

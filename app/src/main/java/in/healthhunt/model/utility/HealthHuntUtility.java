@@ -9,10 +9,12 @@ import android.util.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import in.healthhunt.R;
@@ -105,6 +107,7 @@ public class HealthHuntUtility {
     public static String getDateWithFormat(String strDate) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
+            Log.i("TAGPARSE", " date " + strDate);
             Date date = format.parse(strDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
@@ -143,5 +146,41 @@ public class HealthHuntUtility {
             }
         }
         return res;
+    }
+
+    public static int getCategoryColor(String categoryName){
+
+        int color = R.color.hh_green_light2;
+        if(categoryName != null){
+
+            if(categoryName.equalsIgnoreCase(Constants.NUTRITION)){
+                color = R.color.hh_orange_light;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.FITNESS)){
+                color = R.color.hh_blue_light;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.ORGANIC_BEAUTY)){
+                color = R.color.hh_green_light2;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.MENTAL_WELLBEING)){
+                color = R.color.hh_yello_light;
+            }
+            else if(categoryName.equalsIgnoreCase(Constants.LOVE)){
+                color = R.color.hh_red_light;
+            }
+        }
+        return color;
+    }
+
+    public static String addSeparator(String val){
+        if(val == null || val.isEmpty()){
+            Log.i("TAGUTILITY", " addSeparetor = " + val);
+            return val;
+        }
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+        Log.i("TAGUTILITY", " Value = " + val);
+        String numberAsString = numberFormat.format(Integer.parseInt(val));
+        return numberAsString;
     }
 }

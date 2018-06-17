@@ -100,6 +100,10 @@ public class ArticleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_article_item_view, container, false);
+        if(IArticlePresenter == null){
+            return view;
+        }
+
         mUnBinder = ButterKnife.bind(this, view);
 
         Bundle bundle = getArguments();
@@ -128,7 +132,9 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mUnBinder.unbind();
+        if(mUnBinder != null) {
+            mUnBinder.unbind();
+        }
     }
 
 
@@ -182,7 +188,9 @@ public class ArticleFragment extends Fragment {
         if(categoryName != null) {
             mCategoryName.setText(categoryName);
             int res = HealthHuntUtility.getCategoryIcon(categoryName);
-            mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
+            int color = HealthHuntUtility.getCategoryColor(categoryName);
+            mCategoryName.setTextColor(ContextCompat.getColor(getContext(), color));
+            mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
             if(res != 0){
                 mCategoryImage.setImageResource(res);
             }
@@ -228,7 +236,7 @@ public class ArticleFragment extends Fragment {
         List<TagsItem> tagItems = mArticlePostItem.getTags();
         if(tagItems != null && !tagItems.isEmpty()) {
             for(TagsItem  tagItem: tagItems) {
-                tagsName = "#" + tagItem.getName() + " ";
+                tagsName = tagsName + "#" + tagItem.getName() + " ";
             }
         }
         mHashTags.setText(tagsName);

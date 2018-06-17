@@ -144,6 +144,7 @@ public class ProductPresenterImp implements IProductPresenter, IBookMarkInteract
             if(info != null) {
                 if (postItem.getProduct_id().equals(info.getPost_id())) {
                     postItem.getCurrent_user().setBookmarked(info.isBookMark());
+                    IProductView.updateProductSaved(postItem);
                     break;
                 }
             }

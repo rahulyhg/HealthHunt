@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -49,6 +50,9 @@ public class EditProfileFragment extends Fragment{
     @BindView(R.id.email)
     EditText mEmail;
 
+    @BindView(R.id.bio)
+    EditText mBio;
+
     @BindView(R.id.edit_profile_text)
     TextView mCancel;
 
@@ -58,6 +62,7 @@ public class EditProfileFragment extends Fragment{
     private ITagPresenter ITagPresenter;
     private IHomeView IHomeView;
     private final int PICK_IMAGE_REQUEST = 1001;
+    private String mProfileUrl;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +79,7 @@ public class EditProfileFragment extends Fragment{
         mUserInfo.setVisibility(View.GONE);
         mCancel.setText(R.string.cancel);
         mDone.setText(R.string.done);
+        IHomeView.hideDrawerMenu();
         IHomeView.updateTitle(getString(R.string.edit_profile));
         IHomeView.hideBottomNavigationSelection();
         setUserInfo();
@@ -82,7 +88,7 @@ public class EditProfileFragment extends Fragment{
 
     private void setUserInfo() {
 
-        User user = User.getUser();
+        User user = User.getCurrentUser();
         String name = user.getName();//HealthHuntPrefere
 
         // nce.getString(getContext(), user.getUsername());
@@ -97,8 +103,13 @@ public class EditProfileFragment extends Fragment{
             mEmail.setText(email);
         }
 
-        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
+        String bio = user.getBio();
+        if(bio != null){
+            mBio.setText(bio);
+        }
 
+        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
+        mProfileUrl = url;
         if(url != null) {
             url = url.replace("\n", "");
             Glide.with(getContext())
@@ -124,14 +135,22 @@ public class EditProfileFragment extends Fragment{
 
     @OnClick(R.id.logout) //Done Button
     void onDone(){
-        User user = User.getUser();
+        Toast.makeText(getContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
+        User user = User.getCurrentUser();
         user.setName(mUserName.getText().toString());
+        user.setUserImage(mProfileUrl);
+        user.setBio(mBio.getText().toString());
         user.save();
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
     @OnClick(R.id.user_pic)
     void onChange(){
+        changeImage();
+    }
+
+    @OnClick(R.id.change_photo)
+    void onPhotoChange(){
         changeImage();
     }
 
@@ -153,11 +172,9 @@ public class EditProfileFragment extends Fragment{
             Uri uri = data.getData();
             Glide.with(this).loadFromMediaStore(uri).bitmapTransform(new CropCircleTransformation(getContext())).
                     placeholder(R.mipmap.avatar).into(mProfilePic);
-            User user = User.getUser();
-            user.setUserImage(uri.toString());
-            user.save();
-
-
+            if(uri != null && !uri.toString().isEmpty()) {
+                mProfileUrl = uri.toString();
+            }
 
             /*try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);

@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
@@ -35,13 +36,14 @@ import in.healthhunt.model.articles.commonResponse.Collections;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.commonResponse.TagsItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.login.User;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsVideoPresenter.IMyHuntsVideoPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsVideoPresenter.MyHuntsVideoPresenterImp;
-import in.healthhunt.view.fullView.FullVideoActivity;
+import in.healthhunt.view.fullView.fullViewFragments.YoutubeFragment;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
 
@@ -57,6 +59,9 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
     @BindView(R.id.top_navigation)
     BottomNavigationView mNavigation;
 
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
+
     private int mNavigationType;
     private IHomeView IHomeView;
 
@@ -66,7 +71,7 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
         mNavigationType = ArticleParams.SAVED;
         IHomeView = (IHomeView) getActivity();
         IMyHuntsVideoPresenter = new MyHuntsVideoPresenterImp(getContext(), this);
-        String userId = User.getUser().getUserId();//HealthHuntPreference.getString(getContext(), Constants.USER_ID);
+        String userId = User.getCurrentUser().getUserId();//HealthHuntPreference.getString(getContext(), Constants.USER_ID);
         Log.i("TAGUSRRID", "USER ID " + userId);
         IMyHuntsVideoPresenter.fetchVideos(userId);
         fetchDownloadVideos();
@@ -120,6 +125,19 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
     @Override
     public void updateAdapter() {
         mArticleViewer.getAdapter().notifyDataSetChanged();
+        updateVisibility();
+    }
+
+    public void updateVisibility(){
+        int count = IMyHuntsVideoPresenter.getCount();
+        if(count == 0){
+            mNoRecords.setVisibility(View.VISIBLE);
+            mArticleViewer.setVisibility(View.GONE);
+        }
+        else {
+            mNoRecords.setVisibility(View.GONE);
+            mArticleViewer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -135,6 +153,17 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateSavedArticle(ArticlePostItem articlePostItem) {
+        IHomeView.updateWatch(articlePostItem);
+        showToast(articlePostItem.getCurrent_user());
+    }
+
+    @Override
+    public void updateSavedProduct(ProductPostItem productPostItem) {
+        showToast(productPostItem.getCurrent_user());
     }
 
     private void fetchDownloadVideos() {
@@ -167,13 +196,21 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
     public void ItemClicked(View v, int position) {
         ArticlePostItem postsItem = IMyHuntsVideoPresenter.getVideo(position);
         if(postsItem != null) {
-            Intent intent = new Intent(getContext(), FullVideoActivity.class);
+            /*Intent intent = new Intent(getContext(), FullVideoActivity.class);
             intent.putExtra(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
             intent.putExtra(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
+            */
+
+            Bundle bundle = new Bundle();
+            bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
+            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
+
             if(mNavigationType == ArticleParams.DOWNLOADED) {
-                intent.putExtra(Constants.IS_DOWNLOADED, true);
+                bundle.putBoolean(Constants.IS_DOWNLOADED, true);
             }
-            startActivityForResult(intent, Constants.FULL_VIDEO_REQUEST_CODE);
+
+            IMyHuntsVideoPresenter.loadFragment(YoutubeFragment.class.getSimpleName(), bundle);
+            //startActivityForResult(intent, Constants.FULL_VIDEO_REQUEST_CODE);
         }
     }
 
@@ -317,5 +354,14 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
         if(requestCode == Constants.FULL_VIDEO_REQUEST_CODE){
             updateDownloadData();
         }
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 }

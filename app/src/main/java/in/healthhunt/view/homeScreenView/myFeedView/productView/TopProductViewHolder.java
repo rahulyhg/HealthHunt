@@ -53,7 +53,12 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
     private void setAdapter() {
         TopProductAdapter topProductAdapter = new TopProductAdapter(mContext, ITopProductPresenter);
         topProductAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mTopProductViewer.setLayoutManager(layoutManager);
         mTopProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTopProductViewer.setAdapter(topProductAdapter);
@@ -129,6 +134,12 @@ public class TopProductViewHolder extends RecyclerView.ViewHolder implements Top
             bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.PRODUCT);
             bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getProduct_id()));
             ITopProductPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
+        }
+    }
+
+    public void notifyDataChanged(){
+        if(mTopProductViewer != null && mTopProductViewer.getAdapter() != null){
+            mTopProductViewer.getAdapter().notifyDataSetChanged();
         }
     }
 }

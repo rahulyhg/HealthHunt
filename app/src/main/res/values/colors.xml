@@ -29,5 +29,7 @@
     <color name="hh_background_item">#EEEEEE</color>
     <color name="hh_text_color3">#C7000000</color>
     <color name="hh_red_light">#FF8B91</color>
+    <color name="hh_orange_light">#FABD75</color>
+    <color name="hh_yello_light">#F8DE50</color>
     <color name="hh_green_light4">#1A9FCD33</color>
 </resources>

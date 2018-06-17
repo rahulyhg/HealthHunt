@@ -1,6 +1,7 @@
 package in.healthhunt.view.homeScreenView.drawerView;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,8 +21,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
-import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.login.User;
+import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
@@ -69,8 +70,9 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
 
     private void setUserInfo() {
 
-        User user = User.getUser();
+        User user = User.getCurrentUser();
         String name = user.getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
+        Log.i("TAGUSERNAME", "NAme " + name);
         if(name != null) {
             mUserName.setText(name);
         }
@@ -107,20 +109,27 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     }
 
     @Override
-    public void ItemClicked(View v, String selectedItem) {
-        if(IHomePresenter.isCategoryContain(selectedItem)){
-            IHomePresenter.removeCategory(selectedItem);
+    public void ItemClicked(View v, int pos) {
+        TagItem tagItem = IHomePresenter.getCategory(pos);
+
+        if(tagItem.getId() != 1) {
+            if (IHomePresenter.isCategoryContain(tagItem)) {
+                IHomePresenter.removeCategory(tagItem);
+            } else {
+                IHomePresenter.addCategory(tagItem);
+            }
+
+            TagItem item = IHomePresenter.getCategory(0);
+            if(IHomePresenter.isCategoryContain(item)){
+                IHomePresenter.removeCategory(item);
+            }
         }
         else {
-            IHomePresenter.addCategory(selectedItem);
+            IHomePresenter.getSelectedCategoryList().clear();
+            IHomePresenter.addCategory(tagItem);
         }
 
-        if(IHomePresenter.isCategoryContain(Constants.All)){
-            IHomePresenter.getCategoryList().clear();
-        }
-
-        Log.i("Category", "Category " + selectedItem);
-        Log.i("Category", "Category List " + IHomePresenter.getCategoryList());
+        updateAdapter();
     }
 
     public void updateAdapter(){
@@ -132,6 +141,17 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     @OnClick(R.id.edit_profile)
     void onEdit(){
         IHomeView.closeDrawer();
-        IHomePresenter.loadNonFooterFragment(ProfileFragment.class.getSimpleName(), null);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                IHomePresenter.loadNonFooterFragment(ProfileFragment.class.getSimpleName(), null);
+            }
+        }, 100);
+    }
+
+    public void updateUserInfo(){
+        setUserInfo();
     }
 }

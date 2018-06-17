@@ -90,7 +90,10 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
     private void fetchRelatedArticles(String id){
         Map<String, String> map = new HashMap<String, String>();
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+        map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
         map.put(ArticleParams.RELATED, id);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(2));
         IArticleInteractor.fetchRelatedArticle(mContext, map, this);
@@ -99,6 +102,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     private void fetchRelatedProducts(String id, int type){
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.RELATED, id);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(2));
@@ -284,7 +288,13 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
                     currentUser = mArticlePost.getCurrent_user();
                     if (currentUser != null) {
                         currentUser.setBookmarked(bookMarkInfo.isBookMark());
-                        IFullFragment.updateArticleSaved(mArticlePost);
+
+                        if(type == ArticleParams.ARTICLE) {
+                            IFullFragment.updateArticleSaved(mArticlePost);
+                        }
+                        else {
+                            IFullFragment.updateVideoSaved(mArticlePost);
+                        }
                     }
                 }
                 break;
@@ -337,6 +347,10 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
     public void onRelatedSuccess(List<ArticlePostItem> items) {
         mArticleCount--;
         mRelatedArticleItems = items;
+        /*for(ArticlePostItem postItem: mRelatedArticleItems){
+            Log.i("TAGRELATED", "id " + postItem.getArticle_Id());
+        }*/
+        //Log.i("TAGRTICLERELATED", "RELATED " + mRelatedArticleItems.size());
         updateArticleInfo();
     }
 
@@ -345,6 +359,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         mRelatedProductItems = items;
         if(type == ArticleParams.ARTICLE){
             mArticleCount--;
+            Log.i("TAGRTICLERELATED", "RELATED Product Article " + mRelatedProductItems);
             updateArticleInfo();
         }
         else {

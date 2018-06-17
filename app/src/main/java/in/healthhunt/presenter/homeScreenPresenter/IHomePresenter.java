@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import in.healthhunt.model.tags.TagItem;
+
 /**
  * Created by abhishekkumar on 4/23/18.
  */
@@ -11,8 +13,12 @@ import java.util.List;
 public interface IHomePresenter{
     void loadFooterFragment(String tag, Bundle bundle);
     void loadNonFooterFragment(String tag, Bundle bundle);
-    void addCategory(String str);
-    void removeCategory(String str);
-    boolean isCategoryContain(String str);
-    List<String> getCategoryList();
+    void addCategory(TagItem tagItem);
+    void removeCategory(TagItem tagItem);
+    boolean isCategoryContain(TagItem tagItem);
+    List<TagItem> getSelectedCategoryList();
+    TagItem getSelectedCategory(String tagId);
+    TagItem getCategory(int pos);
+    int getCategoryCount();
+    void fetchCategories();
 }

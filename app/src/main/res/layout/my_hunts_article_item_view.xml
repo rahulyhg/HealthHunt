@@ -52,10 +52,10 @@
             android:fontFamily="@string/font_family_regular"
             android:gravity="left|center"
             android:maxLines="5"
-            android:text="@string/lorem_ipsum"
             android:textColor="@color/hh_edittext_text_color"
             android:textSize="18sp"
             android:layout_margin="8dp"
+            android:maxLength="80"
             android:layout_below="@id/my_hunts_article_image_view"/>
 
         <LinearLayout

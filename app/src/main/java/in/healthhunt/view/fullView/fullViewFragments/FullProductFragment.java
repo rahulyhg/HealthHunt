@@ -4,17 +4,20 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,10 +29,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;
 
 import java.io.UnsupportedEncodingException;
@@ -39,6 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import framework.permisisons.Permissions;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
@@ -109,7 +113,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     RecyclerView mCommentViewer;
 
     @BindView(R.id.full_view_scroll)
-    ScrollView mFullViewScroll;
+    NestedScrollView mFullViewScroll;
 
     @BindView(R.id.comment_content)
     EditText mCommentContent;
@@ -141,12 +145,20 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.related_product_view)
     LinearLayout mRelatedProductView;
 
+    @BindView(R.id.detail_text)
+    ReadMoreTextView mDetailText;
+
+    @BindView(R.id.about_name)
+    TextView mAboutName;
+
 
     private IFullPresenter IFullPresenter;
     private IHomeView IHomeView;
     private Unbinder mUnbinder;
     private int mType;
     private boolean isDownloaded;
+    private String mId;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,15 +167,9 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         IHomeView  =(HomeActivity) getActivity();
 
 
-        String id = getArguments().getString(ArticleParams.ID);
+        mId = getArguments().getString(ArticleParams.ID);
         mType = getArguments().getInt(ArticleParams.POST_TYPE);
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
-        if(!isDownloaded) {
-            IFullPresenter.fetchProduct(id);
-        }
-        else {
-            fetchProductFromDataBase(id);
-        }
     }
 
     private void fetchProductFromDataBase(String id) {
@@ -179,6 +185,12 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         IHomeView.setStatusBarTranslucent(true);
         IHomeView.hideBottomFooter();
         IHomeView.hideActionBar();
+        if(!isDownloaded) {
+            IFullPresenter.fetchProduct(mId);
+        }
+        else {
+            fetchProductFromDataBase(mId);
+        }
         setContent();
         return view;
     }
@@ -226,7 +238,12 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
         RelatedProductAdapter relatedProductAdapter = new RelatedProductAdapter(getContext(), IFullPresenter);
         relatedProductAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mRelatedProductViewer.setLayoutManager(layoutManager);
         mRelatedProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mRelatedProductViewer.setAdapter(relatedProductAdapter);
@@ -261,7 +278,12 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     private void setCommentAdapter(){
         CommentAdapter commentAdapter = new CommentAdapter(getContext(), IFullPresenter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mCommentViewer.setLayoutManager(layoutManager);
         mCommentViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mCommentViewer.setAdapter(commentAdapter);
@@ -324,17 +346,27 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void updateProductSaved(ProductPostItem postItem) {
-        IHomeView.updateProductSavedData(postItem);
+        IHomeView.updateMyhuntsProductSaved(postItem);
+        showToast(postItem.getCurrent_user());
+        IHomeView.updateMyFeedProduct(postItem);
+        IHomeView.updateShop(postItem);
     }
 
     @Override
     public void updateArticleSaved(ArticlePostItem articlePostItem) {
-        IHomeView.updateArticleSavedData(articlePostItem);
+        IHomeView.updateMyhuntsArticleSaved(articlePostItem);
+        showToast(articlePostItem.getCurrent_user());
+        IHomeView.updateMyFeedArticle(articlePostItem);
+    }
+
+    @Override
+    public void updateVideoSaved(ArticlePostItem articlePostItem) {
+
     }
 
     @OnClick(R.id.buy)
     void onBuy(){
-
+        buyProduct();
     }
 
     public void updateLikeIcon(boolean isLike) {
@@ -363,12 +395,12 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             mCommentView.setVisibility(View.VISIBLE);
             mCommentViewer.setVisibility(View.VISIBLE);
 
-            CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
-            if(adapter == null) {
-                ProductPostItem post = IFullPresenter.getProduct();
-                IFullPresenter.fetchComments(String.valueOf(post.getProduct_id()));
-                mFullViewScroll.fullScroll(View.FOCUS_DOWN);
-            }
+            // CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
+            //if(adapter == null) {
+            ProductPostItem post = IFullPresenter.getProduct();
+            IFullPresenter.fetchComments(String.valueOf(post.getProduct_id()));
+            mFullViewScroll.fullScroll(View.FOCUS_DOWN);
+            // }
         }
     }
 
@@ -391,7 +423,16 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     @OnClick(R.id.send_comment)
     void onSend(View view){
+
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         String content = mCommentContent.getText().toString().trim();
+
+        if(content.isEmpty()){
+            IHomeView.showToast(getString(R.string.please_enter_comment));
+            return;
+        }
 
         try {
             byte[] data = content.getBytes("UTF-8");
@@ -400,9 +441,6 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         catch (UnsupportedEncodingException unsupportedEncodingException){
 
         }
-
-        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         ProductPostItem productPost = IFullPresenter.getProduct();
         if(productPost != null){
@@ -433,6 +471,16 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void setAboutContent(ProductPostItem productPost) {
+        Author author = productPost.getAuthor();
+        if(author != null){
+            String authorName = author.getName();
+            Log.i("TAGNAMNE","NAMe " + authorName);
+            mAboutName.setText(authorName);
+
+            String info = author.getInfo();
+            mDetailText.setText(info);
+        }
+
     }
 
     private void setProductContent(ProductPostItem productPost) {
@@ -452,9 +500,15 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void setBuyInfo(ProductPostItem productPost) {
-        String productName = productPost.getPost_name();
+        /*String productName = productPost.getPost_name();
         if(productName != null){
             mBuyProductName.setText(productName);
+        }*/
+
+        Title title = productPost.getTitle();
+        if(title != null){
+            String render = title.getRendered();
+            mBuyProductName.setText(render);
         }
 
         String productType = productPost.getCompany_name();
@@ -466,6 +520,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         if(price != null) {
             String postQuantity = productPost.getPost_quantity();
             String rs = getContext().getString(R.string.rs);
+            price = HealthHuntUtility.addSeparator(price);
             rs = rs + " " + price + "/" + postQuantity;
             mBuyProductPrice.setText(rs);
         }
@@ -493,10 +548,15 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     private void setTopImageContent(ProductPostItem productPost) {
 
 
-        String productName = productPost.getPost_name();
+        Title title = productPost.getTitle();
+        if(title != null){
+            String render = title.getRendered();
+            mProductName.setText(render);
+        }
+        /*String productName = productPost.getPost_name();
         if(productName != null){
             mProductName.setText(productName);
-        }
+        }*/
 
         CurrentUser currentUser = productPost.getCurrent_user();
         if(currentUser != null) {
@@ -570,11 +630,26 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-                storeProduct();
+                String msg = getString(R.string.downloaded_successfully);
+                if(!isAlreadyDownloaded()) {
+                    storeProduct();
+                }
+                else {
+                    msg = getString(R.string.already_downloaded);
+                }
+                IHomeView.showToast(msg);
             }
         });
 
         mBottomSheetDialog.show();
+    }
+
+    private boolean isAlreadyDownloaded() {
+        ProductPostItem productPostItem = ProductPostItem.getProduct(IFullPresenter.getProduct().getProduct_id());
+        if(productPostItem != null){
+            return true;
+        }
+        return false;
     }
 
     private void shareProduct(){
@@ -584,6 +659,17 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         sendIntent.putExtra(Intent.EXTRA_TEXT, productPost.getLink());
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
+    }
+
+    private void buyProduct(){
+        ProductPostItem productPost = IFullPresenter.getProduct();
+        String url = productPost.getPost_url();
+        if(url == null || url.isEmpty()){
+            IHomeView.showToast("Url is empty");
+            return;
+        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(Intent.createChooser(browserIntent, getString(R.string.buy)));
     }
 
     private void updateBookMark(boolean isBookMark) {
@@ -635,6 +721,11 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         int id = commentsItem.getId();
         String content = holder.mCommentEditText.getText().toString();
 
+        if(content != null && content.isEmpty()){
+            IHomeView.showToast(getString(R.string.please_enter_comment));
+            return;
+        }
+
         try {
             byte[] data = content.getBytes("UTF-8");
             content = Base64.encodeToString(data, Base64.DEFAULT);
@@ -676,6 +767,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         String id = IFullPresenter.getProduct().getProduct_id();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.RELATED_PRODUCTS);
         bundle.putString(ArticleParams.ID, String.valueOf(id));
+        bundle.putBoolean(Constants.IS_RELATED, true);
         IFullPresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
@@ -805,5 +897,38 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             IHomeView.hideProgress();
             IFullPresenter.updateProduct(productPosts);
         }
+    }
+
+    @OnClick(R.id.email_view)
+    void onEmail(){
+        ProductPostItem productPost = IFullPresenter.getProduct();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SENDTO);
+        sendIntent.setData(Uri.parse("mailto:" +productPost.getPost_email()));
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
+    }
+
+    @OnClick(R.id.phone_view)
+    void onCall(){
+        ProductPostItem productPost = IFullPresenter.getProduct();
+        String phoneNumber = productPost.getPost_contactno();
+        HomeActivity homeActivity = (HomeActivity) getActivity();
+        if (!TextUtils.isEmpty(phoneNumber)) {
+            if (homeActivity.getPermission(Permissions.PERMISSION_CALL_PHONE, HomeActivity.HOME_REQUEST_CODE)) {
+                String dial = "tel:" + phoneNumber;
+                startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+            } /*else {
+                Toast.makeText(getContext(), "Permission Call Phone denied", Toast.LENGTH_SHORT).show();
+            }*/
+        }
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 }

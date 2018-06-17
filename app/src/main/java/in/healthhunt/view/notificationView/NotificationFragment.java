@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,13 @@ public class NotificationFragment extends Fragment implements INotificationView,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
         ButterKnife.bind(this, view);
+        IHomeView.setStatusBarTranslucent(false);
+        IHomeView.hideBottomNavigationSelection();
+        IHomeView.showBottomFooter();
+        IHomeView.hideDrawerMenu();
+        IHomeView.showActionBar();
         IHomeView.updateTitle(getString(R.string.notifications));
+        Log.i("TAGSEARCHFRAGMENT", "SEARCH NOTIFICATION");
         setAdapter();
         return view;
     }

@@ -6,17 +6,14 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
-import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
 import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
 import in.healthhunt.presenter.interactor.productInteractor.IProductInteractor;
@@ -69,7 +66,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
     @Override
     public void fetchTagsArticle(int offset, int limit) {
 
-        Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
+        /*Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
         String tags = "";
         Iterator iterator = tagIds.iterator();
         while (iterator.hasNext()) {
@@ -77,21 +74,39 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
             if(iterator.hasNext()){
                 tags = tags + ",";
             }
-        }
+        }*/
+
+
+        User user = User.getCurrentUser();
+        String tags = user.getTagList();
         Log.i("TAG1111", "ids = " + tags);
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
 
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TAGS, tags);
+        map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
 
-        IArticleInteractor.fetchArticle(mContext, ArticleParams.BASED_ON_TAGS, map, this);
+        List<String> categories = IMyFeedView.getCategories();
+        if(categories != null && !categories.isEmpty() && !categories.contains("1")) {  // 1 For ALL
+            IArticleInteractor.fetchArticlesCategory(mContext, ArticleParams.BASED_ON_TAGS, map, categories,this);
+        }
+        else {
+            IArticleInteractor.fetchArticle(mContext, ArticleParams.BASED_ON_TAGS, map, this);
+        }
     }
 
     @Override
     public void fetchTrendingArticle(int offset, int limit) {
+        //  String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TRENDING, String.valueOf(1));
+        map.put(ArticleParams.QTRANSLANG, ArticleParams.ENGLISH_LAN);
+        // map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.TRENDING_ARTICLES, map, this);
@@ -99,17 +114,31 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchLatestArticle(int offset, int limit) {
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
+        map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
-        IArticleInteractor.fetchArticle(mContext, ArticleParams.LATEST_ARTICLES, map, this);
+
+        List<String> categories = IMyFeedView.getCategories();
+        if(categories != null && !categories.isEmpty() && !categories.contains("1")) {  // 1 For ALL
+            IArticleInteractor.fetchArticlesCategory(mContext, ArticleParams.LATEST_ARTICLES, map, categories, this);
+        }
+        else {
+            IArticleInteractor.fetchArticle(mContext, ArticleParams.LATEST_ARTICLES, map, this);
+        }
     }
 
     @Override
     public void fetchSponsoredArticle(String type, int offset, int limit) {
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.SPONSORED, type);
+        map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.SPONSORED_ARTICLES, map, this);
@@ -120,6 +149,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
         IProductInteractor.fetchProduct(mContext, ArticleParams.TOP_PRODUCTS, map, this);
@@ -131,6 +161,7 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(offset));
         map.put(ArticleParams.LIMIT, String.valueOf(limit));
         map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
@@ -159,12 +190,12 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
     }
 
     @Override
-    public List<ProductPostItem> getTopProductArticles() {
+    public List<ProductPostItem> getTopProducts() {
         return mTopProduct;
     }
 
     @Override
-    public List<ProductPostItem> getLatestProductArticles() {
+    public List<ProductPostItem> getLatestProducts() {
         return mLatestProduct;
     }
 

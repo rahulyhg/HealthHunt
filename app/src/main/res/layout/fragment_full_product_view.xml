@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/full_view_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,4 +21,4 @@
         <include layout="@layout/full_article_comment_view" />
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

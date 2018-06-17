@@ -109,9 +109,9 @@
                     android:textSize="14sp"
                     android:gravity="left|center"
                     android:textColor="@android:color/white"
-                    android:text="367"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="top"
+                    android:maxLength="6"
                     />
 
             </LinearLayout>

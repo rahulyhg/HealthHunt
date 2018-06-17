@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.activeandroid.query.Select;
 
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.model.articles.commonResponse.CategoriesItem;
 import in.healthhunt.model.articles.commonResponse.Collections;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
@@ -56,6 +58,9 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     @BindView(R.id.top_navigation)
     BottomNavigationView mNavigation;
 
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
+
     private int mNavigationType;
     private IHomeView IHomeView;
 
@@ -65,8 +70,7 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
         IHomeView = (IHomeView) getActivity();
         IMyHuntsProductsPresenter = new MyHuntsShopPresenterImp(getContext(), this);
         mNavigationType = ArticleParams.SAVED;
-        IHomeView = (IHomeView) getActivity();
-        String userId = User.getUser().getUserId();//HealthHuntPreference.getString(getContext(), Constants.USER_ID);
+        String userId = User.getCurrentUser().getUserId();//HealthHuntPreference.getString(getContext(), Constants.USER_ID);
         Log.i("TAGUSRRID", "USER ID " + userId);
         IMyHuntsProductsPresenter.fetchProducts(userId);
         fetchDownloadProducts();
@@ -121,6 +125,19 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     @Override
     public void updateAdapter() {
         mProductViewer.getAdapter().notifyDataSetChanged();
+        updateVisibility();
+    }
+
+    public void updateVisibility(){
+        int count = IMyHuntsProductsPresenter.getCount();
+        if(count == 0){
+            mNoRecords.setVisibility(View.VISIBLE);
+            mProductViewer.setVisibility(View.GONE);
+        }
+        else {
+            mNoRecords.setVisibility(View.GONE);
+            mProductViewer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -136,6 +153,19 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
         IHomeView.loadNonFooterFragment(fragmentName, bundle);
+    }
+
+    @Override
+    public void updateSavedArticle(ArticlePostItem articlePostItem) {
+        IHomeView.updateMyFeedArticle(articlePostItem);
+        showToast(articlePostItem.getCurrent_user());
+    }
+
+    @Override
+    public void updateSavedProduct(ProductPostItem productPostItem) {
+        IHomeView.updateMyFeedProduct(productPostItem);
+        IHomeView.updateShop(productPostItem);
+        showToast(productPostItem.getCurrent_user());
     }
 
     @Override
@@ -207,6 +237,8 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
                         dialog.dismiss();
                         List<ProductPostItem> productPostItems = IMyHuntsProductsPresenter.getProductList();
                         if(productPostItems != null && !productPostItems.isEmpty()){
+                            ProductPostItem productPostItem = productPostItems.get(position);
+                            ProductPostItem.removeProduct(productPostItem.getProduct_id());
                             productPostItems.remove(position);
                             updateAdapter();
                         }
@@ -314,5 +346,14 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     public void updateSavedData(ProductPostItem postItem){
         IMyHuntsProductsPresenter.updateProductSaved(postItem);
         updateAdapter();
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 }

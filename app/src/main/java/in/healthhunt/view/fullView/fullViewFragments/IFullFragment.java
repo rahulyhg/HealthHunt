@@ -25,5 +25,6 @@ public interface IFullFragment {
     void loadFragment(String fragmentName, Bundle bundle);
     void updateProductSaved(ProductPostItem postItem);
     void updateArticleSaved(ArticlePostItem articlePostItem);
+    void updateVideoSaved(ArticlePostItem articlePostItem);
 }
 

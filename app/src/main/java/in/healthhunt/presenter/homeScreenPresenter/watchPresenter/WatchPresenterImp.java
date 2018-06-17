@@ -111,18 +111,27 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
     @Override
     public void fetchVideoArticles() {
         IWatchView.showProgress();
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
-        map.put(ArticleParams.FORMAT, ArticleParams.POST_FORMAT_VIDEO);
-        IArticleInteractor.fetchAllArticle(mContext, map, this);
+        map.put(filter, ArticleParams.POST_FORMAT_VIDEO);
+        map.put(ArticleParams.APP, String.valueOf(1));
+
+        List<String> categories = IWatchView.getCategories();
+        if(categories != null && !categories.isEmpty() && !categories.contains("1")) {  // 1 For ALL
+            IArticleInteractor.fetchAllArticleCategory(mContext, map, categories, this);
+        }
+        else {
+            IArticleInteractor.fetchAllArticle(mContext, map, this);
+        }
     }
 
     @Override
     public ArticlePostItem getArticle(int pos) {
         ArticlePostItem postItem = null;
         if(mVideoArticles != null){
-         postItem = mVideoArticles.get(pos);
+            postItem = mVideoArticles.get(pos);
         }
         return postItem;
     }

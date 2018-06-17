@@ -65,7 +65,7 @@ public class MyHuntsVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         ArticlePostItem postsItem = IMyHuntsVideoPresenter.getVideo(pos);
         if(postsItem != null) {
-            String url = postsItem.getVideo_thumbnail_icon();
+            String url = postsItem.getVideo_thumbnail();
             Log.i("TAG11", "url " + url);
             if(url != null) {
                 Glide.with(mContext).load(url).placeholder(R.drawable.artical).into(holder.mArticleImage);
@@ -82,8 +82,10 @@ public class MyHuntsVideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryView.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryView.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }

@@ -49,7 +49,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
+    // private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
+
+    private final static String BASE_URL = "https://staging.healthhunt.in/wp-json/sd2/v0.1/";
 
     private final String authUrl = "/wp-json/sd2/v0.1/";
 
@@ -240,6 +242,16 @@ public class WebServicesWrapper {
 
     }
 
+    public Call<HHResponse<ArticleData>> fetchArticlesCategory(Map<String, String> params, List<String> category, ResponseResolver<HHResponse<ArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<ArticleData>> loginResponseCall = webServices.fetchArticlesCategory(params, category);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
     public Call<HHResponse<ProductData>> fetchProducts(Map<String, String> params, ResponseResolver<HHResponse<ProductData>> responseResponseResolver) {
 
         Call<HHResponse<ProductData>> loginResponseCall = webServices.fetchProducts(params);
@@ -365,6 +377,27 @@ public class WebServicesWrapper {
         return loginResponseCall;
 
     }
+
+    public Call<HHResponse<ArticleData>> searchArticles(Map<String, String> params, ResponseResolver<HHResponse<ArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<ArticleData>> loginResponseCall = webServices.searchArticles(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<TagData>> fetchCategories(Map<String, String> params, ResponseResolver<HHResponse<TagData>> responseResponseResolver) {
+
+        Call<HHResponse<TagData>> loginResponseCall = webServices.fetchCategories(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
 
 
 /*

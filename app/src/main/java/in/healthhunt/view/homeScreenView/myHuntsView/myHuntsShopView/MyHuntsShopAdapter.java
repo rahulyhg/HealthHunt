@@ -14,8 +14,10 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import in.healthhunt.R;
+import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntsShopPresenter.IMyHuntsProductsPresenter;
 
@@ -85,22 +87,22 @@ public class MyHuntsShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
 
-            String productName = postsItem.getPost_name();
-            if(productName != null) {
+            Title title = postsItem.getTitle();
+
+            if(title != null) {
+                String productName = title.getRendered();
                 holder.mProductName.setText(productName);
             }
             else {
                 holder.mProductName.setText("");
             }
 
-            String brandName = postsItem.getCompany_name();
-            Log.i("TAGPRODU", "type " + brandName);
-            if(brandName != null) {
-                holder.mProductType.setText(brandName);
+            Author author = postsItem.getAuthor();
+            if(author != null) {
+                String authorName = author.getName();
+                holder.mProductType.setText(authorName);
             }
-            else {
-                holder.mProductType.setText("");
-            }
+
 
             CurrentUser currentUser = postsItem.getCurrent_user();
             if(currentUser != null) {

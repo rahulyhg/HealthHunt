@@ -64,6 +64,15 @@ public class User extends Model{
 	@Column(name = "username")
 	private String username;
 
+	@Column(name = "bio")   //not coming from  server
+	private String bio;
+
+	@Column(name = "tags")  //not coming from  server
+	private String tagList;
+
+	@Column(name = "currentLogin")  //not coming from  server
+	private boolean currentLogin;
+
 	/*public void setCapabilities(Capabilities capabilities){
 		this.capabilities = capabilities;
 	}
@@ -72,6 +81,30 @@ public class User extends Model{
 		return capabilities;
 	}
 */
+	public boolean isCurrentLogin() {
+		return currentLogin;
+	}
+
+	public void setCurrentLogin(boolean currentLogin) {
+		this.currentLogin = currentLogin;
+	}
+
+	public String getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(String tagList) {
+		this.tagList = tagList;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
 	public void setUserImage(String  userImage){
 		this.userImage = userImage;
 	}
@@ -208,9 +241,19 @@ public class User extends Model{
 		return username;
 	}
 
-	public static User getUser(){
-		return new Select().from(User.class).executeSingle();
+	public static User getUser(String user_id){
+		return new Select().from(User.class).where("user_id = ?" , user_id).executeSingle();
 	}
+
+	public static User getCurrentUser(){
+		return new Select().from(User.class).where("currentLogin = ?" , true).executeSingle();
+	}
+
+	public static List<User> getAllUser(){
+		return new Select().from(User.class).execute();
+	}
+
+
 
 	@Override
 	public String toString(){

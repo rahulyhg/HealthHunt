@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.bumptech.glide.Glide;
@@ -106,7 +107,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
     @BindView(R.id.full_article_bookmark)
     ImageView mBookMark;
 
-    @BindView(R.id.youtube_player_view)
+   // @BindView(R.id.youtube_player_view)
     YouTubePlayerView mYouTubePlayerView;
 
     @BindView(R.id.overlay_video_view)
@@ -186,7 +187,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
                     //OR
 
                     //cue the video
-                    mYouTubePlayer.cueVideo(IFullPresenter.getArticle().getPost_youtube_id());
+                    mYouTubePlayer.cueVideo("3gFAduagfaE"/*IFullPresenter.getArticle().getPost_youtube_id()*/);
 
                     //if you want when activity start it should be in full screen uncomment below comment
                     //youTubePlayer.setFullscreen(true);
@@ -357,6 +358,11 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
 
     }
 
+    @Override
+    public void updateVideoSaved(ArticlePostItem articlePostItem) {
+
+    }
+
     @OnClick(R.id.full_article_bookmark)
     void onBookMark(){
         CurrentUser currentUser = null;
@@ -518,6 +524,7 @@ public class FullVideoActivity extends YouTubeBaseActivity implements IFullFragm
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
                 storeArticle();
+                Toast.makeText(getApplicationContext(), getString(R.string.downloaded_successfully), Toast.LENGTH_SHORT).show();
             }
         });
 

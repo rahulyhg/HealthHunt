@@ -15,8 +15,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
-import java.util.Set;
-
 import framework.retrofit.RestError;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
@@ -43,7 +41,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     private Context mContext;
 
     public LoginPresenterImpl(Activity activity) {
-         mContext = activity.getApplicationContext();
+        mContext = activity.getApplicationContext();
         ILoginView = (ILoginView) activity;
         ILoginInteractor = new LoginInteractorImpl();
     }
@@ -51,51 +49,89 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     @Override
     public void validateCredentialsLogIn(String email, String password) {
         if(!email.isEmpty() && !password.isEmpty()) {
-            HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, true);
-            ILoginView.onShowProgress();
-            ILoginInteractor.login(mContext, createLoginRequest(email,password,null, null), this);
+
+            if(email.contains("@") && email.contains(".")) {
+                HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_NORMAL, true);
+                ILoginView.onShowProgress();
+                ILoginInteractor.login(mContext, createLoginRequest(email, password, null, null), this);
+                return;
+            }
         }
-        else {
-            String str = mContext.getResources().getString(R.string.email_password_blank);
-            ILoginView.showToast(str);
+
+        String str = mContext.getString(R.string.email_validation_msg);
+        if(email.isEmpty()){
+            str = mContext.getString(R.string.email_validation_msg);
         }
+        else if(password.isEmpty()){
+            str = mContext.getString(R.string.password_validation_msg);
+        }
+        ILoginView.showLoginAlert(str);
     }
 
 
     @Override
     public void validateCredentialsSignUp(String username, String gender, String email, String password) {
-        if(!username.isEmpty() && !password.isEmpty()) {
-            ILoginView.onShowProgress();
+        if(!email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
             //signup
 
-            if(username == null || username.isEmpty()) {
+           /* if(username == null || username.isEmpty()) {
                 username = email;
-            }
+            }*/
+           if(!email.contains("@") || !email.contains(".")){
+               String str = mContext.getString(R.string.email_validation_msg);
+               ILoginView.showLoginAlert(str);
+               return;
+           }
+
+           if(email.contains(".")){
+               int index = email.indexOf(".");
+               int size = email.length();
+               Log.i("TAGLOGIN" , "Index " + index + " size " + size);
+               if(index+2 >= size){
+                   String str = mContext.getString(R.string.email_validation_msg);
+                   ILoginView.showLoginAlert(str);
+                   return;
+               }
+
+           }
 
             if(gender == null || gender.isEmpty()) {
                 gender = "Not specified";
             }
 
-            SignUpRequest signUpRequest = createSignUpRequest(username, gender, username, password);
+            ILoginView.onShowProgress();
+            SignUpRequest signUpRequest = createSignUpRequest(username, gender, email, password);
             ILoginInteractor.signUp(mContext, signUpRequest, this);
         }
         else {
-            String str = mContext.getResources().getString(R.string.email_password_blank);
-            ILoginView.showToast(str);
+            String str = mContext.getString(R.string.username_validation_msg);
+            if(username.isEmpty()){
+                str = mContext.getString(R.string.username_validation_msg);
+            }
+            else if(email.isEmpty()){
+                str = mContext.getString(R.string.email_validation_msg);
+            }
+            else if(password.isEmpty()){
+                str = mContext.getString(R.string.password_validation_msg);
+            }
+
+            ILoginView.showLoginAlert(str);
         }
-        //ILoginView.onHideProgress();
     }
 
     @Override
     public void forgotPassword(String email, String username) {
-        if(!email.isEmpty() || !username.isEmpty()) {
-            ILoginView.onShowProgress();
-            ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
-            ILoginInteractor.resetLoginPassword(mContext, request, this);
+        String str = mContext.getString(R.string.email_validation_msg);
+        if(!email.isEmpty()) {
+            if(email.contains("@") && email.contains(".")) {
+                ILoginView.onShowProgress();
+                ForgotPasswordRequest request = createForgotPasswordRequest(email, username);
+                ILoginInteractor.resetLoginPassword(mContext, request, this);
+                return;
+            }
         }
-        else {
-            ILoginView.showToast("Enter the email");
-        }
+
+        ILoginView.showLoginAlert(str);
     }
 
     private boolean validateGoogleServerClientID(Context context) {
@@ -168,21 +204,52 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     @Override
     public void onSuccess(User user) {
         ILoginView.onHideProgress();
-        storeUserInfo(user);
 
-        Set<String> tags = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
-        if(tags != null && !tags.isEmpty()) {
-            HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_FIRST_KEY, true);
-            ILoginView.startHomeActivity();
-        }
-        else {
+        if(!isUserExit(user)){
+            storeUserInfo(user);
             ILoginView.startTagActivity();
         }
+        else {
+            User savedUser = User.getUser(user.getUserId());
+            savedUser.setCurrentLogin(true);
+            savedUser.save();
+            if (!isTagAvailabel(savedUser)) {
+                ILoginView.startTagActivity();
+            }
+            else {
+                ILoginView.startHomeActivity();
+            }
+        }
+
+        /*Set<String> tags = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
+        if(tags != null && !tags.isEmpty()) {
+            HealthHuntPreference.putBoolean(mContext, Constants.IS_LOGIN_FIRST_KEY, true);
+
+        }
+        else {
+
+        }*/
+    }
+
+    private boolean isUserExit(User user){
+        User tempUser = User.getUser(user.getUserId());
+        if(tempUser != null){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isTagAvailabel(User user){
+        if(user.getTagList() != null && !user.getTagList().isEmpty()){
+            return true;
+        }
+        return false;
     }
 
     private void storeUserInfo(User user) {
+        user.setCurrentLogin(true);
         user.save();
-       // Log.i("TAG", "IMAGE " + user.getUser_image() + " ID " + user.getId());
+        // Log.i("TAG", "IMAGE " + user.getUser_image() + " ID " + user.getId());
         //Log.i("TAG", "URL " + user.getUrl());
        /* HealthHuntPreference.putString(mContext, Constants.USER_ID, String.valueOf(user.getId()));
         HealthHuntPreference.putString(mContext, Constants.USER_NAME, String.valueOf(user.getName()));
@@ -202,7 +269,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     public void onNewUserSuccess(HHResponse<UserData> user) {
         ILoginView.onHideProgress();
         storeUserInfo(user.getData().getUser());
-        ILoginView.showLoginAlert(user.getMessage());
+        ILoginView.showSignUpSuccessAlert(user.getMessage());
     }
 
     @Override
@@ -256,7 +323,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
 
     private SignUpRequest createSignUpRequest(String username, String gender, String email, String password) {
         SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.setmUserName(username);
+        signUpRequest.setmName(username);
         signUpRequest.setmGender(gender);
         signUpRequest.setmEmail(email);
         signUpRequest.setmPassword(password);

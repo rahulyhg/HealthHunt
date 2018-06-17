@@ -92,8 +92,10 @@ public class MyHuntsArticleAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryName.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryName.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }

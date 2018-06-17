@@ -6,13 +6,11 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.tags.TagRequest;
 import in.healthhunt.presenter.interactor.tagInteractor.ITagInteractor;
@@ -80,13 +78,13 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
 
     @Override
     public void addTag(TagItem tag) {
-         if(mSelectedList == null) {
-             mSelectedList = new ArrayList<TagItem>();
-         }
+        if(mSelectedList == null) {
+            mSelectedList = new ArrayList<TagItem>();
+        }
         Log.d(TAG, "Select tag");
-         if(!mSelectedList.contains(tag)) {
-             mSelectedList.add(tag);
-         }
+        if(!mSelectedList.contains(tag)) {
+            mSelectedList.add(tag);
+        }
     }
 
     @Override
@@ -121,11 +119,20 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
 
     @Override
     public void storeSelectedTags() {
-        Set<String> tags = new HashSet<String>();
-        for(TagItem tagItem: mSelectedList){
-            tags.add(String.valueOf(tagItem.getId()));
+        User user = User.getCurrentUser();
+        String tags  = "";
+        for(int i=0; i<mSelectedList.size(); i++){
+            TagItem tagItem  = mSelectedList.get(i);
+            if(i < mSelectedList.size() - 1){
+                tags = tags + tagItem.getId() + Constants.SEPARATOR;
+            }
+            else {
+                tags = tags + tagItem.getId();
+            }
         }
-        HealthHuntPreference.putSet(mContext, Constants.SELECTED_TAGS_KEY, tags);
+        user.setTagList(tags);
+        user.save();
+        //HealthHuntPreference.putSet(mContext, Constants.SELECTED_TAGS_KEY, tags);
     }
 
     @Override
@@ -155,7 +162,7 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
 
     @Override
     public void onSuccess() {
-            ITagView.onHideProgress();
+        ITagView.onHideProgress();
     }
 
     @Override
@@ -171,10 +178,32 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     public void setTags(List<TagItem> tags) {
         if(tags != null && !tags.isEmpty()) {
             mTagList.addAll(tags);
+            updateSelectedTagList();
             ITagView.updateAdapter();
+            ITagView.updateSearchAdapter();
         }
         else {
             Log.i("TAG123", "Tag List is null");
+        }
+    }
+
+    private void updateSelectedTagList() {
+        User user = User.getCurrentUser();
+        String tags = user.getTagList();
+
+        Log.i("TAGSTRINGSET", "tags " + tags);
+        if(mSelectedList != null) {
+            mSelectedList.clear();
+        }
+
+        if(mTagList != null && tags != null) {
+            for(TagItem tagItem: mTagList){
+                if(tags.contains(String.valueOf(tagItem.getId()))){
+                    Log.i("TAGSTRINGSET", "tagId " + tagItem.getId());
+                    tagItem.setPressed(true);
+                    addTag(tagItem);
+                }
+            }
         }
     }
 }

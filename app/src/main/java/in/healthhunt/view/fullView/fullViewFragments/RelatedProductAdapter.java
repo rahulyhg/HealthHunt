@@ -22,6 +22,7 @@ import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.presenter.fullPresenter.IFullPresenter;
 
@@ -93,10 +94,16 @@ public class RelatedProductAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
 
 
-            String productName = postsItem.getPost_name();
+            /*String productName = postsItem.getPost_name();
             Log.i("TAGPRODU", "Product NAme " + productName);
             if(productName != null) {
                 holder.mProductName.setText(productName);
+            }*/
+
+            Title title = postsItem.getTitle();
+            if(title != null){
+                String render = title.getRendered();
+                holder.mProductName.setText(render);
             }
 
             String brandName = postsItem.getCompany_name();

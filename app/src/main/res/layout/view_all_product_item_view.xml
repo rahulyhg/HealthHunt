@@ -49,6 +49,7 @@
                 android:textSize="14sp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
+                android:maxLength="20"
                 android:maxLines="1"/>
 
             <LinearLayout
@@ -66,6 +67,7 @@
                     android:gravity="right|center"
                     android:textColor="@color/hh_green_light2"
                     android:textSize="14sp"
+                    android:maxLength="10"
                     android:maxLines="1"
                     />
 
@@ -78,6 +80,7 @@
                     android:textColor="@color/hh_green_light2"
                     android:textSize="14sp"
                     android:layout_marginStart="2dp"
+                    android:maxLength="10"
                     android:maxLines="1"/>
             </LinearLayout>
 

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
@@ -22,6 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myHuntPresenter.myHuntArticlesPresenter.IMyHuntsArticlesPresenter;
@@ -41,6 +44,9 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
 
     @BindView(R.id.top_navigation)
     BottomNavigationView mNavigation;
+
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
 
     private int mNavigationType;
 
@@ -63,6 +69,8 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
         mNavigation.setVisibility(View.GONE);
         removeShiftMode(mNavigation);
         mNavigationType = ArticleParams.SAVED;
+        //mArticleViewer.setVisibility(View.GONE);
+        //mNoRecords.setVisibility(View.VISIBLE);
 
         mNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -119,6 +127,16 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
 
     @Override
     public void loadFragment(String fragmentName, Bundle bundle) {
+
+    }
+
+    @Override
+    public void updateSavedArticle(ArticlePostItem articlePostItem) {
+
+    }
+
+    @Override
+    public void updateSavedProduct(ProductPostItem productPostItem) {
 
     }
 

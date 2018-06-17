@@ -16,13 +16,15 @@ public interface Constants {
     String TIME_STAMP = "timestamp";
     String CONTENT_TYPE = "Content-Type";
     String SESSION_TOKEN = "sessionToken";
-    String SELECTED_TAGS_KEY = "selected_tags_key";
-    String IS_LOGIN_FIRST_KEY = "is_login_first_key";
+   // String SELECTED_TAGS_KEY = "selected_tags_key";
+   // String IS_LOGIN_FIRST_KEY = "is_login_first_key";
     String IS_LOGIN_NORMAL = "is_login_normal_key";
     String SOCIAL_LOGIN= "social_login_key";
     String FACEBOOK = "facebook";
     String GOOGLE = "google";
     String AUTHCODE = "authCode";
+    String SEPARATOR = ",";
+    String IS_RELATED = "is_related";
 
     /*String USER_ID = "user_id";
     String USER_URL = "user_url";
@@ -44,6 +46,7 @@ public interface Constants {
     int FRAGMENT_WATCH = 2;
     int FRAGMENT_SHOP = 3;
     int FULL_VIDEO_REQUEST_CODE = 1001;
+    String SEARCH_TEXT_KEY = "search_text_key";
 
 
     String IS_DOWNLOADED = "is_Downloaded";

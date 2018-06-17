@@ -27,7 +27,9 @@ import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
@@ -101,9 +103,15 @@ public class LatestProductFragment extends Fragment {
 
     private void setContent() {
 
-        String productName = mProductPostItem.getProduct_type_other_name();
+        /*String productName = mProductPostItem.getProduct_type_other_name();
         if(productName != null) {
             mProductName.setText(productName);
+        }*/
+
+        Title title = mProductPostItem.getTitle();
+        if(title != null){
+            String render = title.getRendered();
+            mProductName.setText(render);
         }
 
 
@@ -111,6 +119,7 @@ public class LatestProductFragment extends Fragment {
         if(price != null) {
             String postQuantity = mProductPostItem.getPost_quantity();
             String rs = getContext().getString(R.string.rs);
+            price = HealthHuntUtility.addSeparator(price);
             rs = rs + " " + price + "/" + postQuantity;
             mProductPrice.setText(rs);
         }

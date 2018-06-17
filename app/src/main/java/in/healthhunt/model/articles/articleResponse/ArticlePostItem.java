@@ -3,6 +3,8 @@ package in.healthhunt.model.articles.articleResponse;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -101,7 +103,7 @@ public class ArticlePostItem extends Model{
 	private List<TagsItem> tags;
 
 	@Column(name = "share_count")
-	private int share_count;
+	private String share_count;
 
 	@Column(name = "video_thumbnail")
 	private String video_thumbnail;
@@ -121,7 +123,7 @@ public class ArticlePostItem extends Model{
 	@Column(name = "is_free_trial")
 	private String is_free_trial;
 
-	@Column(name = "is_Video")
+	@Column(name = "is_Video")  // not from server
 	private boolean isVideo;
 
 	public boolean isVideo() {
@@ -332,11 +334,11 @@ public class ArticlePostItem extends Model{
 		return tags;
 	}
 
-	public void setShare_count(int share_count){
+	public void setShare_count(String share_count){
 		this.share_count = share_count;
 	}
 
-	public int getShare_count(){
+	public String getShare_count(){
 		return share_count;
 	}
 
@@ -394,6 +396,14 @@ public class ArticlePostItem extends Model{
 
 	public Synopsis getSynopsis(){
 		return synopsis;
+	}
+
+	public static void removeArticle(String article_id){
+		new Delete().from(ArticlePostItem.class).where("article_id = ?" , article_id).execute();
+	}
+
+	public static ArticlePostItem getArticle(String article_id){
+		return new Select().from(ArticlePostItem.class).where("article_id = ?" , article_id).executeSingle();
 	}
 
 

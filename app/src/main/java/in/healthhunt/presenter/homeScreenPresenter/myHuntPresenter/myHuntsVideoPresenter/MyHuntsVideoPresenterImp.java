@@ -53,10 +53,11 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
     public void onArticleSuccess(List<ArticlePostItem> items, int type) {
         mVideoCount--;
 
-        if(items == null || items.isEmpty()){
+        /*if(items == null || items.isEmpty()){
             Log.i("TAGITEMS", "Video Data is empty");
             return;
-        }
+        }*/
+
         Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
             case ArticleParams.SAVED:
@@ -100,6 +101,7 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
                             if(!bookMarkInfo.isBookMark()){
                                 updateVideoSaved(postItem);
                             }
+                            IMyHuntsView.updateSavedArticle(postItem);
                         }
                         break;
                     }
@@ -274,17 +276,22 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
     private void fetchSavedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+
+        //String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_SAVED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filter " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_SAVED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_VIDEO);
+
+        map.put(ArticleParams.APP, String.valueOf(1));
+        //map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         map.put(ArticleParams.FORMAT, ArticleParams.POST_FORMAT_VIDEO);
@@ -295,17 +302,21 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
     private void fetchApprovedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+        //String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_CREATED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filter " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_CREATED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_VIDEO);
+
+        map.put(ArticleParams.APP, String.valueOf(1));
+        //map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         map.put(ArticleParams.FORMAT, ArticleParams.POST_FORMAT_VIDEO);
@@ -316,17 +327,21 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
     private void fetchReceivedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+        //String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_RECEIVED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filter " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_RECEIVED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_VIDEO);
+
+        map.put(ArticleParams.APP, String.valueOf(1));
+        //map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         map.put(ArticleParams.FORMAT, ArticleParams.POST_FORMAT_VIDEO);

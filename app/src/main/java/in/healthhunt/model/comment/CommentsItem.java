@@ -1,5 +1,7 @@
 package in.healthhunt.model.comment;
 
+import com.google.gson.annotations.Expose;
+
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.Content;
 
@@ -8,11 +10,15 @@ public class CommentsItem{
 	private int parent;
 	private String image;
 	private int post;
+
+	@Expose
 	private Author author;
 	private String link;
 	private int id;
 	private String type;
 	private String date_gmt;
+
+	@Expose
 	private Content content;
 	private String status;
 

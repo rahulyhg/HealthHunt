@@ -76,11 +76,18 @@ public interface ArticleParams {
     String COLLECTION = "collection";
     String AUTHOR = "author";
     String COLLECTION_SAVED = "saved";
+    String COLLECTION_SAVED_MERKET = "saved_market";
     String COLLECTION_CREATED = "created";
     String COLLECTION_RECEIVED = "received";
     String FETCH = "fetch";
     String NOTI_ALL = "all";
     String NOTI_MARK_AS_COMPLETED = "mark_as_completed";
+    String SEARCH = "search";
+    String APP = "app";
+    String CATEGORIES = "categories";
+    String QTRANSLANG = "qtranslang";
+    String ENGLISH_LAN = "en";
+    String TAGS_FILTER = "tags_filter[]";
 
     String PRODUCT_TYPE_ID = "productType";
     String BRAND = "brand";

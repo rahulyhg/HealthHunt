@@ -26,7 +26,9 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
-
+        <item name="colorPrimary">@color/hh_green_light2</item>
+        <item name="colorPrimaryDark">@color/hh_green_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="InvisibleProgress">
