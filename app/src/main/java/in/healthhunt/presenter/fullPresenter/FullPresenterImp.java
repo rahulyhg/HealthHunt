@@ -160,6 +160,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
         mLimit = 10;
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.POST_ID, id);
+        map.put(ArticleParams.ORDER_BY, ArticleParams.ID);
         map.put(ArticleParams.OFFSET, String.valueOf(mOffset));
         map.put(ArticleParams.LIMIT, String.valueOf(mLimit));
         ICommentInteractor.fetchComments(mContext, map, this);
@@ -459,6 +460,7 @@ public class FullPresenterImp implements IFullPresenter, IArticleInteractor.OnFu
 
         switch (IFullFragment.getPostType()){
             case ArticleParams.ARTICLE:
+            case ArticleParams.VIDEO:
                 mArticlePost.setComments(String.valueOf(post_comment));
                 break;
 

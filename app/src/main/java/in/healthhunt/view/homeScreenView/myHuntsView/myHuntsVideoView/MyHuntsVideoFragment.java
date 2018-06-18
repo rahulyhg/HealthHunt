@@ -158,12 +158,27 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
     @Override
     public void updateSavedArticle(ArticlePostItem articlePostItem) {
         IHomeView.updateWatch(articlePostItem);
+        IHomeView.updateMyhuntsVideoSaved(articlePostItem);
         showToast(articlePostItem.getCurrent_user());
     }
 
     @Override
     public void updateSavedProduct(ProductPostItem productPostItem) {
         showToast(productPostItem.getCurrent_user());
+    }
+
+    @Override
+    public void deletePost(String id) {
+        List<ArticlePostItem> postItems = IMyHuntsVideoPresenter.getVideoList();
+        if(postItems !=null && !postItems.isEmpty()){
+            for(ArticlePostItem postItem: postItems){
+                if(postItem.getArticle_Id().equalsIgnoreCase(id)){
+                    postItems.remove(postItem);
+                    updateAdapter();
+                    break;
+                }
+            }
+        }
     }
 
     private void fetchDownloadVideos() {
@@ -216,7 +231,7 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
 
     @Override
     public void onLongClicked(int position) {
-        if(mNavigationType == ArticleParams.DOWNLOADED) {
+        if(mNavigationType == ArticleParams.DOWNLOADED || mNavigationType == ArticleParams.APPROVED) {
             showDialog(position);
         }
     }
@@ -244,8 +259,14 @@ public class MyHuntsVideoFragment extends Fragment implements IMyHuntsView, MyHu
                         dialog.dismiss();
                         List<ArticlePostItem> articlePostItems = IMyHuntsVideoPresenter.getVideoList();
                         if(articlePostItems != null && !articlePostItems.isEmpty()){
-                            articlePostItems.remove(position);
-                            updateAdapter();
+                            ArticlePostItem postItem = articlePostItems.get(position);
+                            if(mNavigationType == ArticleParams.DOWNLOADED) {
+                                articlePostItems.remove(position);
+                                updateAdapter();
+                            }
+                            else if(mNavigationType == ArticleParams.APPROVED){
+                                IMyHuntsVideoPresenter.deleteArticle(postItem.getArticle_Id());
+                            }
                         }
 
                     }

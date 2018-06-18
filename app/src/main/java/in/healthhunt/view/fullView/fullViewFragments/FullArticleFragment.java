@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,13 +23,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
@@ -69,7 +70,6 @@ import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
-import static android.icu.text.DateTimePatternGenerator.PatternInfo.OK;
 import static android.util.Log.i;
 
 /**
@@ -177,8 +177,8 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     private Unbinder mUnbinder;
     private int mType;
     private boolean isDownloaded;
-    private final int SHARE_REQUEST_CODE = 1001;
     private String mId;
+    private boolean scrollingToBottom;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -191,6 +191,13 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
     }
 
+    private static void scrollRecyclerViewToBottom(RecyclerView recyclerView) {
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if (adapter != null && adapter.getItemCount() > 0) {
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        }
+    }
+
     private void fetchArticleFromDataBase(String id) {
         IHomeView.showProgress();
         FetchArticlesTask productsTask = new FetchArticlesTask(id);
@@ -199,7 +206,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_full_article_view, container, false);
+        final View view = inflater.inflate(R.layout.fragment_full_article_view, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         IHomeView.setStatusBarTranslucent(true);
         IHomeView.hideBottomFooter();
@@ -213,6 +220,31 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         setContent();
         //mCommentContent.setOnFocusChangeListener(focusListener);
 
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                Rect r = new Rect();
+                view.getWindowVisibleDisplayFrame(r);
+                int screenHeight = view.getRootView().getHeight();
+
+                // r.bottom is the position above soft keypad or device button.
+                // if keypad is shown, the r.bottom is smaller than that before.
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    if (!scrollingToBottom) {
+                        scrollingToBottom = true;
+                        scrollRecyclerViewToBottom(mCommentViewer);
+                    }
+                }
+                else {
+                    // keyboard is closed
+                    scrollingToBottom = false;
+                }
+            }
+        });
         return view;
     }
 
@@ -341,6 +373,25 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         mCommentViewer.setLayoutManager(layoutManager);
         mCommentViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mCommentViewer.setAdapter(commentAdapter);
+
+        /*if (Build.VERSION.SDK_INT >= 11) {
+            recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v,
+                                           int left, int top, int right, int bottom,
+                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    if (bottom < oldBottom) {
+                        recyclerView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.smoothScrollToPosition(
+                                        recyclerView.getAdapter().getItemCount() - 1);
+                            }
+                        }, 100);
+                    }
+                }
+            });
+        }*/
     }
 
     @Override
@@ -720,7 +771,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, articlePost.getLink());
         sendIntent.setType("text/plain");
-        startActivityForResult(Intent.createChooser(sendIntent, getString(R.string.share)), SHARE_REQUEST_CODE);
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.share)));
     }
 
     private void updateBookMark(boolean isBookMark) {
@@ -748,7 +799,13 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
                 int id = item.getItemId();
                 switch (id){
                     case R.id.comment_edit:
-                        editComment(position);
+                        RecyclerView.Adapter adapter = mCommentViewer.getAdapter();
+                        if(adapter != null){
+                            CommentAdapter commentAdapter = (CommentAdapter) adapter;
+                            commentAdapter.addEditCommentPos(commentsItem.getId());
+                            commentAdapter.notifyDataSetChanged();
+                        }
+                        //editComment(position);
                         break;
                     case R.id.comment_delete:
                         IFullPresenter.deleteComment(String.valueOf(commentsItem.getId()));
@@ -768,6 +825,10 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
         CommentViewHolder holder = (CommentViewHolder) mCommentViewer.getChildViewHolder(mCommentViewer.getChildAt(position));
         CommentsItem commentsItem = IFullPresenter.getComment(position);
+
+        CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
+        adapter.addEditCommentPos(Integer.MIN_VALUE);  // To remove the edit options
+
         int id = commentsItem.getId();
         String content = holder.mCommentEditText.getText().toString();
 
@@ -963,16 +1024,6 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             super.onPostExecute(articlePostItem);
             IHomeView.hideProgress();
             IFullPresenter.updateArticle(articlePostItem);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        i("TAGSHARE", " RequestCode " + requestCode + "Result " + resultCode);
-        if(requestCode == SHARE_REQUEST_CODE && resultCode == OK){
-            Toast.makeText(getContext(), getString(R.string.share_successfully), Toast.LENGTH_SHORT).show();
         }
     }
 

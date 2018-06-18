@@ -1,6 +1,7 @@
 package in.healthhunt.presenter.interactor.likesInteractor;
 
 import android.content.Context;
+import android.util.Log;
 
 import framework.retrofit.ResponseResolver;
 import framework.retrofit.RestError;
@@ -21,12 +22,13 @@ public class LikesInteractorImpl implements ILikesInteractor {
         WebServicesWrapper.getInstance(context).updateLikes(id, likesRequest, new ResponseResolver<HHResponse<LikesInfo>>() {
             @Override
             public void onSuccess(HHResponse<LikesInfo> likesInfo, Response response) {
-                    finishListener.onLikesSuccess(likesInfo.getData());
+                Log.i("TAGTAGTALIKES", "LIKEs");
+                finishListener.onLikesSuccess(likesInfo.getData());
             }
 
             @Override
             public void onFailure(RestError error, String msg) {
-                    finishListener.onError(error);
+                finishListener.onError(error);
             }
         });
     }

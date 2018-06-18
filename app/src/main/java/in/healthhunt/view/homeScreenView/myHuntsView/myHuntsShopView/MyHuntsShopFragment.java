@@ -165,7 +165,22 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
     public void updateSavedProduct(ProductPostItem productPostItem) {
         IHomeView.updateMyFeedProduct(productPostItem);
         IHomeView.updateShop(productPostItem);
+        IHomeView.updateMyhuntsProductSaved(productPostItem);
         showToast(productPostItem.getCurrent_user());
+    }
+
+    @Override
+    public void deletePost(String id) {
+        List<ProductPostItem> postItems = IMyHuntsProductsPresenter.getProductList();
+        if(postItems !=null && !postItems.isEmpty()){
+            for(ProductPostItem postItem: postItems){
+                if(postItem.getProduct_id().equalsIgnoreCase(id)){
+                    postItems.remove(postItem);
+                    updateAdapter();
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -209,7 +224,7 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
 
     @Override
     public void onLongClicked(int position) {
-        if(mNavigationType == ArticleParams.DOWNLOADED) {
+        if(mNavigationType == ArticleParams.DOWNLOADED || mNavigationType == ArticleParams.APPROVED) {
             showDialog(position);
         }
     }
@@ -238,11 +253,15 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
                         List<ProductPostItem> productPostItems = IMyHuntsProductsPresenter.getProductList();
                         if(productPostItems != null && !productPostItems.isEmpty()){
                             ProductPostItem productPostItem = productPostItems.get(position);
-                            ProductPostItem.removeProduct(productPostItem.getProduct_id());
-                            productPostItems.remove(position);
-                            updateAdapter();
+                            if(mNavigationType == ArticleParams.DOWNLOADED) {
+                                ProductPostItem.removeProduct(productPostItem.getProduct_id());
+                                productPostItems.remove(position);
+                                updateAdapter();
+                            }
+                            else if(mNavigationType == ArticleParams.APPROVED){
+                                IMyHuntsProductsPresenter.deleteProduct(productPostItem.getProduct_id());
+                            }
                         }
-
                     }
                 })
                 .create();
@@ -334,7 +353,7 @@ public class MyHuntsShopFragment extends Fragment implements IMyHuntsView, MyHun
         @Override
         protected void onPostExecute(List<ProductPostItem> productPosts) {
             super.onPostExecute(productPosts);
-           // IHomeView.hideProgress();
+            // IHomeView.hideProgress();
             IMyHuntsProductsPresenter.updateDownloadList(productPosts);
         }
     }

@@ -814,6 +814,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     protected void handleMenuSearch() {
+        mSearchAction.setVisible(false);
         ActionBar action = getSupportActionBar(); //get the actionbar
 
         action.setDisplayShowCustomEnabled(true); //enable it to display a

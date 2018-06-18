@@ -20,4 +20,5 @@ public interface IMyHuntsView extends IView {
     void loadFragment(String fragmentName, Bundle bundle);
     void updateSavedArticle(ArticlePostItem articlePostItem);
     void updateSavedProduct(ProductPostItem productPostItem);
+    void deletePost(String id);
 }

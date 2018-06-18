@@ -32,6 +32,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     private IFullPresenter IFullPresenter;
     private Context mContext;
     private ClickListener mClickListener;
+    private int mEditCommentId = Integer.MIN_VALUE;
 
     public CommentAdapter(Context context, IFullPresenter fullPresenter) {
         mContext = context;
@@ -115,11 +116,27 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                     e.printStackTrace();
                 }
 
-                Log.i("TAGCOMMENT", "temp " + str);
+                Log.i("TAGCOMMENT", "comment ID " + commentsItem.getId());
                 holder.mCommentText.setText(str);
-                holder.mCommentText.setVisibility(View.VISIBLE);
-                holder.mCommentEditText.setVisibility(View.GONE);
-                holder.mCommentUpdate.setVisibility(View.GONE);
+                if(mEditCommentId > 0 && mEditCommentId == commentsItem.getId()) {
+                    /*holder.mCommentText.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setVisibility(View.GONE);
+                    holder.mCommentUpdate.setVisibility(View.GONE);*/
+                    holder.mCommentText.setVisibility(View.GONE);
+                    holder.mCommentEditText.setVisibility(View.VISIBLE);
+                    holder.mCommentUpdate.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setText("");
+                    holder.mCommentEditText.append(str.trim());
+                    //holder.mCommentEditText.setText(holder.mCommentText.getText().toString().trim());
+                    //holder.mCommentEditText.setSelection(holder.mCommentText.getText().toString().length() - 1);
+                    holder.mCommentEditText.requestFocus();
+                    //holder.mCommentEditText.setShowSoftInputOnFocus(true);
+                }
+                else {
+                    holder.mCommentText.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setVisibility(View.GONE);
+                    holder.mCommentUpdate.setVisibility(View.GONE);
+                }
             }
 
         }
@@ -137,5 +154,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     public interface ClickListener {
         void onMore(View v, int position);
         void update(View v, int position);
+    }
+
+    public void addEditCommentPos(int editCommentId){
+        mEditCommentId = editCommentId;
     }
 }

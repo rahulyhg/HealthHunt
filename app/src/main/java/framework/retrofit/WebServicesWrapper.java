@@ -24,6 +24,8 @@ import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.deletePost.DeleteArticleData;
+import in.healthhunt.model.deletePost.DeleteProductData;
 import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
@@ -397,6 +399,27 @@ public class WebServicesWrapper {
         return loginResponseCall;
 
     }
+
+    public Call<HHResponse<DeleteArticleData>> deleteArticle(String id, ResponseResolver<HHResponse<DeleteArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<DeleteArticleData>> loginResponseCall = webServices.deleteArticle(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<DeleteProductData>> deleteProduct(String id, ResponseResolver<HHResponse<DeleteProductData>> responseResponseResolver) {
+
+        Call<HHResponse<DeleteProductData>> loginResponseCall = webServices.deleteProduct(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
 
 
 

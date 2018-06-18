@@ -162,7 +162,16 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         List<String> location = listMap.get(Constants.CITY_FILTER);
         if(location != null && !location.isEmpty()){
             String city = location.get(0);
-            Log.i("TAGFILTERVA", " city "+ city);
+
+            if(city.contains(",")){
+                int index = city.indexOf(",");
+                city = city.substring(0, index);
+                Log.i("TAGFILTERVA", " city "+ city);
+            }
+
+            if(city != null){
+                city.trim();
+            }
             map.put(ArticleParams.LOCATION, city);
         }
 

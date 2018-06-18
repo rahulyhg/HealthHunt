@@ -28,7 +28,7 @@ import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
  */
 
 public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticleInteractor.OnArticleFinishListener,
-        IBookMarkInteractor.OnFinishListener {
+        IBookMarkInteractor.OnFinishListener, IArticleInteractor.OnDeleteFinishListener {
 
     private String TAG = MyHuntsVideoPresenterImp.class.getSimpleName();
     private IArticleInteractor IArticleInteractor;
@@ -109,6 +109,12 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
                 break;
         }
         IMyHuntsView.updateAdapter();
+    }
+
+    @Override
+    public void onDeleteArticleSuccess(ArticlePostItem item) {
+        IMyHuntsView.hideProgress();
+        IMyHuntsView.deletePost(item.getArticle_Id());
     }
 
     @Override
@@ -271,6 +277,12 @@ public class MyHuntsVideoPresenterImp implements IMyHuntsVideoPresenter, IArticl
                 mVideoSavedList.add(articlePostItem);
             }
         }
+    }
+
+    @Override
+    public void deleteArticle(String id) {
+        IMyHuntsView.showProgress();
+        IArticleInteractor.deleteArticle(mContext, id, this);
     }
 
     private void fetchSavedArticles(String userId) {

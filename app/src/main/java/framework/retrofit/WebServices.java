@@ -14,6 +14,8 @@ import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.deletePost.DeleteArticleData;
+import in.healthhunt.model.deletePost.DeleteProductData;
 import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
@@ -97,6 +99,13 @@ public interface WebServices {
 
  @GET("tags")
  Call<HHResponse<TagData>> fetchCategories(@QueryMap Map<String, String> params);
+
+ @POST("posts/{id}/delete")
+ Call<HHResponse<DeleteArticleData>> deleteArticle(@Path("id") String id);
+
+ @POST("posts/{id}/delete")
+ Call<HHResponse<DeleteProductData>> deleteProduct(@Path("id") String id);
+
 
 
     /*@Header("authToken") String token,*/

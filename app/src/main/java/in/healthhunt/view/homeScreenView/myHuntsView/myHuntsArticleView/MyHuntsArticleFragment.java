@@ -163,13 +163,29 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
     @Override
     public void updateSavedArticle(ArticlePostItem articlePostItem) {
         IHomeView.updateMyFeedArticle(articlePostItem);
+        IHomeView.updateMyhuntsArticleSaved(articlePostItem);
         showToast(articlePostItem.getCurrent_user());
     }
 
     @Override
     public void updateSavedProduct(ProductPostItem productPostItem) {
         IHomeView.updateMyFeedProduct(productPostItem);
+        IHomeView.updateMyhuntsProductSaved(productPostItem);
         showToast(productPostItem.getCurrent_user());
+    }
+
+    @Override
+    public void deletePost(String id) {
+        List<ArticlePostItem> postItems = IMyHuntsArticlePresenter.getArticleList();
+        if(postItems !=null && !postItems.isEmpty()){
+            for(ArticlePostItem postItem: postItems){
+                if(postItem.getArticle_Id().equalsIgnoreCase(id)){
+                    postItems.remove(postItem);
+                    updateAdapter();
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -213,7 +229,7 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
 
     @Override
     public void onLongClicked(int position) {
-        if(mNavigationType == ArticleParams.DOWNLOADED) {
+        if(mNavigationType == ArticleParams.DOWNLOADED || mNavigationType == ArticleParams.APPROVED) {
             showDialog(position);
         }
     }
@@ -240,11 +256,18 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         List<ArticlePostItem> articlePostItems = IMyHuntsArticlePresenter.getArticleList();
-                        if(articlePostItems != null && !articlePostItems.isEmpty()){
+
+                        if (articlePostItems != null && !articlePostItems.isEmpty()) {
                             ArticlePostItem articlePostItem = articlePostItems.get(position);
-                            ArticlePostItem.removeArticle(articlePostItem.getArticle_Id());
-                            articlePostItems.remove(position);
-                            updateAdapter();
+                            if(mNavigationType == ArticleParams.DOWNLOADED) {
+                                ArticlePostItem.removeArticle(articlePostItem.getArticle_Id());
+                                articlePostItems.remove(position);
+                                updateAdapter();
+                            }
+
+                            else if(mNavigationType == ArticleParams.APPROVED){
+                                IMyHuntsArticlePresenter.deletePost(articlePostItem.getArticle_Id());
+                            }
                         }
 
                     }

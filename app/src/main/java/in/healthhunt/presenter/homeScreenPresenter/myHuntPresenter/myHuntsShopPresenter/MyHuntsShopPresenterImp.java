@@ -28,7 +28,7 @@ import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
  */
 
 public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProductInteractor.OnProductFinishListener,
-        IBookMarkInteractor.OnFinishListener {
+        IBookMarkInteractor.OnFinishListener, IProductInteractor.OnDeleteFinishListener {
 
     private String TAG = MyHuntsShopPresenterImp.class.getSimpleName();
     private Context mContext;
@@ -111,6 +111,12 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
             IMyHuntsView.hideProgress();
             IMyHuntsView.updateAdapter();
         }
+    }
+
+    @Override
+    public void onProductDeleteSuccess(ProductPostItem item) {
+        IMyHuntsView.hideProgress();
+        IMyHuntsView.deletePost(item.getProduct_id());
     }
 
     @Override
@@ -274,6 +280,12 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                 mProductSavedList.add(productPostItem);
             }
         }
+    }
+
+    @Override
+    public void deleteProduct(String id) {
+        IMyHuntsView.showProgress();
+        IProductInteractor.deleteProduct(mContext, id, this);
     }
 
     private void fetchSavedProducts(String userId) {

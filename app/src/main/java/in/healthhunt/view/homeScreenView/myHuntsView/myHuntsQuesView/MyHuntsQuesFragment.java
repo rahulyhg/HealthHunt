@@ -141,6 +141,11 @@ public class MyHuntsQuesFragment extends Fragment implements IMyHuntsView, MyHun
     }
 
     @Override
+    public void deletePost(String id) {
+
+    }
+
+    @Override
     public int getCount() {
         int count = 8;
         switch (mNavigationType){
