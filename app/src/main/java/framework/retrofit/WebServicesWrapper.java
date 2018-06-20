@@ -38,6 +38,7 @@ import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
 import in.healthhunt.model.tags.TagRequest;
+import in.healthhunt.model.user.UserRequest;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -413,6 +414,26 @@ public class WebServicesWrapper {
     public Call<HHResponse<DeleteProductData>> deleteProduct(String id, ResponseResolver<HHResponse<DeleteProductData>> responseResponseResolver) {
 
         Call<HHResponse<DeleteProductData>> loginResponseCall = webServices.deleteProduct(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<UserData>> updateUser(UserRequest userRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
+
+        Call<HHResponse<UserData>> loginResponseCall = webServices.updateUser(userRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<UserData>> fetchCurrentUser(ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
+
+        Call<HHResponse<UserData>> loginResponseCall = webServices.fetchCurrentUser();
 
         loginResponseCall.enqueue(responseResponseResolver);
 

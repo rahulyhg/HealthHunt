@@ -26,6 +26,7 @@ import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
+import in.healthhunt.model.user.UserRequest;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -105,6 +106,13 @@ public interface WebServices {
 
  @POST("posts/{id}/delete")
  Call<HHResponse<DeleteProductData>> deleteProduct(@Path("id") String id);
+
+ @POST("users/me")
+ Call<HHResponse<UserData>> updateUser(@Body UserRequest userRequest);
+
+ @GET("users/me")
+ Call<HHResponse<UserData>> fetchCurrentUser();
+
 
 
 

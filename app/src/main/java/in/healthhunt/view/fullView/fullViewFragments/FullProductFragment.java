@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -37,6 +39,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +77,8 @@ import in.healthhunt.view.viewAll.ViewAllFragment;
  * Created by abhishekkumar on 5/24/18.
  */
 
-public class FullProductFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener, RelatedProductAdapter.ClickListener {
+public class FullProductFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener,
+        RelatedProductAdapter.ClickListener, TextToSpeech.OnInitListener {
 
     @BindView(R.id.full_product_name)
     TextView mProductName;
@@ -158,6 +162,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
     private int mType;
     private boolean isDownloaded;
     private String mId;
+    private TextToSpeech mTextToSpeech;
 
 
     @Override
@@ -170,6 +175,7 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         mId = getArguments().getString(ArticleParams.ID);
         mType = getArguments().getInt(ArticleParams.POST_TYPE);
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
+        mTextToSpeech = new TextToSpeech(getContext(),this);
     }
 
     private void fetchProductFromDataBase(String id) {
@@ -197,10 +203,16 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if(mUnbinder != null){
             mUnbinder.unbind();
         }
+
+        if (mTextToSpeech != null) {
+            mTextToSpeech.stop();
+            mTextToSpeech.shutdown();
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -849,6 +861,74 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
         }
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = mTextToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            } else {
+                //btnSpeak.setEnabled(true);
+                //speakOut();
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void speakOut() {
+
+        ProductPostItem postItem  = IFullPresenter.getProduct();
+
+        if(postItem != null) {
+            Content content = postItem.getContent();
+            Spanned spanned = Html.fromHtml(content.getRendered()) ;
+            String text = spanned.toString();
+            int maxLen = TextToSpeech.getMaxSpeechInputLength();
+            int strLen = text.length();
+
+            if(strLen > maxLen){
+                int subParts = strLen/maxLen;
+                Log.i("TAGLEN"," Len " + subParts);
+                int start = 0;
+                int end = maxLen;
+                while(subParts>=0){
+                    String subStr = text.substring(start, end);
+                    addSpeakText(subStr);
+                    Log.i("TAGLEN"," SubStr " + subStr);
+                    start = end;
+                    int remainLen = text.substring(end, text.length()).length();
+                    if(remainLen > maxLen){
+                        end = end + maxLen;
+                    }
+                    else {
+                        end = end + remainLen;
+                    }
+
+                    subParts--;
+                }
+            }
+            else {
+                addSpeakText(text.toString());
+            }
+
+
+            /*HashMap<String, String> hash = new HashMap<String,String>();
+            hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_NOTIFICATION));
+            Log.i("TAGTAGTAGSPEECH","TEXT" + text);
+            mTextToSpeech.speak(text.toString(), TextToSpeech.QUEUE_FLUSH, hash);*/
+        }
+    }
+
+    private void addSpeakText(String text){
+        mTextToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+    }
+
     private class FetchProductsTask extends AsyncTask<Void, Void, ProductPostItem> {
 
         private String mProductID;
@@ -930,5 +1010,16 @@ public class FullProductFragment extends Fragment implements IFullFragment, Comm
             str = getString(R.string.removed);
         }
         IHomeView.showToast(str);
+    }
+
+    @OnClick(R.id.listen_view)
+    void onListen(){
+
+        if(!mTextToSpeech.isSpeaking()) {
+            speakOut();
+        }
+        else {
+            mTextToSpeech.stop();
+        }
     }
 }

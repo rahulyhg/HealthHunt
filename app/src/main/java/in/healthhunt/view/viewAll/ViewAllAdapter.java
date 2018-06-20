@@ -189,7 +189,6 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 holder.mProductPrice.setText(rs);
             }
 
-
             String postUnit = postsItem.getPost_unit();
             if (postUnit != null) {
                 holder.mProductUnit.setText(postUnit);

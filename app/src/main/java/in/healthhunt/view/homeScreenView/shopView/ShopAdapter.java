@@ -135,18 +135,33 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopViewHolder> {
                 }
             }
 
-            String price = postsItem.getPost_price();
-            if(price != null) {
-                String postQuantity = postsItem.getPost_quantity();
-                String rs = mContext.getString(R.string.rs);
-                price = HealthHuntUtility.addSeparator(price);
-                rs = rs + " " + price + "/" + postQuantity;
-                holder.mProductPrice.setText(rs);
+            Log.i("TAGISTRAIL", "ISTRAIL " + postsItem.getIs_free_trial());
+            int is_free_trail = 0;
+            String is_free = postsItem.getIs_free_trial();
+            if(is_free != null && !is_free.isEmpty()){
+                is_free_trail = Integer.parseInt(is_free);
             }
 
-            String postUnit = postsItem.getPost_unit();
-            if(postUnit != null) {
-                holder.mProductUnit.setText(postUnit);
+            if(is_free_trail == 0) {
+                holder.mPriceView.setVisibility(View.VISIBLE);
+                holder.mFreeTrail.setVisibility(View.GONE);
+                String price = postsItem.getPost_price();
+                if (price != null) {
+                    String postQuantity = postsItem.getPost_quantity();
+                    String rs = mContext.getString(R.string.rs);
+                    price = HealthHuntUtility.addSeparator(price);
+                    rs = rs + " " + price + "/" + postQuantity;
+                    holder.mProductPrice.setText(rs);
+                }
+
+                String postUnit = postsItem.getPost_unit();
+                if (postUnit != null) {
+                    holder.mProductUnit.setText(postUnit);
+                }
+            }
+            else {
+                holder.mPriceView.setVisibility(View.GONE);
+                holder.mFreeTrail.setVisibility(View.VISIBLE);
             }
         }
     }

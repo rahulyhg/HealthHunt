@@ -156,5 +156,7 @@
     <string name="tags_saved_successfully">Tags saved successfully</string>
     <string name="no_records_found">no records found</string>
     <string name="please_enter_comment">Please enter comment</string>
+    <string name="free_trial">Free Trial</string>
+    <string name="listen">Listen</string>
 
 </resources>

@@ -24,8 +24,11 @@ import in.healthhunt.R;
 import in.healthhunt.model.login.User;
 import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
+import in.healthhunt.presenter.userPresenter.IUserPresenter;
+import in.healthhunt.presenter.userPresenter.UserPresenterImp;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
+import in.healthhunt.view.profileView.IEditProfileView;
 import in.healthhunt.view.profileView.ProfileFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -33,7 +36,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  * Created by abhishekkumar on 5/8/18.
  */
 
-public class DrawerFragment extends Fragment implements CategoryAdapter.ClickListener {
+public class DrawerFragment extends Fragment implements IEditProfileView, CategoryAdapter.ClickListener {
 
 
     @BindView(R.id.drawer_list_viewer)
@@ -46,6 +49,7 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     TextView mUserName;
 
     private IHomePresenter IHomePresenter;
+    private IUserPresenter IUserPresenter;
     private Unbinder mUnbinder;
     private CategoryAdapter mCategoryAdapter;
     private IHomeView IHomeView;
@@ -55,6 +59,7 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IHomePresenter = ((HomeActivity)getActivity()).getHomePresenter();
+        IUserPresenter = new UserPresenterImp(getContext(), this);
         IHomeView = (HomeActivity)getActivity();
     }
 
@@ -71,13 +76,13 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
     private void setUserInfo() {
 
         User user = User.getCurrentUser();
-        String name = user.getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
+        String name = user.getFirst_name();//getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
         Log.i("TAGUSERNAME", "NAme " + name);
         if(name != null) {
             mUserName.setText(name);
         }
 
-        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
+        String url = user.getUser_image();//HealthHuntPreference.getString(getContext(), user.getUserId());
 
         if(url != null) {
             url = url.replace("\n", "");
@@ -151,7 +156,22 @@ public class DrawerFragment extends Fragment implements CategoryAdapter.ClickLis
         }, 100);
     }
 
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
     public void updateUserInfo(){
         setUserInfo();
+    }
+
+    public void updateUserData(){
+        IUserPresenter.fetchCurrentUser();
     }
 }

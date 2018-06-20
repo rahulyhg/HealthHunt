@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -127,6 +128,17 @@ public class SearchFragment extends Fragment implements SearchAdapter.ClickListe
     @Override
     public void updateArticleSaved(ArticlePostItem postItem) {
         IHomeView.updateMyhuntsArticleSaved(postItem);
+        showToast(postItem.getCurrent_user());
+        IHomeView.updateMyFeedArticle(postItem);
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 
     @Override

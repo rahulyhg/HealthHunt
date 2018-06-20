@@ -78,7 +78,9 @@
                     android:textColor="@color/hh_edittext_text_color"
                     android:layout_gravity="center"
                     android:maxLines="1"
-                    android:maxLength="34"/>
+                    android:ellipsize="end"
+                    />
+                <!-- android:maxLength="34" -->
 
                 <TextView
                     android:id="@+id/designation"

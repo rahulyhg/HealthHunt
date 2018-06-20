@@ -114,6 +114,7 @@ public class HomePresenterImp implements IHomePresenter, ICategoryInteractor.OnF
     @Override
     public void onCategorySuccess(List<TagItem> categoriesList) {
         mCategoryList = categoriesList;
+        Log.i("TAGTAGLIST" , "CATEGORYLIST " + mCategoryList);
         sortCategory();
         addDefaultSelectedCategory();
         IHomeView.updateDrawerFragment();

@@ -52,6 +52,12 @@ public class ShopViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.shop_product_unit)
     TextView mProductUnit;
 
+    @BindView(R.id.free_trail)
+    TextView mFreeTrail;
+
+    @BindView(R.id.price_view)
+    LinearLayout mPriceView;
+
 
     private int mViewHolderPos;
 

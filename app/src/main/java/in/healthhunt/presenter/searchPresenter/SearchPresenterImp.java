@@ -64,7 +64,8 @@ public class SearchPresenterImp implements ISearchPresenter, IArticleInteractor.
         Map<String, String> map = new HashMap<String, String>();
 
         map.put(ArticleParams.SEARCH, searchStr);
-        map.put(ArticleParams.APP, String.valueOf(1));
+        map.put(ArticleParams.QTRANSLANG, ArticleParams.ENGLISH_LAN);
+       // map.put(ArticleParams.APP, String.valueOf(1));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.ARTICLE, map,this);
     }
 

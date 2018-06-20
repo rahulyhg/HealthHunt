@@ -89,6 +89,8 @@ public interface ArticleParams {
     String ENGLISH_LAN = "en";
     String TAGS_FILTER = "tags_filter[]";
     String ORDER_BY = "orderby";
+    String ORDER = "order";
+    String DESC = "desc";
 
     String PRODUCT_TYPE_ID = "productType";
     String BRAND = "brand";

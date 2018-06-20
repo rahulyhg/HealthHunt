@@ -249,7 +249,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 if(mDrawerFragment != null){
-                    mDrawerFragment.updateUserInfo();
+                    mDrawerFragment.updateUserData();
                 }
             }
 
@@ -686,17 +686,27 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     @Override
     public void onBackPressed() {
 
+        Log.i("TAGCOUNTfragment", "onBackPressed ");
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
+
+            Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);    // When we press back button of full video screen.
+            if(fragment instanceof YoutubeFragment){
+                YoutubeFragment youtubeFragment = (YoutubeFragment)fragment;
+                if(youtubeFragment.isFullScreen()){
+                    youtubeFragment.setFullScreen(false);
+                    return;
+                }
+            }
+            Log.i("TAGCOUNTfragment", "fragment " + fragment);
+
+
             int count = getSupportFragmentManager().getBackStackEntryCount();
             Log.i("TAGCOUNT", "count " + count);
             if(count == 1){ //when comes back to home screen
                 updateHomeScreen();
             }
-
-            Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);
-            Log.i("TAGCOUNTfragment", "fragment " + fragment);
             super.onBackPressed();
         }
 

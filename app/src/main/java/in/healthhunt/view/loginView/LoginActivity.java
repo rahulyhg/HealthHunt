@@ -127,7 +127,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
 
     @Override
     public void showFragment(String tag, Bundle bundle) {
-        Fragment fragment = fragmentMap.get(tag);
+        Fragment fragment = null;//fragmentMap.get(tag);
 
         if(fragment == null) {
             if (tag != null && tag.equals(LoginFragment.class.getSimpleName())) {
@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             } else if (tag != null && tag.equals(ForgotPasswordFragment.class.getSimpleName())) {
                 fragment = new ForgotPasswordFragment();
             }
-            fragmentMap.put(tag, fragment);
+            //fragmentMap.put(tag, fragment);
         }
         fragment.setArguments(bundle);
         loadFragment(fragment, tag);

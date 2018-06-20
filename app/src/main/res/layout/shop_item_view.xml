@@ -66,6 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/price_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right|center"
@@ -94,6 +95,20 @@
                 android:maxLength="6"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/free_trail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@string/font_family_regular"
+            android:gravity="right|center"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/hh_green_light2"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:text="@string/free_trial"/>
 
         <!--<TextView
             android:id="@+id/shop_article_content"

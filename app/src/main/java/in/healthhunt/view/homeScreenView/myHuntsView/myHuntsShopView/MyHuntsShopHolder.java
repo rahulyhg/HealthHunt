@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -39,6 +40,12 @@ public class MyHuntsShopHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.my_hunts_product_unit)
     public TextView mProductUnit;
+
+    @BindView(R.id.free_trail)
+    TextView mFreeTrail;
+
+    @BindView(R.id.price_view)
+    LinearLayout mPriceView;
 
     private Context mContext;
     private IMyHuntsProductsPresenter IMyHuntsProductsPresenter;

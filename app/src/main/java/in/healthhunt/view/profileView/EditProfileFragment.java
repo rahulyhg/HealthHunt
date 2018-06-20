@@ -1,14 +1,22 @@
 package in.healthhunt.view.profileView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,12 +25,17 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.login.User;
-import in.healthhunt.presenter.tagPresenter.ITagPresenter;
+import in.healthhunt.model.user.UserRequest;
+import in.healthhunt.presenter.userPresenter.IUserPresenter;
+import in.healthhunt.presenter.userPresenter.UserPresenterImp;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
@@ -33,7 +46,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by abhishekkumar on 6/3/18.
  */
 
-public class EditProfileFragment extends Fragment{
+public class EditProfileFragment extends Fragment implements IEditProfileView{
 
     @BindView(R.id.user_pic)
     ImageView mProfilePic;
@@ -59,15 +72,16 @@ public class EditProfileFragment extends Fragment{
     @BindView(R.id.logout)
     TextView mDone;
 
-    private ITagPresenter ITagPresenter;
+    private IUserPresenter IUserPresenter;
     private IHomeView IHomeView;
     private final int PICK_IMAGE_REQUEST = 1001;
-    private String mProfileUrl;
+    private Uri mProfileUrl;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IHomeView = (HomeActivity)getActivity();
+        IUserPresenter = new UserPresenterImp(getContext(), this);
     }
 
     @Nullable
@@ -86,10 +100,10 @@ public class EditProfileFragment extends Fragment{
         return view;
     }
 
-    private void setUserInfo() {
+    public void setUserInfo() {
 
         User user = User.getCurrentUser();
-        String name = user.getName();//HealthHuntPrefere
+        String name = user.getFirst_name();//user.getName();//HealthHuntPrefere
 
         // nce.getString(getContext(), user.getUsername());
         if(name != null) {
@@ -103,13 +117,13 @@ public class EditProfileFragment extends Fragment{
             mEmail.setText(email);
         }
 
-        String bio = user.getBio();
+        String bio = user.getDescription();//getBio();
         if(bio != null){
             mBio.setText(bio);
         }
 
-        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
-        mProfileUrl = url;
+        String url = user.getUser_image();//HealthHuntPreference.getString(getContext(), user.getUserId());
+        // mProfileUrl = url;
         if(url != null) {
             url = url.replace("\n", "");
             Glide.with(getContext())
@@ -135,13 +149,26 @@ public class EditProfileFragment extends Fragment{
 
     @OnClick(R.id.logout) //Done Button
     void onDone(){
-        Toast.makeText(getContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
-        User user = User.getCurrentUser();
-        user.setName(mUserName.getText().toString());
-        user.setUserImage(mProfileUrl);
-        user.setBio(mBio.getText().toString());
-        user.save();
-        getActivity().getSupportFragmentManager().popBackStack();
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mUserName.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mBio.getWindowToken(), 0);
+
+        UserRequest userRequest = createUserRequest();
+        IUserPresenter.updateUser(userRequest);
+    }
+
+    private UserRequest createUserRequest() {
+        UserRequest userRequest = new UserRequest();
+        userRequest.setFirst_name(mUserName.getText().toString());
+
+        if(mProfileUrl != null && !mProfileUrl.toString().isEmpty()) {
+            String decodeUrl = convertToBase64();
+            Log.i("PATHTAG", " decodeUrl " + decodeUrl);
+            userRequest.setRfile1(decodeUrl);
+        }
+        userRequest.setDescription(mBio.getText().toString());
+
+        return userRequest;
     }
 
     @OnClick(R.id.user_pic)
@@ -170,11 +197,13 @@ public class EditProfileFragment extends Fragment{
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
-            Glide.with(this).loadFromMediaStore(uri).bitmapTransform(new CropCircleTransformation(getContext())).
-                    placeholder(R.mipmap.avatar).into(mProfilePic);
             if(uri != null && !uri.toString().isEmpty()) {
-                mProfileUrl = uri.toString();
+                Glide.with(this).load(uri).bitmapTransform(new CropCircleTransformation(getContext())).
+                        placeholder(R.mipmap.avatar).into(mProfilePic);
+                mProfileUrl = uri;
             }
+
+            Log.i("TAGTAGURI", "mProfileUrl " + mProfileUrl);
 
             /*try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
@@ -187,5 +216,75 @@ public class EditProfileFragment extends Fragment{
                 e.printStackTrace();
             }*/
         }
+    }
+
+    @Override
+    public void showProgress() {
+        IHomeView.showProgress();
+    }
+
+    @Override
+    public void hideProgress() {
+        IHomeView.hideProgress();
+    }
+
+    @Override
+    public void updateUserInfo() {
+        Toast.makeText(getContext(), getString(R.string.saved), Toast.LENGTH_SHORT).show();
+        //updateUserInfo(user);
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    /*private void updateUserInfo(User user) {
+        User savedUser = User.getCurrentUser();
+        String tagList = savedUser.getTagList();
+        user.setCurrentLogin(true);
+        user.setTagList(tagList);
+        if(mProfileUrl != null && !mProfileUrl.isEmpty()){
+            user.setUser_image(mProfileUrl);
+        }
+        user.save();
+    }*/
+
+    private String convertToBase64() {
+
+        String encodedImage = null;
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mProfileUrl);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+            byte[] byteArrayImage = baos.toByteArray();
+
+            encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Bitmap bm = BitmapFactory.decodeFile(imagePath);
+
+
+
+        return encodedImage;
+
+    }
+
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+
+        //This method was deprecated in API level 11
+        //Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+
+        CursorLoader cursorLoader = new CursorLoader(
+                getContext(),
+                contentUri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int column_index =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
     }
 }

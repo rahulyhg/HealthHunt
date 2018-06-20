@@ -86,9 +86,18 @@ public class SignUpFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signup, container,  false);
         unbinder = ButterKnife.bind(this, view);
         mSkipView.setVisibility(View.GONE);
+
+        clearFields();
         addLink();
         addGenderWindow();
         return view;
+    }
+
+    public void clearFields() {
+        mUsername.setText("");
+        mEmail.setText("");
+        mPassword.setText("");
+        mGender.setText("");
     }
 
     private void addGenderWindow() {

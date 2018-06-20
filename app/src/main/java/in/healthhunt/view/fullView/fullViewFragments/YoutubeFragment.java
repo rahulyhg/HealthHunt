@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +42,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,9 +77,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 
 public class YoutubeFragment extends Fragment implements IFullFragment , CommentAdapter.ClickListener,
-        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener{
-
-    private static String VIDEO_ID = "3gFAduagfaE";
+        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener, TextToSpeech.OnInitListener{
 
     @BindView(R.id.full_video_name)
     TextView mVideoName;
@@ -168,7 +169,6 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
     @BindView(R.id.related_article_root_view)
     LinearLayout mRelatedArticleView;
 
-
     @BindView(R.id.overlay_video_view)
     RelativeLayout mOverlayVideoView;
 
@@ -176,11 +176,12 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
     private IHomeView IHomeView;
     private Unbinder mUnbinder;
     int mPostType;
-    private MyPlaybackEventListener playbackEventListener;
+    //  private MyPlaybackEventListener playbackEventListener;
     private YouTubePlayer mYouTubePlayer;
     private boolean isDownloaded;
     private String mId;
-
+    private boolean isFullScreen;
+    private TextToSpeech mTextToSpeech;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -193,7 +194,8 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED, false);
 
         IFullPresenter = new FullPresenterImp(getContext(), this);
-        playbackEventListener = new MyPlaybackEventListener();
+        mTextToSpeech = new TextToSpeech(getContext(),this);
+        // playbackEventListener = new MyPlaybackEventListener();
     }
 
     private void fetchVideoFromDataBase(String id) {
@@ -269,6 +271,15 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
         return rootView;
     }
 
+    public boolean isFullScreen() {
+        return isFullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        isFullScreen = fullScreen;
+        mYouTubePlayer.setFullscreen(fullScreen);
+    }
+
     private void initializeYoutubePlayer() {
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
         youTubePlayerFragment.initialize(getString(R.string.youtube_key), new YouTubePlayer.OnInitializedListener() {
@@ -289,7 +300,7 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
                 if (!wasRestored) {
                     //set the player style here: like CHROMELESS, MINIMAL, DEFAULT
                     mYouTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    mYouTubePlayer.setPlaybackEventListener(playbackEventListener);
+                    // mYouTubePlayer.setPlaybackEventListener(playbackEventListener);
 
                     //load the video
                     //youTubePlayer.loadVideo(IFullPresenter.getVideo().getPost_youtube_id());
@@ -307,13 +318,14 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
 
                     //If you want to control the full screen event you can uncomment the below code
                     //Tell the player you want to control the fullscreen change
-                    mYouTubePlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI);
+                   // mYouTubePlayer.setFullscreenControlFlags(0);
                     //Tell the player how to control the change
                     mYouTubePlayer.setOnFullscreenListener(new YouTubePlayer.OnFullscreenListener() {
                         @Override
                         public void onFullscreen(boolean arg0) {
+                            isFullScreen = arg0;
                             // do full screen stuff here, or don't.
-                            //Log.e(TAG,"Full screen mode");
+                            Log.e("TAGFULLSCREN","Full screen mode " + arg0);
                         }
                     });
 
@@ -334,7 +346,7 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
     }
 
 
-    private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
+   /* private final class MyPlaybackEventListener implements YouTubePlayer.PlaybackEventListener {
 
         @Override
         public void onPlaying() {
@@ -365,7 +377,7 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
             // Called when a jump in playback position occurs, either
             // due to user scrubbing or call to seekRelativeMillis() or seekToMillis()
         }
-    }
+    }*/
 
     @Override
     public void onDestroy() {
@@ -375,6 +387,11 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
 
         if (mYouTubePlayer != null) {
             mYouTubePlayer.release();
+        }
+
+        if (mTextToSpeech != null) {
+            mTextToSpeech.stop();
+            mTextToSpeech.shutdown();
         }
 
         super.onDestroy();
@@ -1047,6 +1064,75 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
         IHomeView.updateDownloadData();
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = mTextToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            } else {
+                //btnSpeak.setEnabled(true);
+                //speakOut();
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void speakOut() {
+
+        ArticlePostItem postItem  = IFullPresenter.getArticle();
+
+        if(postItem != null) {
+            Content content = postItem.getContent();
+            Spanned spanned = Html.fromHtml(content.getRendered()) ;
+            String text = spanned.toString();
+            int maxLen = TextToSpeech.getMaxSpeechInputLength();
+            int strLen = text.length();
+
+            if(strLen > maxLen){
+                int subParts = strLen/maxLen;
+                Log.i("TAGLEN"," Len " + subParts);
+                int start = 0;
+                int end = maxLen;
+                while(subParts>=0){
+                    String subStr = text.substring(start, end);
+                    addSpeakText(subStr);
+                    Log.i("TAGLEN"," SubStr " + subStr);
+                    start = end;
+                    int remainLen = text.substring(end, text.length()).length();
+                    if(remainLen > maxLen){
+                        end = end + maxLen;
+                    }
+                    else {
+                        end = end + remainLen;
+                    }
+
+                    subParts--;
+                }
+            }
+            else {
+                addSpeakText(text.toString());
+            }
+
+
+            /*HashMap<String, String> hash = new HashMap<String,String>();
+            hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_NOTIFICATION));
+            Log.i("TAGTAGTAGSPEECH","TEXT" + text);
+            mTextToSpeech.speak(text.toString(), TextToSpeech.QUEUE_FLUSH, hash);*/
+        }
+    }
+
+    private void addSpeakText(String text){
+        mTextToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+    }
+
+
     private class FetchVideoTask extends AsyncTask<Void, Void, ArticlePostItem> {
 
         private String mArticleID;
@@ -1105,5 +1191,16 @@ public class YoutubeFragment extends Fragment implements IFullFragment , Comment
             str = getString(R.string.removed);
         }
         IHomeView.showToast(str);
+    }
+
+    @OnClick(R.id.listen_view)
+    void onListen(){
+
+        if(!mTextToSpeech.isSpeaking()) {
+            speakOut();
+        }
+        else {
+            mTextToSpeech.stop();
+        }
     }
 }

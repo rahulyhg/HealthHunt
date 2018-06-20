@@ -38,6 +38,8 @@ import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.tagPresenter.ITagPresenter;
 import in.healthhunt.presenter.tagPresenter.TagPresenterImp;
+import in.healthhunt.presenter.userPresenter.IUserPresenter;
+import in.healthhunt.presenter.userPresenter.UserPresenterImp;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.loginView.LoginActivity;
@@ -51,7 +53,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
  * Created by abhishekkumar on 6/3/18.
  */
 
-public class ProfileFragment extends Fragment implements ITagView, TagAdapter.OnClickListener{
+public class ProfileFragment extends Fragment implements ITagView, IEditProfileView, TagAdapter.OnClickListener{
 
     @BindView(R.id.tags_recycler_list)
     RecyclerView mTagViewer;
@@ -90,6 +92,7 @@ public class ProfileFragment extends Fragment implements ITagView, TagAdapter.On
     ImageView mCross;
 
 
+    private IUserPresenter IUserPresenter;
     private ITagPresenter ITagPresenter;
     private IHomeView IHomeView;
 
@@ -97,7 +100,9 @@ public class ProfileFragment extends Fragment implements ITagView, TagAdapter.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ITagPresenter = new TagPresenterImp(getContext(), this);
+        IUserPresenter = new UserPresenterImp(getContext(), this);
         IHomeView = (HomeActivity)getActivity();
+        IUserPresenter.fetchCurrentUser();
         ITagPresenter.fetchTags();
     }
 
@@ -112,21 +117,22 @@ public class ProfileFragment extends Fragment implements ITagView, TagAdapter.On
         IHomeView.hideDrawerMenu();
         mCross.setVisibility(View.GONE);
         setUserInfo();
-       // mSelectAll.setVisibility(View.GONE);
+        // mSelectAll.setVisibility(View.GONE);
         setAdapter();
         setSearchAdapter();
         return view;
     }
 
+
     private void setUserInfo() {
 
         User user = User.getCurrentUser();
-        String name = user.getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
+        String name = user.getFirst_name();//getName();//HealthHuntPreference.getString(getContext(), user.getUsername());
         if(name != null) {
             mUserName.setText(name);
         }
 
-        String url = user.getUserImage();//HealthHuntPreference.getString(getContext(), user.getUserId());
+        String url = user.getUser_image();//HealthHuntPreference.getString(getContext(), user.getUserId());
 
         if(url != null) {
             url = url.replace("\n", "");
@@ -185,7 +191,20 @@ public class ProfileFragment extends Fragment implements ITagView, TagAdapter.On
             }
         }*/
         updateTagCount();
+        updateCheckBox();
         mTagViewer.getAdapter().notifyDataSetChanged();
+    }
+
+    private void updateCheckBox() {
+        int selectedCount = ITagPresenter.getSelectedTagList().size();
+        int totalCount = ITagPresenter.getTagCount();
+
+        if(selectedCount == totalCount){
+            mSelectAllCheck.setChecked(true);
+        }
+        else {
+            mSelectAllCheck.setChecked(false);
+        }
     }
 
     @Override
@@ -442,5 +461,20 @@ public class ProfileFragment extends Fragment implements ITagView, TagAdapter.On
     @OnClick(R.id.cross)
     void onCross(){
         mSearchView.setText("");
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void updateUserInfo() {
+        setUserInfo();
     }
 }

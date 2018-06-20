@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +18,9 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -37,6 +40,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +81,7 @@ import static android.util.Log.i;
  */
 
 public class FullArticleFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener,
-        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener {
+        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener, TextToSpeech.OnInitListener {
 
     @BindView(R.id.full_article_read_time)
     TextView mReadTime;
@@ -172,6 +176,9 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.related_article_root_view)
     LinearLayout mRelatedArticleView;
 
+    @BindView(R.id.listen_view)
+    LinearLayout mListenView;
+
     private IFullPresenter IFullPresenter;
     private IHomeView IHomeView;
     private Unbinder mUnbinder;
@@ -179,6 +186,8 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     private boolean isDownloaded;
     private String mId;
     private boolean scrollingToBottom;
+    private TextToSpeech mTextToSpeech;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,6 +198,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         mId = getArguments().getString(ArticleParams.ID);
         mType = getArguments().getInt(ArticleParams.POST_TYPE);
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
+        mTextToSpeech = new TextToSpeech(getContext(),this);
     }
 
     private static void scrollRecyclerViewToBottom(RecyclerView recyclerView) {
@@ -260,10 +270,17 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
+        if (mTextToSpeech != null) {
+            mTextToSpeech.stop();
+            mTextToSpeech.shutdown();
+        }
+
         if(mUnbinder != null){
             mUnbinder.unbind();
         }
+
+        super.onDestroy();
     }
 
     @Override
@@ -977,6 +994,74 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         IHomeView.updateDownloadData();
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = mTextToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            } else {
+                //btnSpeak.setEnabled(true);
+                //speakOut();
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void speakOut() {
+
+        ArticlePostItem postItem  = IFullPresenter.getArticle();
+
+        if(postItem != null) {
+            Content content = postItem.getContent();
+            Spanned spanned = Html.fromHtml(content.getRendered()) ;
+            String text = spanned.toString();
+            int maxLen = TextToSpeech.getMaxSpeechInputLength();
+            int strLen = text.length();
+
+            if(strLen > maxLen){
+                int subParts = strLen/maxLen;
+                Log.i("TAGLEN"," Len " + subParts);
+                int start = 0;
+                int end = maxLen;
+                while(subParts>=0){
+                    String subStr = text.substring(start, end);
+                    addSpeakText(subStr);
+                    Log.i("TAGLEN"," SubStr " + subStr);
+                    start = end;
+                    int remainLen = text.substring(end, text.length()).length();
+                    if(remainLen > maxLen){
+                        end = end + maxLen;
+                    }
+                    else {
+                        end = end + remainLen;
+                    }
+
+                    subParts--;
+                }
+            }
+            else {
+                addSpeakText(text.toString());
+            }
+
+
+            /*HashMap<String, String> hash = new HashMap<String,String>();
+            hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_NOTIFICATION));
+            Log.i("TAGTAGTAGSPEECH","TEXT" + text);
+            mTextToSpeech.speak(text.toString(), TextToSpeech.QUEUE_FLUSH, hash);*/
+        }
+    }
+
+    private void addSpeakText(String text){
+        mTextToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+    }
+
     private class FetchArticlesTask extends AsyncTask<Void, Void, ArticlePostItem> {
 
         private String mArticleID;
@@ -1035,4 +1120,16 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         }
         IHomeView.showToast(str);
     }
+
+    @OnClick(R.id.listen_view)
+    void onListen(){
+
+        if(!mTextToSpeech.isSpeaking()) {
+            speakOut();
+        }
+        else {
+            mTextToSpeech.stop();
+        }
+    }
+
 }

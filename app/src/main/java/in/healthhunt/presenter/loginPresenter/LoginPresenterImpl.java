@@ -77,23 +77,23 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
            /* if(username == null || username.isEmpty()) {
                 username = email;
             }*/
-           if(!email.contains("@") || !email.contains(".")){
-               String str = mContext.getString(R.string.email_validation_msg);
-               ILoginView.showLoginAlert(str);
-               return;
-           }
+            if(!email.contains("@") || !email.contains(".")){
+                String str = mContext.getString(R.string.email_validation_msg);
+                ILoginView.showLoginAlert(str);
+                return;
+            }
 
-           if(email.contains(".")){
-               int index = email.indexOf(".");
-               int size = email.length();
-               Log.i("TAGLOGIN" , "Index " + index + " size " + size);
-               if(index+2 >= size){
-                   String str = mContext.getString(R.string.email_validation_msg);
-                   ILoginView.showLoginAlert(str);
-                   return;
-               }
+            if(email.contains(".")){
+                int index = email.indexOf(".");
+                int size = email.length();
+                Log.i("TAGLOGIN" , "Index " + index + " size " + size);
+                if(index+2 >= size){
+                    String str = mContext.getString(R.string.email_validation_msg);
+                    ILoginView.showLoginAlert(str);
+                    return;
+                }
 
-           }
+            }
 
             if(gender == null || gender.isEmpty()) {
                 gender = "Not specified";
@@ -211,9 +211,16 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         }
         else {
             User savedUser = User.getUser(user.getUserId());
-            savedUser.setCurrentLogin(true);
-            savedUser.save();
-            if (!isTagAvailabel(savedUser)) {
+            String tagList = savedUser.getTagList();
+            User.removeUser(savedUser.getUserId());
+
+
+
+            user.setTagList(tagList);
+            user.setCurrentLogin(true);
+            user.save();
+
+            if (!isTagAvailabel(user)) {
                 ILoginView.startTagActivity();
             }
             else {
