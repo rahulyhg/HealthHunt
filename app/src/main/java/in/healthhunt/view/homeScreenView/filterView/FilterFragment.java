@@ -110,7 +110,6 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
     @BindView(R.id.cross_city)
     ImageView mCrossCity;
 
-
     @BindView(R.id.remove)
     TextView mRemove;
 
@@ -160,6 +159,7 @@ public class FilterFragment extends Fragment implements IFilterView, ProductAdap
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         IHomeView.hideDrawerMenu();
+        IHomeView.hideSearchView();
         mProductSearch.setHint(R.string.search_by_product_type);
         mBrandSearch.setHint(R.string.search_by_brand_name);
 

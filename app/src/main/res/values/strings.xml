@@ -49,7 +49,7 @@
 
     <!-- Tags screen string values -->
 
-    <string name="select_at_least_5_tags">You\'re almost done! Select at least 5 tags to personalize your feed</string>
+    <string name="select_at_least_5_tags">Select at least 5 tags to personalize your feed</string>  <!-- You\'re almost done! -->
     <string name="done">Done</string>
     <string name="search_by_tags">Search by tags</string>
     <string name="select_all">Select all</string>
@@ -158,5 +158,8 @@
     <string name="please_enter_comment">Please enter comment</string>
     <string name="free_trial">Free Trial</string>
     <string name="listen">Listen</string>
+
+    <string name="added_to_my_hunt">Added to my hunt</string>
+    <string name="removed_from_my_hunt">Removed from my hunt</string>
 
 </resources>

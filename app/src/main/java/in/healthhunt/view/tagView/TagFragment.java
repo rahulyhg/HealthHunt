@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
@@ -78,16 +78,28 @@ public class TagFragment extends Fragment{
         }
     }*/
 
-    @OnCheckedChanged(R.id.select_all_checkbox)
-    void onCheckBox(boolean isSelect){
+    @OnClick(R.id.select_all_checkbox)
+    void onClickCheckBox(){
+        boolean isSelect = mSelectAll.isChecked();
         TagAdapter tagAdapter = (TagAdapter) mRecyclerView.getAdapter();
-        if(isSelect){
+        if(!isSelect){
             ITagPresenter.selectAll();
             tagAdapter.setSelectAll(true);
+            mSelectAll.setChecked(true);
         }
         else {
             ITagPresenter.unSelectAll();
             tagAdapter.setSelectAll(false);
+            mSelectAll.setChecked(false);
+        }
+    }
+
+    void updateCheckBox(boolean isCheck){
+        if(isCheck){
+            mSelectAll.setChecked(true);
+        }
+        else {
+            mSelectAll.setChecked(false);
         }
     }
 }

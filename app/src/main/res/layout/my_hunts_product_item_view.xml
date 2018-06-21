@@ -30,7 +30,6 @@
             android:src="@mipmap/ic_bookmark" />
     </FrameLayout>
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,29 +39,29 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@id/my_hunts_image_view"
-        >
+        android:layout_below="@id/my_hunts_image_view">
 
         <TextView
             android:id="@+id/my_hunts_product_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_family_regular"
             android:gravity="left|center"
             android:textColor="@color/hh_edittext_text_color"
             android:textSize="16sp"
-            android:maxLength="50"/>
+            android:ellipsize="end"
+            android:maxLines="3"/>
 
         <TextView
             android:id="@+id/my_hunts_product_type"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@string/font_family_regular"
             android:gravity="left|center"
             android:textColor="@color/hh_text_color"
             android:textSize="14sp"
-            android:maxLength="50" />
-
+            android:ellipsize="end"
+            android:maxLines="3" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +80,8 @@
             android:fontFamily="@string/font_family_regular"
             android:gravity="right|center"
             android:textColor="@color/hh_green_light2"
-            android:maxLength="9"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="16sp" />
 
         <TextView
@@ -92,7 +92,8 @@
             android:gravity="right|bottom"
             android:layout_marginStart="1dp"
             android:textColor="@color/hh_green_light2"
-            android:maxLength="6"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textSize="16sp" />
     </LinearLayout>
 

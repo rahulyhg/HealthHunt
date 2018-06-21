@@ -243,8 +243,8 @@ public class User extends Model{
 		return username;
 	}
 
-	public static User getUser(String user_id){
-		return new Select().from(User.class).where("user_id = ?" , user_id).executeSingle();
+	public static User getUser(String userId){
+		return new Select().from(User.class).where("user_id = ?" , userId).executeSingle();
 	}
 
 	public static User getCurrentUser(){

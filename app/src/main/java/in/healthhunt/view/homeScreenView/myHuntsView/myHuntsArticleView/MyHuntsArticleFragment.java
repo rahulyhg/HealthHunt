@@ -373,9 +373,9 @@ public class MyHuntsArticleFragment extends Fragment implements IMyHuntsView, My
 
     private void showToast(CurrentUser currentUser) {
         boolean isBookMark = currentUser.isBookmarked();
-        String str = getString(R.string.saved);
+        String str = getString(R.string.added_to_my_hunt);//getString(R.string.saved);
         if(!isBookMark){
-            str = getString(R.string.removed);
+            str = getString(R.string.removed_from_my_hunt);//getString(R.string.removed);
         }
         IHomeView.showToast(str);
     }

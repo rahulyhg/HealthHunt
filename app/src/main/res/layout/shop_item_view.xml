@@ -50,7 +50,8 @@
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
                 android:textColor="@color/hh_edittext_text_color"
-                android:maxLength="50"
+                android:maxLines="3"
+                android:ellipsize="end"
                 android:textSize="16sp" />
 
             <TextView
@@ -60,7 +61,8 @@
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="left|center"
                 android:textColor="@color/hh_text_color"
-                android:maxLength="50"
+                android:maxLines="3"
+                android:ellipsize="end"
                 android:textSize="14sp" />
 
         </LinearLayout>
@@ -81,7 +83,8 @@
                 android:fontFamily="@string/font_family_regular"
                 android:gravity="right|center"
                 android:textColor="@color/hh_green_light2"
-                android:maxLength="9"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="16sp" />
 
             <TextView
@@ -92,7 +95,8 @@
                 android:gravity="right|bottom"
                 android:layout_marginStart="1dp"
                 android:textColor="@color/hh_green_light2"
-                android:maxLength="6"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="16sp" />
         </LinearLayout>
 

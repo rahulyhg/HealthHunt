@@ -53,4 +53,8 @@ public interface IHomeView {
     void showToast(String msg);
     List<String> getCategories();
     void updateCategoryList();
+
+
+    void hideSearchView();
+    void showSearchView();
 }

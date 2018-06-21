@@ -250,6 +250,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 super.onDrawerOpened(drawerView);
                 if(mDrawerFragment != null){
                     mDrawerFragment.updateUserData();
+                    mDrawerFragment.updateCategory();
                 }
             }
 
@@ -258,7 +259,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                 super.onDrawerClosed(drawerView);
                 Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);
                 Log.i("TAGFRAG", "fragment " + fragment);
-                if(fragment == null) {
+                if(fragment == null && !isUpdateCategory()) {
                     updateCategoryList();
                     updateMyFeed();
                     updateWatch();
@@ -462,6 +463,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void sendFilterData(Map<Integer, List<String>> map) {
         updateFragVisible(mCurrentItem);
         setBottomNavigation();
+        showSearchView();
         Fragment fragment = mFragment[mCurrentItem];
         if(mFragment != null && fragment instanceof ShopFragment){
             ((IShopView)fragment).handleFilterData(map);
@@ -531,6 +533,20 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
+    public void hideSearchView() {
+        if(mSearchAction != null) {
+            mSearchAction.setVisible(false);
+        }
+    }
+
+    @Override
+    public void showSearchView() {
+        if(mSearchAction != null) {
+            mSearchAction.setVisible(true);
+        }
+    }
+
+    @Override
     public void hideActionBar() {
         mToolbar.setVisibility(View.GONE);
     }
@@ -541,10 +557,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
         actionBar.setDisplayShowTitleEnabled(true); //show the title in the action bar
-
-        if(mSearchAction != null) {
-            mSearchAction.setVisible(true);
-        }
+        showSearchView();
 
         if(mNotificationAction != null) {
             mNotificationAction.setVisible(true);
@@ -824,7 +837,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     protected void handleMenuSearch() {
-        mSearchAction.setVisible(false);
+        hideSearchView();
         ActionBar action = getSupportActionBar(); //get the actionbar
 
         action.setDisplayShowCustomEnabled(true); //enable it to display a
@@ -997,5 +1010,26 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     private void removeAllCategory() {
         mCategoryViewer.removeAllViews();
+    }
+
+    private boolean isUpdateCategory(){
+
+        List<TagItem> catergory = IHomePresenter.getSelectedCategoryList();
+        List<String> prevCategory = mCategoryList;
+
+        int count = catergory.size();
+        int prevCount = prevCategory.size();
+
+        if(count == prevCount){
+            List<String> selectedCategory = new ArrayList<String>();
+            for(TagItem tagItem: catergory){
+                selectedCategory.add(String.valueOf(tagItem.getId()));
+            }
+
+            if(prevCategory.containsAll(selectedCategory)){
+                return true;
+            }
+        }
+        return false;
     }
 }

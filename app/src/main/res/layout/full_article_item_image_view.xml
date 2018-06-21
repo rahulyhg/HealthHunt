@@ -18,23 +18,21 @@
             android:layout_gravity="center"
             />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="40dp"
-            android:weightSum="3"
             android:gravity="center">
 
 
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/timeer_view"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="left|top"
+                android:layout_alignParentLeft="true"
                 android:gravity="left|top">
 
 
@@ -64,10 +62,10 @@
 
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_gravity="right|top"
+                android:layout_toRightOf="@id/timeer_view"
+                android:layout_alignParentRight="true"
                 android:gravity="right|bottom">
 
 
@@ -111,11 +109,11 @@
                     android:textColor="@android:color/white"
                     android:layout_marginStart="10dp"
                     android:layout_gravity="top"
-                    android:maxLength="6"
+                    android:maxLength="4"
                     />
 
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
     </FrameLayout>
 

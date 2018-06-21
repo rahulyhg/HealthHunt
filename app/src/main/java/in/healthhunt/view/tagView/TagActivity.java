@@ -140,7 +140,7 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
             searchList.add(item.getName());
         }*/
 
-      //  ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.popup_window_item, searchList);
+        //  ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.popup_window_item, searchList);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
@@ -207,9 +207,27 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
                     }
                 }*/
                 updateAdapter();
+                updateSelectAll();
+
             }
         });
 
+    }
+
+    private void updateSelectAll(){
+        int totalCount = ITagPresenter.getTagCount();
+        int prevCount = 0;
+        List<TagItem> list = ITagPresenter.getSelectedTagList();
+        if(list != null) {
+            prevCount = list.size();
+        }
+
+        if(totalCount == prevCount){
+            mTagFragment.updateCheckBox(true);
+        }
+        else {
+            mTagFragment.updateCheckBox(false);
+        }
     }
 
     /*@Override
@@ -290,6 +308,7 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         else {
             mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_grey_dark));
         }
+        updateSelectAll();
     }
 
     @OnClick(R.id.cross)

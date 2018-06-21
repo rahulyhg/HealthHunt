@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -173,5 +175,25 @@ public class DrawerFragment extends Fragment implements IEditProfileView, Catego
 
     public void updateUserData(){
         IUserPresenter.fetchCurrentUser();
+    }
+
+    public void updateCategory(){
+        List<String> categoryList = IHomeView.getCategories();
+
+        List<TagItem> prevCategory = IHomePresenter.getSelectedCategoryList();
+        if(prevCategory != null) {
+            prevCategory.clear();
+        }
+
+        Log.i("TAGTAGLIST", "category " + categoryList);
+        int count = IHomePresenter.getCategoryCount();
+        for(int i=0; i<count; i++) {
+            TagItem category = IHomePresenter.getCategory(i);
+            if(categoryList.contains(String.valueOf(category.getId()))){
+                IHomePresenter.addCategory(category);
+            }
+        }
+
+        updateAdapter();
     }
 }

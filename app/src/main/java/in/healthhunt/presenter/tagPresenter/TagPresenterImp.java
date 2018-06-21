@@ -120,6 +120,7 @@ public class TagPresenterImp implements ITagPresenter, ITagInteractor.OnTagLoadF
     @Override
     public void storeSelectedTags() {
         User user = User.getCurrentUser();
+        Log.i("TAGIDUSER", "ID " + user.getUserId());
         String tags  = "";
         for(int i=0; i<mSelectedList.size(); i++){
             TagItem tagItem  = mSelectedList.get(i);

@@ -66,6 +66,9 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
     @Override
     public void fetchTagsArticle(int offset, int limit) {
 
+        if(mTagArticles != null){
+            mTagArticles.clear();
+        }
         /*Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
         String tags = "";
         Iterator iterator = tagIds.iterator();
@@ -102,6 +105,10 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
     public void fetchTrendingArticle(int offset, int limit) {
         //  String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
 
+        if(mTrendingArticles != null){
+            mTrendingArticles.clear();
+        }
+
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TRENDING, String.valueOf(1));
         map.put(ArticleParams.QTRANSLANG, ArticleParams.ENGLISH_LAN);
@@ -114,6 +121,11 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchLatestArticle(int offset, int limit) {
+
+        if(mLatestArticles != null){
+            mLatestArticles.clear();
+        }
+
         String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
 
         Map<String, String> map = new HashMap<String, String>();
@@ -134,6 +146,11 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchSponsoredArticle(String type, int offset, int limit) {
+
+        if(mSponsoredArticles != null){
+            mSponsoredArticles.clear();
+        }
+
         String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.SPONSORED, type);
@@ -146,6 +163,11 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchTopProduct(int offset, int limit) {
+
+        if(mTopProduct != null){
+            mTopProduct.clear();
+        }
+
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
@@ -158,6 +180,11 @@ public class MyFeedPresenterImp implements IMyFeedPresenter, IArticleInteractor.
 
     @Override
     public void fetchLatestProduct(int offset, int limit) {
+
+        if(mLatestProduct != null){
+            mLatestProduct.clear();
+        }
+
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));

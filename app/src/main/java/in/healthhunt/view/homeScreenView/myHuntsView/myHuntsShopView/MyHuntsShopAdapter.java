@@ -91,6 +91,7 @@ public class MyHuntsShopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             if(title != null) {
                 String productName = title.getRendered();
+                Log.i("TAGTAGTAG", "produtname " + productName);
                 holder.mProductName.setText(productName);
             }
             else {

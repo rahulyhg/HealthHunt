@@ -15,6 +15,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 
+import java.util.List;
+
 import framework.retrofit.RestError;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
@@ -204,8 +206,10 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     @Override
     public void onSuccess(User user) {
         ILoginView.onHideProgress();
+        updateUserSession();
 
         if(!isUserExit(user)){
+            Log.i("TAGIDUSER", "ID NEW" + user.getUserId());
             storeUserInfo(user);
             ILoginView.startTagActivity();
         }
@@ -219,6 +223,8 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
             user.setTagList(tagList);
             user.setCurrentLogin(true);
             user.save();
+
+            Log.i("TAGIDUSER", "ID Already" + user.getUserId());
 
             if (!isTagAvailabel(user)) {
                 ILoginView.startTagActivity();
@@ -263,6 +269,14 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
         HealthHuntPreference.putString(mContext, Constants.USER_URL, String.valueOf(user.getUrl()));*/
     }
 
+    private void updateUserSession() {
+        List<User> userList = User.getAllUser();
+        for(User user: userList){
+            user.setCurrentLogin(false);
+            user.save();
+        }
+    }
+
     @Override
     public void onError(RestError errorInfo) {
         ILoginView.onHideProgress();
@@ -275,7 +289,7 @@ public class LoginPresenterImpl implements ILoginPresenter, ILoginInteractor.OnL
     @Override
     public void onNewUserSuccess(HHResponse<UserData> user) {
         ILoginView.onHideProgress();
-        storeUserInfo(user.getData().getUser());
+       // storeUserInfo(user.getData().getUser());
         ILoginView.showSignUpSuccessAlert(user.getMessage());
     }
 

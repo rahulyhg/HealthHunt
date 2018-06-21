@@ -180,7 +180,7 @@ public class HealthHuntUtility {
 
         NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
         Log.i("TAGUTILITY", " Value = " + val);
-        String numberAsString = numberFormat.format(Integer.parseInt(val));
+        String numberAsString = numberFormat.format(Long.parseLong(val));
         return numberAsString;
     }
 }

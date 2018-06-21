@@ -29,7 +29,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.SpaceDecoration;
@@ -235,6 +234,7 @@ public class ProfileFragment extends Fragment implements ITagView, IEditProfileV
     @Override
     public void onItemClick(int position) {
         updateTagCount();
+        updateCheckBox();
     }
 
     @OnClick(R.id.save)
@@ -437,22 +437,26 @@ public class ProfileFragment extends Fragment implements ITagView, IEditProfileV
                     }
                 }*/
                 updateAdapter();
+                updateCheckBox();
             }
         });
 
     }
 
 
-    @OnCheckedChanged(R.id.select_all_checkbox)
-    void onCheckBox(boolean isSelect){
+    @OnClick(R.id.select_all_checkbox)
+    void onClickCheckBox(){
+        boolean isSelect = mSelectAllCheck.isChecked();
         TagAdapter tagAdapter = (TagAdapter) mTagViewer.getAdapter();
-        if(isSelect){
+        if(!isSelect){
             ITagPresenter.selectAll();
             tagAdapter.setSelectAll(true);
+            mSelectAllCheck.setChecked(true);
         }
         else {
             ITagPresenter.unSelectAll();
             tagAdapter.setSelectAll(false);
+            mSelectAllCheck.setChecked(false);
         }
         updateTagCount();
 

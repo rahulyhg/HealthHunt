@@ -52,7 +52,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:maxLength="25"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
 
             <LinearLayout

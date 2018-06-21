@@ -18,6 +18,6 @@
         <include layout="@layout/related_products_article_view"/>
         <include layout="@layout/full_article_about_view"/>
         <include layout="@layout/full_article_comment_view" />
-        <include layout="@layout/listen_view"/>
+        <!--<include layout="@layout/listen_view"/>-->
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

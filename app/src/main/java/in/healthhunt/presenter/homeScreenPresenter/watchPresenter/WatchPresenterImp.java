@@ -45,6 +45,10 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
 
     @Override
     public void onArticleSuccess(List<ArticlePostItem> items) {
+        if(mVideoArticles != null){
+            mVideoArticles.clear();
+        }
+
         IWatchView.hideProgress();
         mVideoArticles = items;
         Log.i("TAGITEMS", "ITEMS " + mVideoArticles.size());
@@ -110,6 +114,7 @@ public class WatchPresenterImp implements IWatchPresenter, IArticleInteractor.On
 
     @Override
     public void fetchVideoArticles() {
+
         IWatchView.showProgress();
         String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
         Map<String, String> map = new HashMap<String, String>();

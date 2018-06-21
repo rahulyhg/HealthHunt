@@ -262,7 +262,7 @@ public class ArticleFragment extends Fragment {
         List<MediaItem> mediaItems = mArticlePostItem.getMedia();
         if(mediaItems != null && !mediaItems.isEmpty()) {
             MediaItem media = mediaItems.get(0);
-            if("image".equals(media.getMedia_type())) {
+            if("image".equalsIgnoreCase(media.getMedia_type())) {
                 articleUrl = media.getUrl();
             }
         }

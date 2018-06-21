@@ -28,6 +28,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center"
                     android:layout_gravity="center">
                     <TextView
@@ -39,7 +40,8 @@
                         android:gravity="center"
                         android:textColor="@color/hh_edittext_text_color"
                         android:layout_gravity="left|center"
-                        android:text="Abhishek"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         />
 
                     <TextView
