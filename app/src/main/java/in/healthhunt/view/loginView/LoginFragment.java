@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -50,6 +51,9 @@ public class LoginFragment extends Fragment{
     @BindView(R.id.password)
     EditText mPassword;
 
+    @BindView(R.id.login_view)
+    LinearLayout mLoginView;
+
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
     private int isLoginType;
@@ -70,9 +74,16 @@ public class LoginFragment extends Fragment{
 
     @OnClick(R.id.login)
     void onLogin() {
+        //clearFocus();
+        mLoginView.clearFocus();;
         isLoginType = LoginActivity.LOGIN_TYPE_NORMAL;
         IPresenter.validateCredentialsLogIn(mEmail.getText().toString(), mPassword.getText().toString());
         //startActivity(new Intent(getActivity(), HomeActivity.class));
+    }
+
+    private void clearFocus() {
+        mEmail.clearFocus();
+        mPassword.clearFocus();
     }
 
     @OnClick(R.id.sign_up)

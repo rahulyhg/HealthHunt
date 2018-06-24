@@ -28,7 +28,7 @@ import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
  */
 
 public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, IArticleInteractor.OnArticleFinishListener,
-        IBookMarkInteractor.OnFinishListener {
+        IBookMarkInteractor.OnFinishListener, IArticleInteractor.OnDeleteFinishListener {
 
     private String TAG = MyHuntsArticlesPresenterImp.class.getSimpleName();
     private IArticleInteractor IArticleInteractor;
@@ -53,10 +53,11 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
     public void onArticleSuccess(List<ArticlePostItem> items, int type) {
         mArticleCount--;
 
-        if(items == null || items.isEmpty()){
+        /*if(items == null || items.isEmpty()){
             Log.i("TAGITEMS", "Article Data is empty");
             return;
-        }
+        }*/
+
         Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
             case ArticleParams.SAVED:
@@ -100,6 +101,7 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
                             if(!bookMarkInfo.isBookMark()){
                                 updateSavedArticles(postItem);
                             }
+                            IMyHuntsView.updateSavedArticle(postItem);
                         }
                         break;
                     }
@@ -107,6 +109,12 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
                 break;
         }
         IMyHuntsView.updateAdapter();
+    }
+
+    @Override
+    public void onDeleteArticleSuccess(ArticlePostItem item) {
+        IMyHuntsView.hideProgress();
+        IMyHuntsView.deletePost(item.getArticle_Id());
     }
 
     @Override
@@ -271,20 +279,30 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
         }
     }
 
+    @Override
+    public void deletePost(String id) {
+        IMyHuntsView.showProgress();
+        IArticleInteractor.deleteArticle(mContext, id, this);
+    }
+
     private void fetchSavedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+
+        //String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_SAVED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filterCollection " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_SAVED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
+        //map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.SAVED, map, this);
@@ -294,17 +312,21 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
     private void fetchApprovedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+
+        //String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_CREATED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filterCollection " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_CREATED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_IMAGE);
+        map.put(ArticleParams.APP, String.valueOf(1));
+       // map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.APPROVED, map, this);
@@ -314,17 +336,21 @@ public class MyHuntsArticlesPresenterImp implements IMyHuntsArticlesPresenter, I
     private void fetchReceivedArticles(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
-        String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+        String filterCollection = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
+        String filterFormat = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+        // String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
                 + "," + '"' + ArticleParams.AUTHOR + '"'
                 + ":" + userId + "}";*/
 
-        Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_RECEIVED);
-        map.put(author, userId);
+        Log.i("TAGFILTER", "filter " + filterCollection);
+        map.put(filterCollection, ArticleParams.COLLECTION_RECEIVED);
+        map.put(filterFormat, ArticleParams.POST_FORMAT_IMAGE);
+
+        map.put(ArticleParams.APP, String.valueOf(1));
+       // map.put(author, userId);
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IArticleInteractor.fetchArticle(mContext, ArticleParams.RECEIVED, map, this);

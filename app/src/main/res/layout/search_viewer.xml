@@ -20,12 +20,11 @@
         android:alpha="54"/>-->
 
 
-   <AutoCompleteTextView
+    <AutoCompleteTextView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/search_icon"
-        android:layout_toLeftOf="@id/record"
+        android:layout_toEndOf="@id/search_icon"
         android:layout_centerInParent="true"
         android:gravity="left|center"
         android:paddingStart="16dp"
@@ -34,12 +33,23 @@
         android:hint="@string/search_by_tags"
         android:fontFamily="@string/font_family_regular"
         android:drawableStart="@mipmap/ic_search"
-        android:drawableEnd="@mipmap/ic_record"
         android:paddingEnd="16dp"
         android:dropDownAnchor="@id/search_root_view"
         android:drawablePadding="16dp"
         android:textColor="@color/hh_grey_dark"
         android:completionThreshold="1"/>
+
+    <ImageView
+        android:id="@+id/cross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_cross"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        />
 
     <!--<ImageView
         andridd:idmedia_category_tag_id@+id/record"

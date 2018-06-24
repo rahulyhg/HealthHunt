@@ -3,6 +3,8 @@ package in.healthhunt.view.homeScreenView.watchView;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.List;
+
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
 import in.healthhunt.view.homeScreenView.myFeedView.IView;
 
@@ -16,4 +18,5 @@ public interface IWatchView extends IView {
     void showAlert(String msg);
     void loadFragment(String fragmentName, Bundle bundle);
     void updateVideoSaved(ArticlePostItem postItem);
+    List<String> getCategories();
 }

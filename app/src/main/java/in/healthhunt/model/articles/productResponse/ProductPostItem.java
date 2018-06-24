@@ -3,6 +3,8 @@ package in.healthhunt.model.articles.productResponse;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -600,54 +602,62 @@ public class ProductPostItem extends Model{
 		return is_free_trial;
 	}
 
+	public static void removeProduct(String product_id){
+		new Delete().from(ProductPostItem.class).where("product_id = ?" , product_id).execute();
+	}
+
+	public static ProductPostItem getProduct(String product_id){
+		return new Select().from(ProductPostItem.class).where("product_id = ?" , product_id).executeSingle();
+	}
+
 	@Override
- 	public String toString(){
-		return 
-			"ProductPost{" +
-			"date = '" + date + '\'' + 
-			",trending = '" + trending + '\'' + 
-			",post_contactno = '" + post_contactno + '\'' +
-			",link = '" + link + '\'' + 
-			",post_youtube_id = '" + post_youtube_id + '\'' +
-			",media = '" + media + '\'' + 
-			",type = '" + type + '\'' + 
-			",title = '" + title + '\'' + 
-			",content = '" + content + '\'' + 
-			",is_commented = '" + is_commented + '\'' +
-			",post_name = '" + post_name + '\'' +
-			",modified = '" + modified + '\'' + 
-			",id = '" + product_id + '\'' +
-			",post_email = '" + post_email + '\'' +
-			",categories = '" + categories + '\'' + 
-			",date_gmt = '" + date_gmt + '\'' +
-			",slug = '" + slug + '\'' + 
-			",market_type = '" + market_type + '\'' +
-			",post_currency = '" + post_currency + '\'' +
-			",video_thumbnail_icon = '" + video_thumbnail_icon + '\'' +
-			",likes = '" + likes + '\'' + 
-			",tss_loved = '" + tss_loved + '\'' +
-			",current_user = '" + current_user + '\'' +
-			",post_quantity = '" + post_quantity + '\'' +
-			",post_unit = '" + post_unit + '\'' +
-			",comments = '" + comments + '\'' + 
-			",modified_gmt = '" + modified_gmt + '\'' +
-			",post_delivery = '" + post_delivery + '\'' +
-			",post_location = '" + post_location + '\'' +
-			",author = '" + author + '\'' + 
-			",format = '" + format + '\'' + 
-			",post_price = '" + post_price + '\'' +
-			",synopsis = '" + synopsis + '\'' + 
-			",comment_status = '" + comment_status + '\'' +
-			",tags = '" + tags + '\'' + 
-			",share_count = '" + share_count + '\'' +
-			",video_thumbnail = '" + video_thumbnail + '\'' +
-			",ping_status = '" + ping_status + '\'' +
-			",read_time = '" + read_time + '\'' +
-			",post_url = '" + post_url + '\'' +
-			",company_name = '" + company_name + '\'' +
-			",sticky = '" + sticky + '\'' + 
-			",excerpt = '" + excerpt + '\'' + 
-			",is_free_trial = '" + is_free_trial + '\'' +
-			"}";
-		}
+	public String toString(){
+		return
+				"ProductPost{" +
+						"date = '" + date + '\'' +
+						",trending = '" + trending + '\'' +
+						",post_contactno = '" + post_contactno + '\'' +
+						",link = '" + link + '\'' +
+						",post_youtube_id = '" + post_youtube_id + '\'' +
+						",media = '" + media + '\'' +
+						",type = '" + type + '\'' +
+						",title = '" + title + '\'' +
+						",content = '" + content + '\'' +
+						",is_commented = '" + is_commented + '\'' +
+						",post_name = '" + post_name + '\'' +
+						",modified = '" + modified + '\'' +
+						",id = '" + product_id + '\'' +
+						",post_email = '" + post_email + '\'' +
+						",categories = '" + categories + '\'' +
+						",date_gmt = '" + date_gmt + '\'' +
+						",slug = '" + slug + '\'' +
+						",market_type = '" + market_type + '\'' +
+						",post_currency = '" + post_currency + '\'' +
+						",video_thumbnail_icon = '" + video_thumbnail_icon + '\'' +
+						",likes = '" + likes + '\'' +
+						",tss_loved = '" + tss_loved + '\'' +
+						",current_user = '" + current_user + '\'' +
+						",post_quantity = '" + post_quantity + '\'' +
+						",post_unit = '" + post_unit + '\'' +
+						",comments = '" + comments + '\'' +
+						",modified_gmt = '" + modified_gmt + '\'' +
+						",post_delivery = '" + post_delivery + '\'' +
+						",post_location = '" + post_location + '\'' +
+						",author = '" + author + '\'' +
+						",format = '" + format + '\'' +
+						",post_price = '" + post_price + '\'' +
+						",synopsis = '" + synopsis + '\'' +
+						",comment_status = '" + comment_status + '\'' +
+						",tags = '" + tags + '\'' +
+						",share_count = '" + share_count + '\'' +
+						",video_thumbnail = '" + video_thumbnail + '\'' +
+						",ping_status = '" + ping_status + '\'' +
+						",read_time = '" + read_time + '\'' +
+						",post_url = '" + post_url + '\'' +
+						",company_name = '" + company_name + '\'' +
+						",sticky = '" + sticky + '\'' +
+						",excerpt = '" + excerpt + '\'' +
+						",is_free_trial = '" + is_free_trial + '\'' +
+						"}";
+	}
 }

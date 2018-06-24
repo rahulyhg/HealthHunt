@@ -3,6 +3,7 @@
     package="in.healthhunt">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
         android:name=".view.HealthHuntApp"
@@ -14,25 +15,30 @@
         android:theme="@style/AppTheme">
 
         <activity android:name="in.healthhunt.view.loginView.LoginActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation">
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"></action>
-                <category android:name="android.intent.category.LAUNCHER"></category>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity android:name=".view.tagView.TagActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name=".view.onBoardingView.OnBoardingActivity"></activity>
+            android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".view.onBoardingView.OnBoardingActivity"/>
+
         <activity android:name=".view.homeScreenView.HomeActivity" android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"></activity>
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:windowSoftInputMode="adjustPan"  />
+
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/FullyTranslucent11"
             tools:replace="android:theme"/>
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -45,9 +51,9 @@
         </activity>
 
         <activity android:name=".view.socialLogin.GoogleLoginActivity"
-             android:theme="@style/GoogleTransparent"/>
+            android:theme="@style/GoogleTransparent"/>
 
-        <activity android:name=".view.fullView.FullVideoActivity"></activity>
+        <activity android:name=".view.fullView.FullVideoActivity"/>
 
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
@@ -60,9 +66,13 @@
         <meta-data android:name="AA_DB_NAME" android:value="MyDatabase.db" />
         <meta-data android:name="AA_DB_VERSION" android:value="2" />
 
-       <!-- <meta-data android:name="AA_SERIALIZERS"
-            android:value="in.healthhunt.model.articles.commonResponse.MediaItem" />-->
+        <!-- <meta-data android:name="AA_SERIALIZERS"
+             android:value="in.healthhunt.model.articles.commonResponse.MediaItem" />-->
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="4934d7737b18862483c13a9075abe05005637917"
+            />
 
     </application>
 

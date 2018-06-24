@@ -110,7 +110,9 @@ public class FilterPresenterImp implements IFilterPresenter, IFilterInteractor.O
         if(mProductTypes == null){
             mProductTypes = new ArrayList<String>();
         }
-        mProductTypes.add(id);
+        if(id != null && !id.isEmpty()) {
+            mProductTypes.add(id);
+        }
     }
 
     @Override
@@ -136,7 +138,9 @@ public class FilterPresenterImp implements IFilterPresenter, IFilterInteractor.O
         if(mBrands == null){
             mBrands = new ArrayList<String>();
         }
-        mBrands.add(id);
+        if(id != null && !id.isEmpty()) {
+            mBrands.add(id);
+        }
     }
 
     @Override

@@ -40,7 +40,6 @@
                     android:fontFamily="@string/font_family_medium"
                     android:textSize="14sp"
                     android:gravity="center"
-                    android:text="ABHISHEK"
                     android:textColor="@android:color/black"
                     />
 

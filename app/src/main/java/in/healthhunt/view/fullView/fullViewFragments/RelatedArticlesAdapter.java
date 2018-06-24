@@ -62,6 +62,7 @@ public class RelatedArticlesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void setContent(RelatedArticleViewHolder holder, int pos) {
 
         ArticlePostItem postsItem = IFullPresenter.getRelatedArticle(pos);
+        Log.i("TAGPOSTMAIN", " POstimen " + postsItem);
         if(postsItem != null) {
             String url = null;
             List<MediaItem> mediaItems = postsItem.getMedia();
@@ -86,8 +87,10 @@ public class RelatedArticlesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryName.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryName.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }

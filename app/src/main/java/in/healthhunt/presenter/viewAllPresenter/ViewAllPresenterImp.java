@@ -7,10 +7,8 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import framework.retrofit.RestError;
 import in.healthhunt.model.articles.ArticleParams;
@@ -19,8 +17,7 @@ import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkInfo;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
-import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.presenter.interactor.articleInteractor.ArticleInteractorImpl;
 import in.healthhunt.presenter.interactor.articleInteractor.IArticleInteractor;
 import in.healthhunt.presenter.interactor.bookMarkInteractor.BookMarkInteractorImpl;
@@ -39,7 +36,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
     private String TAG = ViewAllPresenterImp.class.getSimpleName();
     private IViewAll IViewAll;
     private Context mContext;
-   // private IViewAllInteractor IViewAllInteractor;
+    // private IViewAllInteractor IViewAllInteractor;
     private List<ArticlePostItem> mArticlePosts;
     private List<ProductPostItem> mProductPosts;
     private IBookMarkInteractor IBookMarkInteractor;
@@ -88,19 +85,38 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
 
         IViewAll.showProgress();
         Map<String, String> map = new HashMap<String, String>();
+        int limit = 30;
+        if(IViewAll.isRelated()){
+            limit = 9;
+        }
+
+        String filter = ArticleParams.FILTER + "[" + ArticleParams.FORMAT + "]";
+        List<String> categories = IViewAll.getCategories();
 
         switch (type) {
             case ArticleParams.LATEST_ARTICLES:
+
                 map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
+                map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
-                map.put(ArticleParams.LIMIT, String.valueOf(30));
-                IArticleInteractor.fetchAllArticle(mContext, map,this);
+                map.put(ArticleParams.LIMIT, String.valueOf(limit));
+                map.put(ArticleParams.APP, String.valueOf(1));
+
+                if(categories != null && !categories.isEmpty() && !categories.contains("1")) {  // 1 For ALL
+                    IArticleInteractor.fetchAllArticleCategory(mContext, map, categories, this);
+                }
+                else{
+                    IArticleInteractor.fetchAllArticle(mContext, map,this);
+                }
+
                 break;
 
             case ArticleParams.RELATED_ARTICLES:
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
-                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                map.put(ArticleParams.LIMIT, String.valueOf(limit));
                 map.put(ArticleParams.RELATED, id);
+                map.put(ArticleParams.APP, String.valueOf(1));
+                map.put(filter, ArticleParams.POST_FORMAT_IMAGE);
                 IArticleInteractor.fetchAllArticle(mContext, map,this);
                 break;
 
@@ -113,7 +129,7 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                 IArticleInteractor.fetchAllArticle(mContext, map,this);
                 break;*/
             case ArticleParams.BASED_ON_TAGS:
-                Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
+                /*Set<String> tagIds = HealthHuntPreference.getSet(mContext, Constants.SELECTED_TAGS_KEY);
                 String tags = "";
                 Iterator iterator = tagIds.iterator();
                 while (iterator.hasNext()) {
@@ -121,25 +137,36 @@ public class ViewAllPresenterImp implements IViewAllPresenter, IArticleInteracto
                     if(iterator.hasNext()){
                         tags = tags + ",";
                     }
-                }
+                }*/
+                User user = User.getCurrentUser();
+                String tags = user.getTagList();
                 map.put(ArticleParams.TAGS, tags);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
-                map.put(ArticleParams.LIMIT, String.valueOf(30));
-                IArticleInteractor.fetchAllArticle(mContext, map,this);
+                map.put(ArticleParams.LIMIT, String.valueOf(limit));
+                map.put(ArticleParams.APP, String.valueOf(1));
+
+                if(categories != null && !categories.isEmpty() && !categories.contains("1")) {  // 1 For ALL
+                    IArticleInteractor.fetchAllArticleCategory(mContext, map, categories, this);
+                }
+                else {
+                    IArticleInteractor.fetchAllArticle(mContext, map, this);
+                }
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
                 map.put(ArticleParams.TYPE, ArticleParams.MARKET);
                 map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
-                map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_WEEK);
+                map.put(ArticleParams.SECTION, ArticleParams.LATEST_BY_MONTH);
+                map.put(ArticleParams.APP, String.valueOf(1));
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
-                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                map.put(ArticleParams.LIMIT, String.valueOf(limit));
                 IProductInteractor.fetchAllProduct(mContext, map, this);
                 break;
             case ArticleParams.RELATED_PRODUCTS:
                 map.put(ArticleParams.TYPE, ArticleParams.MARKET);
                 map.put(ArticleParams.OFFSET, String.valueOf(0));
-                map.put(ArticleParams.LIMIT, String.valueOf(30));
+                map.put(ArticleParams.LIMIT, String.valueOf(limit));
+                map.put(ArticleParams.APP, String.valueOf(1));
                 map.put(ArticleParams.RELATED, id);
                 IProductInteractor.fetchAllProduct(mContext, map, this);
                 break;

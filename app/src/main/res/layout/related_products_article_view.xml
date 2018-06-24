@@ -24,6 +24,7 @@
             android:text="@string/related_products"
             android:layout_weight="1"
             android:textColor="@color/hh_edittext_text_color"
+            android:maxLength="20"
             android:paddingTop="24dp"
             />
 

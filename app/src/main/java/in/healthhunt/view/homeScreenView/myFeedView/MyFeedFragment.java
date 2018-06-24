@@ -1,22 +1,16 @@
 package in.healthhunt.view.homeScreenView.myFeedView;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -26,21 +20,17 @@ import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
-import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.IMyFeedPresenter;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.MyFeedPresenterImp;
 import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.ArticleViewHolder;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.ContinueArticleViewHolder;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.LatestArticleViewHolder;
-import in.healthhunt.view.homeScreenView.myFeedView.articleView.SponsoredAdapter;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.SponsoredArticleViewHolder;
-import in.healthhunt.view.homeScreenView.myFeedView.articleView.TrendingAdapter;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.TrendingArticleViewHolder;
 import in.healthhunt.view.homeScreenView.myFeedView.productView.LatestProductViewHolder;
-import in.healthhunt.view.homeScreenView.myFeedView.productView.TopProductAdapter;
 import in.healthhunt.view.homeScreenView.myFeedView.productView.TopProductViewHolder;
 
 /**
@@ -52,11 +42,8 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     @BindView(R.id.my_feed_recycler_list)
     RecyclerView mFeedViewer;
 
-    @BindView(R.id.category_viewer)
-    LinearLayout mCategoryViewer;
-
-    @BindView(R.id.horizontalScrollView)
-    HorizontalScrollView mHorizontalScrollView;
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
 
     private IMyFeedPresenter IMyFeedPresenter;
     private FragmentManager mFragmentManager;
@@ -174,12 +161,12 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
 
     @Override
     public List<ProductPostItem> getTopProductArticles() {
-        return IMyFeedPresenter.getTopProductArticles();
+        return IMyFeedPresenter.getTopProducts();
     }
 
     @Override
     public List<ProductPostItem> getLatestProductArticles() {
-        return IMyFeedPresenter.getLatestProductArticles();
+        return IMyFeedPresenter.getLatestProducts();
     }
 
     @Override
@@ -192,90 +179,39 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
                 if(viewHolder instanceof ArticleViewHolder) {
                     ((ArticleViewHolder) viewHolder).notifyDataChanged();
                 }
-                else if(viewHolder instanceof TrendingAdapter.TrendingItemViewHolder) {
-                    ((TrendingAdapter.TrendingItemViewHolder) viewHolder).notifyDataChanged();
+                else if(viewHolder instanceof TrendingArticleViewHolder) {
+                    ((TrendingArticleViewHolder) viewHolder).notifyDataChanged();
                 }
                 else if(viewHolder instanceof LatestArticleViewHolder) {
                     ((LatestArticleViewHolder) viewHolder).notifyDataChanged();
                 }
-                else if(viewHolder instanceof SponsoredAdapter.SponsoredItemViewHolder) {
-                    ((SponsoredAdapter.SponsoredItemViewHolder) viewHolder).notifyDataChanged();
+                else if(viewHolder instanceof SponsoredArticleViewHolder) {
+                    ((SponsoredArticleViewHolder) viewHolder).notifyDataChanged();
                 }
-                else if(viewHolder instanceof TopProductAdapter.TopProductItemViewHolder) {
-                    ((TopProductAdapter.TopProductItemViewHolder) viewHolder).notifyDataChanged();
+                else if(viewHolder instanceof TopProductViewHolder) {
+                    ((TopProductViewHolder) viewHolder).notifyDataChanged();
                 }
                 else if(viewHolder instanceof LatestProductViewHolder) {
                     ((LatestProductViewHolder) viewHolder).notifyDataChanged();
                 }
             }
+            updateVisibility();
         }
 
-        updateCategoryView();
+        IHomeView.updateCategoryVisibility();
+        //updateCategoryView();
     }
 
-    private void updateCategoryView() {
-        List<String> categoryList = IHomeView.getHomePresenter().getCategoryList();
-
-        Log.i("TAGCategoryList", "List " + categoryList);
-        if(categoryList == null || categoryList.isEmpty() || categoryList.contains(Constants.All)){
-            removeAllCategory();
-            mHorizontalScrollView.setVisibility(View.GONE);
-            return;
+    public void updateVisibility(){
+        int count = IMyFeedPresenter.getCount();
+        if(count == 0){
+            mNoRecords.setVisibility(View.VISIBLE);
+            mFeedViewer.setVisibility(View.GONE);
         }
-
-
-        removeAllCategory();
-        mHorizontalScrollView.setVisibility(View.VISIBLE);
-        for(String name: categoryList) {
-            addCategoryView(name);
+        else {
+            mNoRecords.setVisibility(View.GONE);
+            mFeedViewer.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void addCategoryView(String name) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.category_my_feed_item_view, null);
-        ImageView image = view.findViewById(R.id.category_image);
-        TextView textView = view.findViewById(R.id.category_name);
-
-
-        textView.setText(name);
-
-        if(name.equalsIgnoreCase(Constants.LOVE)){
-            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.circle_view);
-            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_red_light), PorterDuff.Mode.SRC_ATOP);
-            imageBack.setBackground(drawable);
-        }
-
-        if(name.equalsIgnoreCase(Constants.FITNESS)){
-            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.circle_view);
-            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_ATOP);
-            imageBack.setBackground(drawable);
-        }
-
-        int src = HealthHuntUtility.getCategoryIcon(name);
-        image.setImageResource(src);
-
-        view.setTag(name);
-        mCategoryViewer.addView(view);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IHomeView.getHomePresenter().removeCategory(view.getTag().toString());
-                mCategoryViewer.removeView(view);
-                // will update the articles list
-                if(mCategoryViewer.getChildCount() == 0){
-                    mHorizontalScrollView.setVisibility(View.GONE);
-                }
-                updateData();
-                IHomeView.updateDrawerFragment();
-            }
-        });
-    }
-
-    private void removeAllCategory() {
-        mCategoryViewer.removeAllViews();
     }
 
     @Override
@@ -345,12 +281,40 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
 
     @Override
     public void updateArticleSaved(ArticlePostItem postItem) {
-        IHomeView.updateArticleSavedData(postItem);
+
+        String url = postItem.getVideo_thumbnail();
+        if(url == null || url.isEmpty()) {   // For article
+            IHomeView.updateMyhuntsArticleSaved(postItem);
+        }
+        else {
+            IHomeView.updateMyhuntsVideoSaved(postItem);
+        }
+        CurrentUser currentUser = postItem.getCurrent_user();
+        showToast(currentUser);
+        updateDataOfArticles(postItem);
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.added_to_my_hunt);//getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed_from_my_hunt);//getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 
     @Override
     public void updateProductSaved(ProductPostItem productPostItem) {
-        IHomeView.updateProductSavedData(productPostItem);
+        IHomeView.updateMyhuntsProductSaved(productPostItem);
+        CurrentUser currentUser = productPostItem.getCurrent_user();
+        showToast(currentUser);
+        IHomeView.updateShop(productPostItem);
+        updateDataOfProducts(productPostItem);
+    }
+
+    @Override
+    public List<String> getCategories() {
+        return IHomeView.getCategories();
     }
 
     @Override
@@ -371,4 +335,227 @@ public class MyFeedFragment extends Fragment implements IMyFeedView {
     public void updateData(){
         IMyFeedPresenter.fetchData();
     }
+
+    public void updateDataOfArticles(ArticlePostItem postItem){
+        updateBasedOnTags(postItem);
+        updateTrending(postItem);
+        updateSponsored(postItem);
+        updateLatestArticles(postItem);
+        mFeedAdapter.notifyDataSetChanged();
+    }
+
+    public void updateDataOfProducts(ProductPostItem postItem){
+        updateTopProduct(postItem);
+        updateLatestProduct(postItem);
+        mFeedAdapter.notifyDataSetChanged();
+    }
+
+
+    private void updateBasedOnTags(ArticlePostItem articlePostItem){     // For Bookmark
+        List<ArticlePostItem> list = IMyFeedPresenter.getTagArticles();
+        for(ArticlePostItem postItem: list){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(articlePostItem.getCurrent_user().isBookmarked());
+                }
+                //updateBasedOnTagsAdapter();
+                break;
+            }
+        }
+    }
+
+    private void updateTrending(ArticlePostItem articlePostItem){   // For Bookmark
+        List<ArticlePostItem> list = IMyFeedPresenter.getTrendingArticles();
+        for(ArticlePostItem postItem: list){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(articlePostItem.getCurrent_user().isBookmarked());
+                }
+                //updateTrendingAdapter();
+                break;
+            }
+        }
+    }
+
+    private void updateSponsored(ArticlePostItem articlePostItem){   // For Bookmark
+        Log.i("TAGSPONSPRED", "updateSponsored " + articlePostItem.getArticle_Id());
+        List<ArticlePostItem> list = IMyFeedPresenter.getSponsoredArticles();
+        for(ArticlePostItem postItem: list){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(articlePostItem.getCurrent_user().isBookmarked());
+                }
+                Log.i("TAGSPONSPRED", "SPONSPR");
+                //updateSponsoredAdapter();
+                break;
+            }
+        }
+    }
+
+    private void updateLatestArticles(ArticlePostItem articlePostItem){   // For Bookmark
+        List<ArticlePostItem> list = IMyFeedPresenter.getLatestArticles();
+        for(ArticlePostItem postItem: list){
+            if(postItem.getArticle_Id().equalsIgnoreCase(articlePostItem.getArticle_Id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(articlePostItem.getCurrent_user().isBookmarked());
+                }
+                //updateLatestArticleAdapter();
+                break;
+            }
+        }
+    }
+
+    private void updateTopProduct(ProductPostItem productPostItem){
+        List<ProductPostItem> list = IMyFeedPresenter.getTopProducts();
+        for(ProductPostItem postItem: list){
+            if(postItem.getProduct_id().equalsIgnoreCase(productPostItem.getProduct_id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(productPostItem.getCurrent_user().isBookmarked());
+                }
+                //updateTopProductsAdapter();
+                break;
+            }
+        }
+    }
+
+    private void updateLatestProduct(ProductPostItem productPostItem){
+        List<ProductPostItem> list = IMyFeedPresenter.getLatestProducts();
+        for(ProductPostItem postItem: list){
+            if(postItem.getProduct_id().equalsIgnoreCase(productPostItem.getProduct_id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(productPostItem.getCurrent_user().isBookmarked());
+                }
+                //updateLatestProductAdapter();
+                break;
+            }
+        }
+    }
+
+    /*private void updateBasedOnTagsAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedAdapter.getItemCount();
+            for(int i=0; i<count; i++) {
+                View view = mFeedViewer.getChildAt(i);
+
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(mFeedViewer.getChildAt(i));
+                }
+
+                if(viewHolder instanceof ArticleViewHolder) {
+                    ((ArticleViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateTrendingAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedAdapter.getItemCount();
+            for(int i=0; i<count; i++) {
+                View view = mFeedViewer.getChildAt(i);
+
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(mFeedViewer.getChildAt(i));
+                }
+                if(viewHolder instanceof TrendingArticleViewHolder) {
+                    ((TrendingArticleViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateSponsoredAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedViewer.getChildCount();
+            for(int i=0; i<count; i++) {
+                View view = mFeedViewer.getChildAt(i);
+
+                Log.i("TagFeed", "View  " + view);
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(view);
+                }
+                if(viewHolder instanceof SponsoredArticleViewHolder) {
+                    ((SponsoredArticleViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateTopProductsAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedViewer.getChildCount();
+            for(int i=0; i<count; i++) {
+                View view = mFeedViewer.getChildAt(i);
+
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(view);
+                }
+
+                if(viewHolder instanceof TopProductViewHolder) {
+                    ((TopProductViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+
+    private void updateLatestProductAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedViewer.getChildCount();
+            for(int i=0; i<count; i++) {
+                View view = mFeedViewer.getChildAt(i);
+
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(view);
+                }
+
+                if(viewHolder instanceof LatestProductViewHolder) {
+                    ((LatestProductViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateLatestArticleAdapter(){
+        if(mFeedAdapter != null) {
+            mFeedAdapter.notifyDataSetChanged();
+            int count = mFeedViewer.getChildCount();
+            for(int i=0; i<count; i++) {
+
+                View view = mFeedViewer.getChildAt(i);
+
+                RecyclerView.ViewHolder viewHolder = null;
+                if(view != null) {
+                    viewHolder = mFeedViewer.getChildViewHolder(view);
+                }
+
+
+                if(viewHolder instanceof LatestArticleViewHolder) {
+                    ((LatestArticleViewHolder) viewHolder).notifyDataChanged();
+                    break;
+                }
+            }
+        }
+    }*/
 }

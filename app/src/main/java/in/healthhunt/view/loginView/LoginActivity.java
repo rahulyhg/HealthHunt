@@ -15,19 +15,22 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
-import in.healthhunt.model.preference.HealthHuntPreference;
+import in.healthhunt.model.login.User;
 import in.healthhunt.presenter.loginPresenter.Facebook;
 import in.healthhunt.presenter.loginPresenter.ILoginPresenter;
 import in.healthhunt.presenter.loginPresenter.LoginPresenterImpl;
 import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.homeScreenView.HomeActivity;
 import in.healthhunt.view.tagView.TagActivity;
+import io.fabric.sdk.android.Fabric;
 
 import static in.healthhunt.view.socialLogin.GoogleLoginActivity.GOOGLE_LOGIN_RESPONSE_OK;
 
@@ -51,7 +54,10 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Fabric.with(this, new Crashlytics());
         ButterKnife.bind(this);
+
+
 
         IPresenter = new LoginPresenterImpl(this);
 
@@ -72,6 +78,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         if(ForgotPasswordFragment.class.getSimpleName().equals(tag)) { // Needed when user press the back button on forgot password screen
             fragmentTransaction.addToBackStack(tag);
         }
@@ -120,7 +127,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
 
     @Override
     public void showFragment(String tag, Bundle bundle) {
-        Fragment fragment = fragmentMap.get(tag);
+        Fragment fragment = null;//fragmentMap.get(tag);
 
         if(fragment == null) {
             if (tag != null && tag.equals(LoginFragment.class.getSimpleName())) {
@@ -130,7 +137,7 @@ public class LoginActivity extends BaseActivity implements ILoginView{
             } else if (tag != null && tag.equals(ForgotPasswordFragment.class.getSimpleName())) {
                 fragment = new ForgotPasswordFragment();
             }
-            fragmentMap.put(tag, fragment);
+            //fragmentMap.put(tag, fragment);
         }
         fragment.setArguments(bundle);
         loadFragment(fragment, tag);
@@ -146,10 +153,12 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         TextView message = dialog.findViewById(R.id.alert_message);
         message.setText(spannable, TextView.BufferType.SPANNABLE);
 
+        String str = getResources().getString(R.string.alert);
         TextView title = dialog.findViewById(R.id.alert_title);
-        title.setVisibility(View.GONE);
+        title.setText(str);
 
         Button okButton = dialog.findViewById(R.id.action_button);
+        okButton.setText(android.R.string.ok);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,19 +179,18 @@ public class LoginActivity extends BaseActivity implements ILoginView{
         TextView message = dialog.findViewById(R.id.alert_message);
         message.setText(msg);
 
-        String str = getResources().getString(R.string.could_not_log_in);
+        String str = getResources().getString(R.string.alert);
         TextView title = dialog.findViewById(R.id.alert_title);
         title.setText(str);
 
-        str = getResources().getString(R.string.try_again);
         Button okButton = dialog.findViewById(R.id.action_button);
-        okButton.setText(str);
+        okButton.setText(android.R.string.ok);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
-                if(fragment instanceof LoginFragment){
+                //Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frame);
+                /*if(fragment instanceof LoginFragment){
                     LoginFragment loginFragment = (LoginFragment) fragment;
                     loginFragment.tryAgain();
 
@@ -190,7 +198,34 @@ public class LoginActivity extends BaseActivity implements ILoginView{
                 else if(fragment instanceof SignUpFragment){
                     SignUpFragment signUpFragment = (SignUpFragment) fragment;
                     signUpFragment.tryAgain();
-                }
+                }*/
+            }
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void showSignUpSuccessAlert(String msg) {
+        final Dialog dialog = new Dialog(this);
+
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.alertdialog_view);
+        //dialog.
+
+        TextView message = dialog.findViewById(R.id.alert_message);
+        message.setText(msg);
+
+        String str = getResources().getString(R.string.alert);
+        TextView title = dialog.findViewById(R.id.alert_title);
+        title.setText(str);
+
+        Button okButton = dialog.findViewById(R.id.action_button);
+        okButton.setText(android.R.string.ok);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IPresenter.loadFragment(LoginFragment.class.getSimpleName(), null);
+                dialog.dismiss();
             }
         });
         dialog.show();
@@ -240,6 +275,11 @@ public class LoginActivity extends BaseActivity implements ILoginView{
     }
 
     public boolean isNeedLogin() {
-        return HealthHuntPreference.getBoolean(this, Constants.IS_LOGIN_FIRST_KEY);
+        User user = User.getCurrentUser();
+        if(user != null && user.getTagList() != null
+                && !user.getTagList().isEmpty()){
+            return true;
+        }
+        return false;
     }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.view.homeScreenView.myFeedView.IView;
 
 /**
@@ -16,4 +18,7 @@ public interface IMyHuntsView extends IView {
     void showAlert(String msg);
     int getType();
     void loadFragment(String fragmentName, Bundle bundle);
+    void updateSavedArticle(ArticlePostItem articlePostItem);
+    void updateSavedProduct(ProductPostItem productPostItem);
+    void deletePost(String id);
 }

@@ -17,4 +17,5 @@ public interface ITagView {
     TagViewHolder createTagViewHolder(View view);
     void loadFragment(String fragmentName, Bundle bundle);
     ITagPresenter getPresenter();
+    void updateSearchAdapter();
 }

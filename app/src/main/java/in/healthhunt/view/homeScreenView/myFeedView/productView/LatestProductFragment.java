@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,9 @@ import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
@@ -60,6 +63,12 @@ public class LatestProductFragment extends Fragment {
 
     @BindView(R.id.latest_product_unit)
     TextView mProductUnit;
+
+    @BindView(R.id.free_trail)
+    TextView mFreeTrail;
+
+    @BindView(R.id.price_view)
+    LinearLayout mPriceView;
 
     private int mPos;
     private IProductPresenter IProductPresenter;
@@ -101,25 +110,47 @@ public class LatestProductFragment extends Fragment {
 
     private void setContent() {
 
-        String productName = mProductPostItem.getProduct_type_other_name();
+        /*String productName = mProductPostItem.getProduct_type_other_name();
         if(productName != null) {
             mProductName.setText(productName);
+        }*/
+
+        Title title = mProductPostItem.getTitle();
+        if(title != null){
+            String render = title.getRendered();
+            mProductName.setText(render);
         }
 
 
-        String price = mProductPostItem.getPost_price();
-        if(price != null) {
-            String postQuantity = mProductPostItem.getPost_quantity();
-            String rs = getContext().getString(R.string.rs);
-            rs = rs + " " + price + "/" + postQuantity;
-            mProductPrice.setText(rs);
+        int is_free_trail = 0;
+        String is_free = mProductPostItem.getIs_free_trial();
+        if(is_free != null && !is_free.isEmpty()){
+            is_free_trail = Integer.parseInt(is_free);
         }
 
+        if(is_free_trail == 0) {
+            mPriceView.setVisibility(View.VISIBLE);
+            mFreeTrail.setVisibility(View.GONE);
+            String price = mProductPostItem.getPost_price();
 
-        String postUnit = mProductPostItem.getPost_unit();
-        Log.i("TAGUNIT" ," UNIT " + postUnit);
-        if(postUnit != null) {
-            mProductUnit.setText(postUnit);
+            if (price != null) {
+                String postQuantity = mProductPostItem.getPost_quantity();
+                String rs = getContext().getString(R.string.rs);
+                price = HealthHuntUtility.addSeparator(price);
+                rs = rs + " " + price + "/" + postQuantity;
+                mProductPrice.setText(rs);
+            }
+
+
+            String postUnit = mProductPostItem.getPost_unit();
+            Log.i("TAGUNIT", " UNIT " + postUnit);
+            if (postUnit != null) {
+                mProductUnit.setText(postUnit);
+            }
+        }
+        else {
+            mPriceView.setVisibility(View.GONE);
+            mFreeTrail.setVisibility(View.VISIBLE);
         }
 
         CurrentUser currentUser = mProductPostItem.getCurrent_user();

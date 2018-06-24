@@ -2,6 +2,7 @@ package in.healthhunt.presenter.interactor.articleInteractor;
 
 import android.content.Context;
 
+import java.util.List;
 import java.util.Map;
 
 import framework.retrofit.ResponseResolver;
@@ -9,6 +10,7 @@ import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.fullArticleResponse.FullArticleResponse;
+import in.healthhunt.model.deletePost.DeleteArticleData;
 import in.healthhunt.model.response.HHResponse;
 import retrofit2.Response;
 
@@ -33,6 +35,36 @@ public class ArticleInteractorImpl implements IArticleInteractor {
     }
 
     @Override
+    public void fetchAllArticleCategory(Context context, Map<String, String> queryMap, List<String> category, final OnViewAllFinishListener finishListener) {
+        WebServicesWrapper.getInstance(context).fetchArticlesCategory(queryMap, category,  new ResponseResolver<HHResponse<ArticleData>>() {
+            @Override
+            public void onSuccess(HHResponse<ArticleData> articleDat, Response response2) {
+                finishListener.onArticleSuccess(articleDat.getData().getPosts());
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                finishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void deleteArticle(Context context, String id, final OnDeleteFinishListener deleteFinishListener) {
+        WebServicesWrapper.getInstance(context).deleteArticle(id, new ResponseResolver<HHResponse<DeleteArticleData>>() {
+            @Override
+            public void onSuccess(HHResponse<DeleteArticleData> deleteDataHHResponse, Response response) {
+                deleteFinishListener.onDeleteArticleSuccess(deleteDataHHResponse.getData().getPost());
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+            deleteFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
     public void fetchFullArticle(Context context, String id, final OnFullViewFinishListener finishListener) {
         WebServicesWrapper.getInstance(context).fetchFullArticle(id, new ResponseResolver<FullArticleResponse>() {
             @Override
@@ -50,6 +82,21 @@ public class ArticleInteractorImpl implements IArticleInteractor {
     @Override
     public void fetchArticle(Context context, final int type, Map<String, String> queryMap, final OnArticleFinishListener articleFinishListener) {
         WebServicesWrapper.getInstance(context).fetchArticles(queryMap, new ResponseResolver<HHResponse<ArticleData>>() {
+            @Override
+            public void onSuccess(HHResponse<ArticleData> articleData, Response response) {
+                articleFinishListener.onArticleSuccess(articleData.getData().getPosts(), type);
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                articleFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void fetchArticlesCategory(Context context, final int type, Map<String, String> queryMap, List<String> category, final OnArticleFinishListener articleFinishListener) {
+        WebServicesWrapper.getInstance(context).fetchArticlesCategory(queryMap, category, new ResponseResolver<HHResponse<ArticleData>>() {
             @Override
             public void onSuccess(HHResponse<ArticleData> articleData, Response response) {
                 articleFinishListener.onArticleSuccess(articleData.getData().getPosts(), type);

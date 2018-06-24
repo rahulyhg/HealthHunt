@@ -51,10 +51,13 @@
                 android:textSize="12sp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:maxLines="1"/>
+                android:maxLength="25"
+                android:maxLines="1"
+                android:ellipsize="end"/>
 
 
             <LinearLayout
+                android:id="@+id/price_view"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:gravity="right"
@@ -68,6 +71,7 @@
                     android:gravity="right|center"
                     android:textColor="@color/hh_green_light2"
                     android:textSize="12sp"
+                    android:maxLength="10"
                     android:maxLines="1"/>
 
                 <TextView
@@ -78,8 +82,22 @@
                     android:gravity="right|center"
                     android:textColor="@color/hh_green_light2"
                     android:textSize="12sp"
+                    android:maxLength="10"
                     android:maxLines="1"/>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/free_trail"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@string/font_family_regular"
+                android:gravity="right|center"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:textColor="@color/hh_green_light2"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:text="@string/free_trial"/>
 
         </RelativeLayout>
     </RelativeLayout>

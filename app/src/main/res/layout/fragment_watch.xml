@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/hh_background_light">
+    android:background="@color/hh_background_light"
+    android:gravity="center">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/watch_recycler_list"
@@ -15,4 +16,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:id="@+id/no_records"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_records_found"
+        android:visibility="gone"/>
 </LinearLayout>

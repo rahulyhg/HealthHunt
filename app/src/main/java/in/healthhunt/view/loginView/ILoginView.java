@@ -16,6 +16,7 @@ public interface ILoginView {
     void showFragment(String tag, Bundle bundle);
     void showPasswordChangeAlert(Spannable spannable);
     void showLoginAlert(String msg);
+    void showSignUpSuccessAlert(String msg);
     void showToast(String message);
     void startTagActivity();
     void startHomeActivity();

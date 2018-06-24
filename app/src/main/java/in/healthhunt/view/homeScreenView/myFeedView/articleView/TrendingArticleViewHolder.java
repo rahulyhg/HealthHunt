@@ -20,6 +20,7 @@ import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.ArticlePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.articlePresenter.IArticlePresenter;
 import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
+import in.healthhunt.view.fullView.fullViewFragments.YoutubeFragment;
 import in.healthhunt.view.homeScreenView.myFeedView.IMyFeedView;
 
 /**
@@ -52,7 +53,12 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
     private void setAdapter() {
         TrendingAdapter trendingAdapter = new TrendingAdapter(mContext, IArticlePresenter);
         trendingAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mTrendingViewer.setLayoutManager(layoutManager);
         mTrendingViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, mContext), SpaceDecoration.VERTICAL));
         mTrendingViewer.setAdapter(trendingAdapter);
@@ -124,9 +130,22 @@ public class TrendingArticleViewHolder extends RecyclerView.ViewHolder implement
             mContext.startActivity(intent);*/
 
             Bundle bundle = new Bundle();
-            bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
             bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getArticle_Id()));
-            IArticlePresenter.loadFragment(FullArticleFragment.class.getSimpleName(), bundle);
+            String url = postsItem.getVideo_thumbnail();
+            if(url == null || url.isEmpty()) {
+                bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.ARTICLE);
+                IArticlePresenter.loadFragment(FullArticleFragment.class.getSimpleName(), bundle);
+            }
+            else {
+                bundle.putInt(ArticleParams.POST_TYPE, ArticleParams.VIDEO);
+                IArticlePresenter.loadFragment(YoutubeFragment.class.getSimpleName(), bundle);
+            }
+        }
+    }
+
+    public void notifyDataChanged(){
+        if(mTrendingViewer != null && mTrendingViewer.getAdapter() != null){
+            mTrendingViewer.getAdapter().notifyDataSetChanged();
         }
     }
 }

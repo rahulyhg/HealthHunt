@@ -30,13 +30,31 @@ public interface IHomeView {
     void sendFilterData(Map<Integer, List<String>> map);
     Map<Integer, List<String>> getFilterData();
     void closeDrawer();
-    void updateMyFeedArticles();
+    void updateMyFeed();
+    void updateWatch();
+
+    void updateCategoryVisibility();
+
     void updateDrawerFragment();
     void hideActionBar();
     void showActionBar();
     void setStatusBarTranslucent(boolean val);
     void updateDownloadData();
-    void updateArticleSavedData(ArticlePostItem  articlePostItem);
-    void updateVideoSavedData(ArticlePostItem  articlePostItem);
-    void updateProductSavedData(ProductPostItem productPostItem);
+    void updateMyhuntsArticleSaved(ArticlePostItem  articlePostItem);
+    void updateMyhuntsVideoSaved(ArticlePostItem  articlePostItem);
+    void updateMyhuntsProductSaved(ProductPostItem productPostItem);
+    void showDrawerMenu();
+    void hideDrawerMenu();
+
+    void updateMyFeedArticle(ArticlePostItem  articlePostItem);
+    void updateMyFeedProduct(ProductPostItem productPostItem);
+    void updateWatch(ArticlePostItem  articlePostItem);
+    void updateShop(ProductPostItem productPostItem);
+    void showToast(String msg);
+    List<String> getCategories();
+    void updateCategoryList();
+
+
+    void hideSearchView();
+    void showSearchView();
 }

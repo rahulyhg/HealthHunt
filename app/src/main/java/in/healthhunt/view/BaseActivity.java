@@ -3,15 +3,15 @@ package in.healthhunt.view;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
+import framework.permisisons.PermissionActivity;
 import in.healthhunt.R;
 
 /**
  * Created by abhishekkumar on 4/23/18.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends PermissionActivity {
 
     public ProgressDialog mProgress;
 
@@ -31,5 +31,9 @@ public class BaseActivity extends AppCompatActivity {
         if(mProgress != null) {
             mProgress.dismiss();
         }
+    }
+
+    @Override
+    public void setPermission(int requestCode, boolean isGranted) {
     }
 }

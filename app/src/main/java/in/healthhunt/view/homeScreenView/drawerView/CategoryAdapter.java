@@ -13,14 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.tags.TagItem;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 
@@ -32,24 +30,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     private IHomePresenter IHomePresenter;
     private Context mContext;
-    private List<String> mCategoryList;
     private ClickListener mClickListener;
 
 
     public CategoryAdapter(Context context, IHomePresenter homePresenter) {
         mContext = context;
         IHomePresenter = homePresenter;
-        createCategoryList();
-    }
-
-    private void createCategoryList() {
-        mCategoryList = new ArrayList<String>();
-        mCategoryList.add(Constants.All);
-        mCategoryList.add(Constants.NUTRITION);
-        mCategoryList.add(Constants.FITNESS);
-        mCategoryList.add(Constants.ORGANIC_BEAUTY);
-        mCategoryList.add(Constants.MENTAL_WELLBEING);
-        mCategoryList.add(Constants.LOVE);
     }
 
     @NonNull
@@ -62,21 +48,48 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
 
-        String name = mCategoryList.get(position);
+        TagItem item = IHomePresenter.getCategory(position);
+        String name = item.getName();
         holder.mCategoryName.setText(name);
 
         int res = HealthHuntUtility.getCategoryIcon(name);
 
-        if(IHomePresenter.isCategoryContain(Constants.LOVE) && name.equalsIgnoreCase(Constants.LOVE)){
-            holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_red_light));
-            holder.mCategoryImage.setColorFilter(null);
-            holder.mCategoryName.setTextColor(Color.WHITE);
+        if(IHomePresenter.isCategoryContain(item)) {
+            if (name.equalsIgnoreCase(Constants.All)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_green_light2));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
 
-        }
-        else if(IHomePresenter.isCategoryContain(Constants.FITNESS) && name.equalsIgnoreCase(Constants.FITNESS)){
-            holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_blue_light));
-            holder.mCategoryImage.setColorFilter(null);
-            holder.mCategoryName.setTextColor(Color.WHITE);
+            }
+            else if (name.equalsIgnoreCase(Constants.NUTRITION)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_orange_light));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
+
+            }
+            else if (name.equalsIgnoreCase(Constants.FITNESS)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_blue_light));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
+            }
+            else if (name.equalsIgnoreCase(Constants.ORGANIC_BEAUTY)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_green_light2));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
+
+            }
+            else if (name.equalsIgnoreCase(Constants.MENTAL_WELLBEING)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_yello_light));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
+
+            }
+            else if (name.equalsIgnoreCase(Constants.LOVE)) {
+                holder.mCategoryView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.hh_red_light));
+                holder.mCategoryImage.setColorFilter(null);
+                holder.mCategoryName.setTextColor(Color.WHITE);
+
+            }
         }
         else {
             holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_text_color), PorterDuff.Mode.SRC_ATOP);
@@ -89,7 +102,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public int getItemCount() {
-        return mCategoryList.size();
+        return IHomePresenter.getCategoryCount();
     }
 
     public void setClickListener(ClickListener clickListener) {
@@ -97,7 +110,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public interface ClickListener {
-        void ItemClicked(View v, String selectedItem);
+        void ItemClicked(View v, int pos);
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -118,8 +131,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         @OnClick(R.id.category_drawer_item_view)
         void onCategoryClick(View view){
-            String name = mCategoryList.get(getAdapterPosition());
-            mClickListener.ItemClicked(view, name);
+            mClickListener.ItemClicked(view, getAdapterPosition());
             notifyDataSetChanged();
         }
     }

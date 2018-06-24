@@ -32,7 +32,7 @@ public class WatchViewHolder extends RecyclerView.ViewHolder {
     public ImageView mBookMark;
 
     @BindView(R.id.article_content)
-    public TextView mShopContent;
+    public TextView mArticleTitle;
 
     @BindView(R.id.category_image)
     public ImageView mCategoryImage;

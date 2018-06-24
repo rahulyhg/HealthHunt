@@ -3,6 +3,7 @@ package in.healthhunt.model.login;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,8 +15,8 @@ public class User extends Model{
 	//@Column(name = "capabilities")
 	//private Capabilities capabilities;
 
-	@Column(name = "userImage")
-	private String userImage;
+	@Column(name = "user_image")
+	private String user_image;
 
 	//@Column(name = "roles")
 	private List<String> roles;
@@ -23,8 +24,8 @@ public class User extends Model{
 	@Column(name = "link")
 	private String link;
 
-	@Column(name = "lastName")
-	private String lastName;
+	@Column(name = "last_name")
+	private String last_name;
 
 	@Column(name = "description")
 	private String description;
@@ -46,14 +47,14 @@ public class User extends Model{
 	@SerializedName("id")
 	private String user_id;
 
-	@Column(name = "registeredDate")
-	private String registeredDate;
+	@Column(name = "registered_date")
+	private String registered_date;
 
 	//@Column(name = "extraCapabilities")
 	//private ExtraCapabilities extraCapabilities;
 
-	@Column(name = "firstName")
-	private String firstName;
+	@Column(name = "first_name")
+	private String first_name;
 
 	@Column(name = "email")
 	private String email;
@@ -64,6 +65,16 @@ public class User extends Model{
 	@Column(name = "username")
 	private String username;
 
+	@Column(name = "bio")   //not coming from  server
+	private String bio;
+
+	@Column(name = "tags")  //not coming from  server
+	private String tagList;
+
+	@Column(name = "currentLogin")  //not coming from  server
+	private boolean currentLogin;
+
+
 	/*public void setCapabilities(Capabilities capabilities){
 		this.capabilities = capabilities;
 	}
@@ -72,12 +83,36 @@ public class User extends Model{
 		return capabilities;
 	}
 */
-	public void setUserImage(String  userImage){
-		this.userImage = userImage;
+	public boolean isCurrentLogin() {
+		return currentLogin;
 	}
 
-	public String getUserImage(){
-		return userImage;
+	public void setCurrentLogin(boolean currentLogin) {
+		this.currentLogin = currentLogin;
+	}
+
+	public String getTagList() {
+		return tagList;
+	}
+
+	public void setTagList(String tagList) {
+		this.tagList = tagList;
+	}
+
+	public String getBio() {
+		return bio;
+	}
+
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
+
+	public void setUser_image(String user_image){
+		this.user_image = user_image;
+	}
+
+	public String getUser_image(){
+		return user_image;
 	}
 
 	public void setRoles(List<String> roles){
@@ -96,12 +131,12 @@ public class User extends Model{
 		return link;
 	}
 
-	public void setLastName(String lastName){
-		this.lastName = lastName;
+	public void setLast_name(String last_name){
+		this.last_name = last_name;
 	}
 
-	public String getLastName(){
-		return lastName;
+	public String getLast_name(){
+		return last_name;
 	}
 
 	public void setDescription(String description){
@@ -160,12 +195,12 @@ public class User extends Model{
 		return user_id;
 	}
 
-	public void setRegisteredDate(String registeredDate){
-		this.registeredDate = registeredDate;
+	public void setRegistered_date(String registered_date){
+		this.registered_date = registered_date;
 	}
 
-	public String getRegisteredDate(){
-		return registeredDate;
+	public String getRegistered_date(){
+		return registered_date;
 	}
 
 	/*public void setExtraCapabilities(ExtraCapabilities extraCapabilities){
@@ -176,12 +211,12 @@ public class User extends Model{
 		return extraCapabilities;
 	}*/
 
-	public void setFirstName(String firstName){
-		this.firstName = firstName;
+	public void setFirst_name(String first_name){
+		this.first_name = first_name;
 	}
 
-	public String getFirstName(){
-		return firstName;
+	public String getFirst_name(){
+		return first_name;
 	}
 
 	public void setEmail(String email){
@@ -208,19 +243,33 @@ public class User extends Model{
 		return username;
 	}
 
-	public static User getUser(){
-		return new Select().from(User.class).executeSingle();
+	public static User getUser(String userId){
+		return new Select().from(User.class).where("user_id = ?" , userId).executeSingle();
 	}
+
+	public static User getCurrentUser(){
+		return new Select().from(User.class).where("currentLogin = ?" , true).executeSingle();
+	}
+
+	public static List<User> getAllUser(){
+		return new Select().from(User.class).execute();
+	}
+
+	public static void removeUser(String user_id){
+		new Delete().from(User.class).where("user_id = ?" , user_id).execute();
+	}
+
+
 
 	@Override
 	public String toString(){
 		return
 				"User{" +
 						//"capabilities = '" + capabilities + '\'' +
-						",user_image = '" + userImage + '\'' +
+						",user_image = '" + user_image + '\'' +
 						",roles = '" + roles + '\'' +
 						",link = '" + link + '\'' +
-						",last_name = '" + lastName + '\'' +
+						",last_name = '" + last_name + '\'' +
 						",description = '" + description + '\'' +
 						",url = '" + url + '\'' +
 						//'" + collections + '\'' +
@@ -228,9 +277,9 @@ public class User extends Model{
 						",name = '" + name + '\'' +
 						",nickname = '" + nickname + '\'' +
 						",userid = '" + user_id + '\'' +
-						",registered_date = '" + registeredDate + '\'' +
+						",registered_date = '" + registered_date + '\'' +
 						//",extra_capabilities = '" + extraCapabilities + '\'' +
-						",first_name = '" + firstName + '\'' +
+						",first_name = '" + first_name + '\'' +
 						",email = '" + email + '\'' +
 						",slug = '" + slug + '\'' +
 						",username = '" + username + '\'' +

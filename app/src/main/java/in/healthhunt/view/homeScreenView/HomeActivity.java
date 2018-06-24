@@ -3,32 +3,50 @@ package in.healthhunt.view.homeScreenView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.activeandroid.query.Select;
+import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +55,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
-import in.healthhunt.model.articles.commonResponse.MediaItem;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
+import in.healthhunt.model.tags.TagItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.HomePresenterImp;
 import in.healthhunt.presenter.homeScreenPresenter.IHomePresenter;
 import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.fullView.fullViewFragments.FullArticleFragment;
 import in.healthhunt.view.fullView.fullViewFragments.FullProductFragment;
+import in.healthhunt.view.fullView.fullViewFragments.YoutubeFragment;
 import in.healthhunt.view.homeScreenView.drawerView.DrawerFragment;
 import in.healthhunt.view.homeScreenView.filterView.FilterFragment;
 import in.healthhunt.view.homeScreenView.myFeedView.MyFeedFragment;
@@ -55,7 +75,9 @@ import in.healthhunt.view.homeScreenView.watchView.WatchFragment;
 import in.healthhunt.view.notificationView.NotificationFragment;
 import in.healthhunt.view.profileView.EditProfileFragment;
 import in.healthhunt.view.profileView.ProfileFragment;
+import in.healthhunt.view.searchView.SearchFragment;
 import in.healthhunt.view.viewAll.ViewAllFragment;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by abhishekkumar on 4/27/18.
@@ -72,6 +94,16 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     @BindView(R.id.bottom_navigation)
     BottomNavigationView mNavigation;
+
+    @BindView(R.id.nvView)
+    NavigationView mNavigationView;
+
+    @BindView(R.id.category_viewer)
+    LinearLayout mCategoryViewer;
+
+    @BindView(R.id.horizontalScrollView)
+    HorizontalScrollView mHorizontalScrollView;
+
 
     //@BindView(R.id.my_feed_frame)
     //FrameLayout mFeedLayout;
@@ -91,12 +123,23 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     private int mCurrentItem;
 
+    private MenuItem mSearchAction;
+    private MenuItem mNotificationAction;
+    public final static int HOME_REQUEST_CODE = 101;
+
+    private List<String> mCategoryList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homescreen);
         ButterKnife.bind(this);
+        Fabric.with(this, new Crashlytics());
+
+        mCategoryList = new ArrayList<String>();
+        IHomePresenter = new HomePresenterImp(getApplicationContext(), this);
+        IHomePresenter.fetchCategories();
+
         mAlertDialog = new Dialog(this);
         mAlertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mAlertDialog.setContentView(R.layout.alertdialog_view);
@@ -107,8 +150,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         addDrawer();
         removeShiftMode(mNavigation);
 
-
-        Select select = new Select();
+        //Select select = new Select();
 
 
         /*List<Title> titles = select.from(Title.class).execute();
@@ -117,7 +159,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             Log.i("TAGPOSTSINGLE", "DATA title " + title);
         }*/
 
-        List<MediaItem> items = select.from(MediaItem.class).execute();
+        // List<MediaItem> items = select.from(MediaItem.class).execute();
         //ProductPost post = ProductPost.load(ProductPost.class, produc.getProduct_id());
         /*for(MediaItem mediaItem: items) {
             Log.i("TAGPOSTSINGLE", "Media  " + mediaItem);
@@ -133,7 +175,6 @@ public class HomeActivity extends BaseActivity implements IHomeView{
            Log.i("TAGPOSTSINGLE", "Product Post  " + produc );
         }*/
 
-        IHomePresenter = new HomePresenterImp(getApplicationContext(), this);
         IHomePresenter.loadFooterFragment(MyFeedFragment.class.getSimpleName(), null);
         updateTitle(getString(R.string.my_feed));
 
@@ -142,14 +183,20 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setCheckable(true);
                 popAllBackStack();
+                showActionBar();
+                hideDrawerMenu();
 
                 if(item.getItemId() == R.id.navigation_my_feed) {
+                    showDrawerMenu();
                     mCurrentItem = Constants.FRAGMENT_MY_FEED;
                     //updateTitle(getString(R.string.my_feed));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
                         IHomePresenter.loadFooterFragment(MyFeedFragment.class.getSimpleName(), null);
                     }
+                    updateCategoryVisibility();
+                    //mHorizontalScrollView.setVisibility(View.VISIBLE);
+                    //mCategoryViewer.setVisibility(View.VISIBLE);
                 }
                 else if(item.getItemId() == R.id.navigation_my_hunts) {
                     mCurrentItem = Constants.FRAGMENT_MY_HUNTS;
@@ -158,14 +205,18 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     if(fragment == null){
                         IHomePresenter.loadFooterFragment(MyHuntFragment.class.getSimpleName(), null);
                     }
+                    mHorizontalScrollView.setVisibility(View.GONE);
+                    mCategoryViewer.setVisibility(View.GONE);
                 }
                 else if(item.getItemId() == R.id.navigation_watch) {
+                    showDrawerMenu();
                     mCurrentItem = Constants.FRAGMENT_WATCH;
                     //updateTitle(getString(R.string.watch));
                     Fragment fragment = mFragment[mCurrentItem];
                     if(fragment == null){
                         IHomePresenter.loadFooterFragment(WatchFragment.class.getSimpleName(), null);
                     }
+                    updateCategoryVisibility();
                 }
                 else if(item.getItemId() == R.id.navigation_shop) {
                     mCurrentItem = Constants.FRAGMENT_SHOP;
@@ -174,6 +225,8 @@ public class HomeActivity extends BaseActivity implements IHomeView{
                     if(fragment == null){
                         IHomePresenter.loadFooterFragment(ShopFragment.class.getSimpleName(), null);
                     }
+                    mHorizontalScrollView.setVisibility(View.GONE);
+                    mCategoryViewer.setVisibility(View.GONE);
                 }
                 updateTitleWithFooter(mCurrentItem);
                 updateFragVisible(mCurrentItem);
@@ -191,7 +244,29 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     private void addDrawer() {
         mDrawerToggle = new android.support.v7.app.
-                ActionBarDrawerToggle(this,mDrawerLayout,mToolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                ActionBarDrawerToggle(this,mDrawerLayout,mToolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if(mDrawerFragment != null){
+                    mDrawerFragment.updateUserData();
+                    mDrawerFragment.updateCategory();
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);
+                Log.i("TAGFRAG", "fragment " + fragment);
+                if(fragment == null && !isUpdateCategory()) {
+                    updateCategoryList();
+                    updateMyFeed();
+                    updateWatch();
+                    updateCategoryView();
+                }
+            }
+        };
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
@@ -250,7 +325,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
-    public void updateArticleSavedData(ArticlePostItem articlePostItem) {
+    public void updateMyhuntsArticleSaved(ArticlePostItem articlePostItem) {
         Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
         if(fragment != null && fragment instanceof MyHuntFragment){
             ((MyHuntFragment)fragment).updateSavedArticleData(articlePostItem);
@@ -258,7 +333,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
-    public void updateVideoSavedData(ArticlePostItem articlePostItem) {
+    public void updateMyhuntsVideoSaved(ArticlePostItem articlePostItem) {
         Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
         if(fragment != null && fragment instanceof MyHuntFragment){
             ((MyHuntFragment)fragment).updateSavedVideoData(articlePostItem);
@@ -266,11 +341,71 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
-    public void updateProductSavedData(ProductPostItem productPostItem) {
+    public void updateMyhuntsProductSaved(ProductPostItem productPostItem) {
         Fragment fragment = mFragment[Constants.FRAGMENT_MY_HUNTS];
         if(fragment != null && fragment instanceof MyHuntFragment){
             ((MyHuntFragment)fragment).updateSavedProductData(productPostItem);
         }
+    }
+
+    @Override
+    public void showDrawerMenu() {
+        /*Menu menu = mNavigationView.getMenu();
+        menu.findItem(android.R.id.home).setVisible(true);
+        *//*ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.*/
+        //actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+    }
+
+    @Override
+    public void hideDrawerMenu() {
+        //mNavigationView.setVisibility(View.GONE);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
+
+    }
+
+    @Override
+    public void updateMyFeedArticle(ArticlePostItem articlePostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_FEED];
+        if(fragment != null && fragment instanceof MyFeedFragment){
+            ((MyFeedFragment) fragment).updateDataOfArticles(articlePostItem);
+        }
+    }
+
+    @Override
+    public void updateMyFeedProduct(ProductPostItem productPostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_FEED];
+        if(fragment != null && fragment instanceof MyFeedFragment){
+            ((MyFeedFragment) fragment).updateDataOfProducts(productPostItem);
+        }
+    }
+
+    @Override
+    public void updateWatch(ArticlePostItem articlePostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_WATCH];
+        if(fragment != null && fragment instanceof WatchFragment){
+            ((WatchFragment) fragment).updateDataOfArticles(articlePostItem);
+        }
+    }
+
+    @Override
+    public void updateShop(ProductPostItem productPostItem) {
+        Fragment fragment = mFragment[Constants.FRAGMENT_SHOP];
+        if(fragment != null && fragment instanceof ShopFragment){
+            ((ShopFragment) fragment).updateDataOfProducts(productPostItem);
+        }
+    }
+
+    @Override
+    public void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public List<String> getCategories() {
+        return mCategoryList;
     }
 
     @Override
@@ -299,6 +434,12 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             else if (tag.equals(EditProfileFragment.class.getSimpleName())) {
                 fragment = new EditProfileFragment();
             }
+            else if (tag.equals(SearchFragment.class.getSimpleName())) {
+                fragment = new SearchFragment();
+            }
+            else if (tag.equals(YoutubeFragment.class.getSimpleName())) {
+                fragment = new YoutubeFragment();
+            }
 
             if (bundle != null && fragment != null) {
                 fragment.setArguments(bundle);
@@ -309,6 +450,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
             }
 
             hideAllFooterFragment(); // to hide all the previous fragments
+            //hideDrawerMenu();
         }
     }
 
@@ -321,6 +463,7 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void sendFilterData(Map<Integer, List<String>> map) {
         updateFragVisible(mCurrentItem);
         setBottomNavigation();
+        showSearchView();
         Fragment fragment = mFragment[mCurrentItem];
         if(mFragment != null && fragment instanceof ShopFragment){
             ((IShopView)fragment).handleFilterData(map);
@@ -344,10 +487,30 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     }
 
     @Override
-    public void updateMyFeedArticles() {
-        Fragment fragment = mFragment[mCurrentItem];
+    public void updateMyFeed() {
+        Fragment fragment = mFragment[Constants.FRAGMENT_MY_FEED];
         if(fragment != null && fragment instanceof MyFeedFragment){
             ((MyFeedFragment)fragment).updateData();
+        }
+    }
+
+    @Override
+    public void updateWatch() {
+        Fragment fragment = mFragment[Constants.FRAGMENT_WATCH];
+        if(fragment != null && fragment instanceof WatchFragment){
+            ((WatchFragment)fragment).updateData();
+        }
+    }
+
+    @Override
+    public void updateCategoryVisibility() {
+        if(mCategoryList != null && !mCategoryList.isEmpty() && !mCategoryList.contains("1")){
+            mHorizontalScrollView.setVisibility(View.VISIBLE);
+            mCategoryViewer.setVisibility(View.VISIBLE);
+        }
+        else {
+            mHorizontalScrollView.setVisibility(View.GONE);
+            mCategoryViewer.setVisibility(View.GONE);
         }
     }
 
@@ -355,6 +518,31 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void updateDrawerFragment() {
         if(mDrawerFragment != null){
             mDrawerFragment.updateAdapter();
+            updateCategoryList();
+        }
+    }
+
+    @Override
+    public void updateCategoryList() {
+        List<TagItem> tagItemList = IHomePresenter.getSelectedCategoryList();
+        mCategoryList.clear();
+
+        for(TagItem tagItem: tagItemList){
+            mCategoryList.add(String.valueOf(tagItem.getId()));
+        }
+    }
+
+    @Override
+    public void hideSearchView() {
+        if(mSearchAction != null) {
+            mSearchAction.setVisible(false);
+        }
+    }
+
+    @Override
+    public void showSearchView() {
+        if(mSearchAction != null) {
+            mSearchAction.setVisible(true);
         }
     }
 
@@ -366,6 +554,14 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     @Override
     public void showActionBar() {
         mToolbar.setVisibility(View.VISIBLE);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+        actionBar.setDisplayShowTitleEnabled(true); //show the title in the action bar
+        showSearchView();
+
+        if(mNotificationAction != null) {
+            mNotificationAction.setVisible(true);
+        }
     }
 
     private void showNonFooterFragment(Fragment fragment, String tag, int layout) {
@@ -502,21 +698,36 @@ public class HomeActivity extends BaseActivity implements IHomeView{
 
     @Override
     public void onBackPressed() {
+
+        Log.i("TAGCOUNTfragment", "onBackPressed ");
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
+
+            Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);    // When we press back button of full video screen.
+            if(fragment instanceof YoutubeFragment){
+                YoutubeFragment youtubeFragment = (YoutubeFragment)fragment;
+                if(youtubeFragment.isFullScreen()){
+                    youtubeFragment.setFullScreen(false);
+                    return;
+                }
+            }
+            Log.i("TAGCOUNTfragment", "fragment " + fragment);
+
+
             int count = getSupportFragmentManager().getBackStackEntryCount();
             Log.i("TAGCOUNT", "count " + count);
             if(count == 1){ //when comes back to home screen
-                setStatusBarTranslucent(false);
-                showActionBar();
-                updateFragVisible(mCurrentItem);
-                setBottomNavigation();
-                updateTitleWithFooter(mCurrentItem);
-                showBottomFooter();
+                updateHomeScreen();
             }
             super.onBackPressed();
         }
+
+        /*int value = getResources().getConfiguration().orientation;
+
+        if (value == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }*/
     }
 
     @Override
@@ -537,7 +748,8 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     public void updateTitle(String msg) {
         //SpannableString s = new SpannableString(msg);
         //.setSpan(new ForegroundColorSpan(Color.WHITE), 0, msg.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mToolbar.setTitle(msg);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(msg);
         //mToolbar.setT
     }
 
@@ -561,6 +773,22 @@ public class HomeActivity extends BaseActivity implements IHomeView{
         super.onDestroy();
         mProgress.dismiss();
         mAlertDialog.dismiss();
+    }
+
+    private void updateHomeScreen(){
+        setStatusBarTranslucent(false);
+        showActionBar();
+        updateFragVisible(mCurrentItem);
+        setBottomNavigation();
+        updateTitleWithFooter(mCurrentItem);
+        showBottomFooter();
+
+        if(mCurrentItem == 0 || mCurrentItem == 2){ // for my feed and watch screen
+            showDrawerMenu();
+        }
+        else {
+            hideDrawerMenu();
+        }
     }
 
     private void updateTitleWithFooter(int pos){
@@ -588,16 +816,220 @@ public class HomeActivity extends BaseActivity implements IHomeView{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
+        inflater.inflate(R.menu.home_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
-        if(id == R.id.notification_id){
-            IHomePresenter.loadNonFooterFragment(NotificationFragment.class.getSimpleName(), null);
+        switch (id) {
+            case R.id.notification_id:
+                IHomePresenter.loadNonFooterFragment(NotificationFragment.class.getSimpleName(), null);
+                return true;
+            case R.id.article_search:
+                handleMenuSearch();
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void handleMenuSearch() {
+        hideSearchView();
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        action.setDisplayShowCustomEnabled(true); //enable it to display a
+        // custom view in the action bar.
+        action.setCustomView(R.layout.search_layout);//add the custom view
+        action.setDisplayShowTitleEnabled(false); //hide the title
+
+        final EditText edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+        final ImageView cross = (ImageView) action.getCustomView().findViewById(R.id.cross); //the text editor
+
+
+        cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edtSeach.setText("");
+            }
+        });
+
+        //this is a listener to do a search when the user clicks on search button
+        edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+
+                    Fragment fragment = mFragmentManager.findFragmentById(R.id.main_frame);
+                    if(fragment instanceof SearchFragment){
+                        ((SearchFragment)fragment).updateData(v.getText().toString());
+                    }
+                    else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constants.SEARCH_TEXT_KEY, v.getText().toString());
+                        IHomePresenter.loadNonFooterFragment(SearchFragment.class.getSimpleName(), bundle);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        edtSeach.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                if(str.isEmpty()){
+                    cross.setVisibility(View.GONE);
+                }
+                else {
+                    cross.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        edtSeach.requestFocus();
+
+        //open the keyboard focused in the edtSearch
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        /*MenuItem searchViewMenuItem = menu.findItem(R.id.article_search);
+        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchViewMenuItem);
+        int searchImgId = android.support.v7.appcompat.R.id.search_button; // I used the explicit layout ID of searchview's ImageView
+        ImageView v = (ImageView) mSearchView.findViewById(searchImgId);
+        v.setImageResource(R.mipmap.ic_search_white_icon);
+        */
+        mSearchAction = menu.findItem(R.id.article_search);
+        mNotificationAction = menu.findItem(R.id.notification_id);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void updateCategoryView() {
+        List<String> categoryList = getCategories();
+
+        Log.i("TAGCategoryList", "List " + categoryList);
+        if(categoryList == null || categoryList.isEmpty() || categoryList.contains("1")){ // 1 for All Category
+            removeAllCategory();
+            mHorizontalScrollView.setVisibility(View.GONE);
+            return;
+        }
+
+
+        removeAllCategory();
+        //mHorizontalScrollView.setVisibility(View.VISIBLE);
+        for(String id: categoryList) {
+            addCategoryView(id);
+        }
+    }
+
+    private void addCategoryView(String id) {
+        View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.category_my_feed_item_view, null);
+        ImageView image = view.findViewById(R.id.category_image);
+        TextView textView = view.findViewById(R.id.category_name);
+
+
+        TagItem tagItem = IHomePresenter.getSelectedCategory(id);
+        String name = tagItem.getName();
+        textView.setText(name);
+
+        if(name.equalsIgnoreCase(Constants.LOVE)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.hh_red_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+        else if(name.equalsIgnoreCase(Constants.FITNESS)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+        else if(name.equalsIgnoreCase(Constants.NUTRITION)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.hh_orange_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+        else if(name.equalsIgnoreCase(Constants.MENTAL_WELLBEING)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.hh_yello_light), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+        else if(name.equalsIgnoreCase(Constants.ORGANIC_BEAUTY)){
+            LinearLayout imageBack = view.findViewById(R.id.category_image_bg);
+            Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle_view);
+            drawable.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.hh_green_light2), PorterDuff.Mode.SRC_ATOP);
+            imageBack.setBackground(drawable);
+        }
+
+        int src = HealthHuntUtility.getCategoryIcon(name);
+        image.setImageResource(src);
+
+        view.setTag(tagItem);
+        mCategoryViewer.addView(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IHomePresenter.removeCategory((TagItem) view.getTag());
+                updateCategoryList();
+                mCategoryViewer.removeView(view);
+                // will update the articles list
+                /*if(mCategoryViewer.getChildCount() == 0){
+                    //mCategoryViewer.setVisibility(View.GONE);
+                    mCategoryViewer.removeAllViews();
+                    mHorizontalScrollView.setVisibility(View.GONE);
+                }*/
+                updateMyFeed();
+                updateWatch();
+                updateDrawerFragment();
+                //updateCategoryVisibility();
+            }
+        });
+    }
+
+    private void removeAllCategory() {
+        mCategoryViewer.removeAllViews();
+    }
+
+    private boolean isUpdateCategory(){
+
+        List<TagItem> catergory = IHomePresenter.getSelectedCategoryList();
+        List<String> prevCategory = mCategoryList;
+
+        int count = catergory.size();
+        int prevCount = prevCategory.size();
+
+        if(count == prevCount){
+            List<String> selectedCategory = new ArrayList<String>();
+            for(TagItem tagItem: catergory){
+                selectedCategory.add(String.valueOf(tagItem.getId()));
+            }
+
+            if(prevCategory.containsAll(selectedCategory)){
+                return true;
+            }
+        }
+        return false;
     }
 }

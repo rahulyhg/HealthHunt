@@ -24,6 +24,8 @@ import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.deletePost.DeleteArticleData;
+import in.healthhunt.model.deletePost.DeleteProductData;
 import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
@@ -36,6 +38,7 @@ import in.healthhunt.model.preference.HealthHuntPreference;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
 import in.healthhunt.model.tags.TagRequest;
+import in.healthhunt.model.user.UserRequest;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -49,7 +52,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServicesWrapper {
 
-    private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
+    // private final static String BASE_URL = "https://development.healthhunt.in/wp-json/sd2/v0.1/";
+
+    private final static String BASE_URL = "https://staging.healthhunt.in/wp-json/sd2/v0.1/";
 
     private final String authUrl = "/wp-json/sd2/v0.1/";
 
@@ -240,6 +245,16 @@ public class WebServicesWrapper {
 
     }
 
+    public Call<HHResponse<ArticleData>> fetchArticlesCategory(Map<String, String> params, List<String> category, ResponseResolver<HHResponse<ArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<ArticleData>> loginResponseCall = webServices.fetchArticlesCategory(params, category);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
     public Call<HHResponse<ProductData>> fetchProducts(Map<String, String> params, ResponseResolver<HHResponse<ProductData>> responseResponseResolver) {
 
         Call<HHResponse<ProductData>> loginResponseCall = webServices.fetchProducts(params);
@@ -365,6 +380,68 @@ public class WebServicesWrapper {
         return loginResponseCall;
 
     }
+
+    public Call<HHResponse<ArticleData>> searchArticles(Map<String, String> params, ResponseResolver<HHResponse<ArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<ArticleData>> loginResponseCall = webServices.searchArticles(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<TagData>> fetchCategories(Map<String, String> params, ResponseResolver<HHResponse<TagData>> responseResponseResolver) {
+
+        Call<HHResponse<TagData>> loginResponseCall = webServices.fetchCategories(params);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<DeleteArticleData>> deleteArticle(String id, ResponseResolver<HHResponse<DeleteArticleData>> responseResponseResolver) {
+
+        Call<HHResponse<DeleteArticleData>> loginResponseCall = webServices.deleteArticle(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<DeleteProductData>> deleteProduct(String id, ResponseResolver<HHResponse<DeleteProductData>> responseResponseResolver) {
+
+        Call<HHResponse<DeleteProductData>> loginResponseCall = webServices.deleteProduct(id);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<UserData>> updateUser(UserRequest userRequest, ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
+
+        Call<HHResponse<UserData>> loginResponseCall = webServices.updateUser(userRequest);
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+    public Call<HHResponse<UserData>> fetchCurrentUser(ResponseResolver<HHResponse<UserData>> responseResponseResolver) {
+
+        Call<HHResponse<UserData>> loginResponseCall = webServices.fetchCurrentUser();
+
+        loginResponseCall.enqueue(responseResponseResolver);
+
+        return loginResponseCall;
+
+    }
+
+
 
 
 /*

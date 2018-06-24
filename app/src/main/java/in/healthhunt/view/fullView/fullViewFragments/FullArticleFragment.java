@@ -4,17 +4,21 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,19 +26,21 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.bumptech.glide.Glide;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,12 +74,14 @@ import in.healthhunt.view.homeScreenView.IHomeView;
 import in.healthhunt.view.viewAll.ViewAllFragment;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
+import static android.util.Log.i;
+
 /**
  * Created by abhishekkumar on 5/24/18.
  */
 
 public class FullArticleFragment extends Fragment implements IFullFragment, CommentAdapter.ClickListener,
-        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener {
+        RelatedArticlesAdapter.ClickListener, RelatedProductAdapter.ClickListener, TextToSpeech.OnInitListener {
 
     @BindView(R.id.full_article_read_time)
     TextView mReadTime;
@@ -105,6 +113,12 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.author_publish_date)
     TextView mPublishDate;
 
+    @BindView(R.id.detail_text)
+    ReadMoreTextView mDetailText;
+
+    @BindView(R.id.about_name)
+    TextView mAboutName;
+
     @BindView(R.id.full_article_description)
     TextView mContent;
 
@@ -129,14 +143,11 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.full_article_bookmark)
     ImageView mBookMark;
 
-    @BindView(R.id.full_view)
-    LinearLayout mFullView;
-
     @BindView(R.id.comments_recycler_list)
     RecyclerView mCommentViewer;
 
     @BindView(R.id.full_view_scroll)
-    ScrollView mFullViewScroll;
+    NestedScrollView mFullViewScroll;
 
     @BindView(R.id.send_comment)
     Button mSendComment;
@@ -162,11 +173,18 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     @BindView(R.id.related_article_root_view)
     LinearLayout mRelatedArticleView;
 
+    @BindView(R.id.listen_view)
+    LinearLayout mListenView;
+
     private IFullPresenter IFullPresenter;
     private IHomeView IHomeView;
     private Unbinder mUnbinder;
     private int mType;
     private boolean isDownloaded;
+    private String mId;
+    private boolean scrollingToBottom;
+    private TextToSpeech mTextToSpeech;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -174,14 +192,16 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         IFullPresenter = new FullPresenterImp(getContext(), this);
         IHomeView  =(HomeActivity) getActivity();
 
-        String id = getArguments().getString(ArticleParams.ID);
+        mId = getArguments().getString(ArticleParams.ID);
         mType = getArguments().getInt(ArticleParams.POST_TYPE);
         isDownloaded = getArguments().getBoolean(Constants.IS_DOWNLOADED);
-        if(!isDownloaded) {
-            IFullPresenter.fetchArticle(id);
-        }
-        else {
-            fetchArticleFromDataBase(id);
+        mTextToSpeech = new TextToSpeech(getContext(),this);
+    }
+
+    private static void scrollRecyclerViewToBottom(RecyclerView recyclerView) {
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if (adapter != null && adapter.getItemCount() > 0) {
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         }
     }
 
@@ -193,14 +213,45 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_full_article_view, container, false);
+        final View view = inflater.inflate(R.layout.fragment_full_article_view, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         IHomeView.setStatusBarTranslucent(true);
         IHomeView.hideBottomFooter();
         IHomeView.hideActionBar();
+        if(!isDownloaded) {
+            IFullPresenter.fetchArticle(mId);
+        }
+        else {
+            fetchArticleFromDataBase(mId);
+        }
         setContent();
         //mCommentContent.setOnFocusChangeListener(focusListener);
 
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
+                Rect r = new Rect();
+                view.getWindowVisibleDisplayFrame(r);
+                int screenHeight = view.getRootView().getHeight();
+
+                // r.bottom is the position above soft keypad or device button.
+                // if keypad is shown, the r.bottom is smaller than that before.
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    if (!scrollingToBottom) {
+                        scrollingToBottom = true;
+                        scrollRecyclerViewToBottom(mCommentViewer);
+                    }
+                }
+                else {
+                    // keyboard is closed
+                    scrollingToBottom = false;
+                }
+            }
+        });
         return view;
     }
 
@@ -216,10 +267,17 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
+        if (mTextToSpeech != null) {
+            mTextToSpeech.stop();
+            mTextToSpeech.shutdown();
+        }
+
         if(mUnbinder != null){
             mUnbinder.unbind();
         }
+
+        super.onDestroy();
     }
 
     @Override
@@ -236,6 +294,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     public void setContent() {
         ArticlePostItem articlePost = IFullPresenter.getArticle();
 
+
         if (articlePost != null) {
             setTopImageContent(articlePost);
             setArticleContent(articlePost);
@@ -243,8 +302,6 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             setCommentContent(articlePost);
             setRelatedArticleAdapter();
             setRelatedProductAdapter();
-
-            Log.i("TAGPOSTART", "PIOST " + articlePost);
         }
     }
 
@@ -258,7 +315,12 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
         RelatedArticlesAdapter relatedArticlesAdapter = new RelatedArticlesAdapter(getContext(), IFullPresenter);
         relatedArticlesAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mRelatedArticleViewer.setLayoutManager(layoutManager);
         mRelatedArticleViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mRelatedArticleViewer.setAdapter(relatedArticlesAdapter);
@@ -275,7 +337,12 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         }
         RelatedProductAdapter relatedProductAdapter = new RelatedProductAdapter(getContext(), IFullPresenter);
         relatedProductAdapter.setClickListener(this);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mRelatedProductViewer.setLayoutManager(layoutManager);
         mRelatedProductViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mRelatedProductViewer.setAdapter(relatedProductAdapter);
@@ -311,10 +378,34 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     private void setCommentAdapter(){
         CommentAdapter commentAdapter = new CommentAdapter(getContext(), IFullPresenter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         mCommentViewer.setLayoutManager(layoutManager);
         mCommentViewer.addItemDecoration(new SpaceDecoration(HealthHuntUtility.dpToPx(8, getContext()), SpaceDecoration.VERTICAL));
         mCommentViewer.setAdapter(commentAdapter);
+
+        /*if (Build.VERSION.SDK_INT >= 11) {
+            recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                @Override
+                public void onLayoutChange(View v,
+                                           int left, int top, int right, int bottom,
+                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                    if (bottom < oldBottom) {
+                        recyclerView.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.smoothScrollToPosition(
+                                        recyclerView.getAdapter().getItemCount() - 1);
+                            }
+                        }, 100);
+                    }
+                }
+            });
+        }*/
     }
 
     @Override
@@ -336,7 +427,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         CurrentUser currentUser =  IFullPresenter.getArticle().getCurrent_user();
         if(currentUser != null) {
             int like = currentUser.getLike();
-            int count = Integer.parseInt(mLikesCount.getText().toString());
+            long count = Long.parseLong(mLikesCount.getText().toString());
             if (like > 0) {
                 updateLikeIcon(true);
                 count++;
@@ -376,12 +467,22 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void updateProductSaved(ProductPostItem postItem) {
-        IHomeView.updateProductSavedData(postItem);
+        IHomeView.updateMyhuntsProductSaved(postItem);
+        showToast(postItem.getCurrent_user());
+        IHomeView.updateMyFeedProduct(postItem);
+        IHomeView.updateShop(postItem);
     }
 
     @Override
     public void updateArticleSaved(ArticlePostItem articlePostItem) {
-        IHomeView.updateArticleSavedData(articlePostItem);
+        IHomeView.updateMyhuntsArticleSaved(articlePostItem);
+        showToast(articlePostItem.getCurrent_user());
+        IHomeView.updateMyFeedArticle(articlePostItem);
+    }
+
+    @Override
+    public void updateVideoSaved(ArticlePostItem articlePostItem) {
+
     }
 
     public void updateLikeIcon(boolean isLike) {
@@ -396,7 +497,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @OnClick(R.id.comments_view_all)
     void onViewAll(){
-        Log.i("TAGCOMMENT" , " isShown " + mCommentView.isShown());
+        i("TAGCOMMENT" , " isShown " + mCommentView.isShown());
 
         if(mCommentView.isShown()){
             mCommentViewAll.setText(R.string.view_all);
@@ -410,12 +511,12 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             mCommentView.setVisibility(View.VISIBLE);
             mCommentViewer.setVisibility(View.VISIBLE);
 
-            CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
-            if(adapter == null) {
-                ArticlePostItem post = IFullPresenter.getArticle();
-                IFullPresenter.fetchComments(String.valueOf(post.getArticle_Id()));
-                mFullViewScroll.fullScroll(View.FOCUS_DOWN);
-            }
+            // CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
+            //if(adapter == null) {
+            ArticlePostItem post = IFullPresenter.getArticle();
+            IFullPresenter.fetchComments(String.valueOf(post.getArticle_Id()));
+            mFullViewScroll.fullScroll(View.FOCUS_DOWN);
+            //}
         }
     }
 
@@ -438,7 +539,17 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @OnClick(R.id.send_comment)
     void onSend(View view){
+
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+
         String content = mCommentContent.getText().toString().trim();
+
+        if(content.isEmpty()){
+            IHomeView.showToast(getString(R.string.please_enter_comment));
+            return;
+        }
 
         try {
             byte[] data = content.getBytes("UTF-8");
@@ -447,9 +558,6 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         catch (UnsupportedEncodingException unsupportedEncodingException){
 
         }
-
-        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         ArticlePostItem articlePost = IFullPresenter.getArticle();
         if(articlePost != null){
@@ -480,6 +588,17 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void setAboutContent(ArticlePostItem articlePost) {
+
+        Author author = articlePost.getAuthor();
+        if(author != null){
+            String authorName = author.getName();
+            i("TAGNAMNE","NAMe " + authorName);
+            mAboutName.setText(authorName);
+
+            String info = author.getInfo();
+            mDetailText.setText(info);
+        }
+
     }
 
     private void setArticleContent(ArticlePostItem articlePost) {
@@ -492,7 +611,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         mTitle.setText(articleTitle);
 
         Content content = articlePost.getContent();
-        Log.i("TAGCONTENT", "Content " + content.getRendered());
+        i("TAGCONTENT", "Content " + content.getRendered());
         if (content != null) {
             URLImageParser imageGetter = new URLImageParser(getContext(), mContent);
             Spannable html;
@@ -506,12 +625,14 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
         String tagsName = "";
         List<TagsItem> tagItems = articlePost.getTags();
+        i("TAGITEMSTAG", "TAGITEMS " + tagItems);
         if (tagItems != null && !tagItems.isEmpty()) {
             for (TagsItem tagItem : tagItems) {
                 String tag = tagItem.getName();
-                tagsName = "#" + tag + " ";
+                tagsName = tagsName + "#" + tag + " ";
             }
         }
+        i("TAGITEMSTAG", "TAGNAME " + tagsName);
         mHashTags.setText(tagsName);
 
         String date = articlePost.getDate();
@@ -577,6 +698,9 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             mCategoryName.setText(categoryName);
             mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
             int res = HealthHuntUtility.getCategoryIcon(categoryName);
+            int color = HealthHuntUtility.getCategoryColor(categoryName);
+            mCategoryName.setTextColor(ContextCompat.getColor(getContext(), color));
+            mCategoryImage.setColorFilter(ContextCompat.getColor(getContext(), color), PorterDuff.Mode.SRC_IN);
             if(res != 0){
                 mCategoryImage.setImageResource(res);
             }
@@ -589,10 +713,10 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         List<MediaItem> mediaItems = articlePost.getMedia();
         if (mediaItems != null && !mediaItems.isEmpty()) {
             MediaItem media = mediaItems.get(0);
-            Log.i("TAGMedia", "media " + media);
+            i("TAGMedia", "media " + media);
             if ("image".equals(media.getMedia_type())) {
                 url = media.getUrl();
-                Log.i("TAGMedia", "URL " + url);
+                i("TAGMedia", "URL " + url);
 
             }
         }
@@ -630,11 +754,29 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             @Override
             public void onClick(View view) {
                 mBottomSheetDialog.dismiss();
-                storeArticle();
+
+                String msg = getString(R.string.downloaded_successfully);
+                if(!isAlreadyDownloaded()) {
+                    storeArticle();
+                }
+                else {
+                    msg = getString(R.string.already_downloaded);
+                }
+                IHomeView.showToast(msg);
+
             }
         });
 
         mBottomSheetDialog.show();
+    }
+
+    private boolean isAlreadyDownloaded() {
+        ArticlePostItem articlePostItem = ArticlePostItem.getArticle(IFullPresenter.getArticle().getArticle_Id());
+        i("TAGISISIS", "artic" + articlePostItem);
+        if(articlePostItem != null){
+            return true;
+        }
+        return false;
     }
 
     private void shareArticle(){
@@ -647,7 +789,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void updateBookMark(boolean isBookMark) {
-        Log.i("TAGBOOKMARK", "ISBOOK " + isBookMark);
+        i("TAGBOOKMARK", "ISBOOK " + isBookMark);
         if(!isBookMark){
             mBookMark.setColorFilter(null);
             mBookMark.setImageResource(R.mipmap.ic_bookmark_full_view);
@@ -659,7 +801,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
 
     @Override
     public void onMore(View view, final int position) {
-        Log.i("TAGPOPUP", "onMore");
+        i("TAGPOPUP", "onMore");
 
         PopupMenu popup = new PopupMenu(getContext(), view);
         popup.setGravity(Gravity.LEFT);
@@ -671,7 +813,13 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
                 int id = item.getItemId();
                 switch (id){
                     case R.id.comment_edit:
-                        editComment(position);
+                        RecyclerView.Adapter adapter = mCommentViewer.getAdapter();
+                        if(adapter != null){
+                            CommentAdapter commentAdapter = (CommentAdapter) adapter;
+                            commentAdapter.addEditCommentPos(commentsItem.getId());
+                            commentAdapter.notifyDataSetChanged();
+                        }
+                        //editComment(position);
                         break;
                     case R.id.comment_delete:
                         IFullPresenter.deleteComment(String.valueOf(commentsItem.getId()));
@@ -689,11 +837,19 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-
         CommentViewHolder holder = (CommentViewHolder) mCommentViewer.getChildViewHolder(mCommentViewer.getChildAt(position));
         CommentsItem commentsItem = IFullPresenter.getComment(position);
+
+        CommentAdapter adapter = (CommentAdapter) mCommentViewer.getAdapter();
+        adapter.addEditCommentPos(Integer.MIN_VALUE);  // To remove the edit options
+
         int id = commentsItem.getId();
         String content = holder.mCommentEditText.getText().toString();
+
+        if(content != null && content.isEmpty()){
+            IHomeView.showToast(getString(R.string.please_enter_comment));
+            return;
+        }
 
         try {
             byte[] data = content.getBytes("UTF-8");
@@ -738,7 +894,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
     }
 
     private void openViewAllFragment() {
-          }
+    }
 
     @OnClick(R.id.related_view_all)
     void onRelatedViewAll(){
@@ -746,6 +902,7 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         String id = IFullPresenter.getArticle().getArticle_Id();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.RELATED_ARTICLES);
         bundle.putString(ArticleParams.ID, String.valueOf(id));
+        bundle.putBoolean(Constants.IS_RELATED, true);
         IFullPresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
@@ -755,13 +912,14 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         String id = IFullPresenter.getArticle().getArticle_Id();
         bundle.putInt(ArticleParams.ARTICLE_TYPE, ArticleParams.RELATED_PRODUCTS);
         bundle.putString(ArticleParams.ID, String.valueOf(id));
+        bundle.putBoolean(Constants.IS_RELATED, true);
         IFullPresenter.loadFragment(ViewAllFragment.class.getSimpleName(), bundle);
     }
 
     private void storeArticle(){
         ArticlePostItem articlePostItem = IFullPresenter.getArticle();
 
-        Log.i("TAGPOSTSINGLE", "Article " + articlePostItem);
+        i("TAGPOSTSINGLE", "Article " + articlePostItem);
         Title title = articlePostItem.getTitle();
         if(title != null){
             title.save();
@@ -833,6 +991,74 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
         IHomeView.updateDownloadData();
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+
+            int result = mTextToSpeech.setLanguage(Locale.US);
+
+            if (result == TextToSpeech.LANG_MISSING_DATA
+                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.e("TTS", "This Language is not supported");
+            } else {
+                //btnSpeak.setEnabled(true);
+                //speakOut();
+            }
+
+        } else {
+            Log.e("TTS", "Initilization Failed!");
+        }
+    }
+
+    private void speakOut() {
+
+        ArticlePostItem postItem  = IFullPresenter.getArticle();
+
+        if(postItem != null) {
+            Content content = postItem.getContent();
+            Spanned spanned = Html.fromHtml(content.getRendered()) ;
+            String text = spanned.toString();
+            int maxLen = TextToSpeech.getMaxSpeechInputLength();
+            int strLen = text.length();
+
+            if(strLen > maxLen){
+                int subParts = strLen/maxLen;
+                Log.i("TAGLEN"," Len " + subParts);
+                int start = 0;
+                int end = maxLen;
+                while(subParts>=0){
+                    String subStr = text.substring(start, end);
+                    addSpeakText(subStr);
+                    Log.i("TAGLEN"," SubStr " + subStr);
+                    start = end;
+                    int remainLen = text.substring(end, text.length()).length();
+                    if(remainLen > maxLen){
+                        end = end + maxLen;
+                    }
+                    else {
+                        end = end + remainLen;
+                    }
+
+                    subParts--;
+                }
+            }
+            else {
+                addSpeakText(text.toString());
+            }
+
+
+            /*HashMap<String, String> hash = new HashMap<String,String>();
+            hash.put(TextToSpeech.Engine.KEY_PARAM_STREAM,
+                    String.valueOf(AudioManager.STREAM_NOTIFICATION));
+            Log.i("TAGTAGTAGSPEECH","TEXT" + text);
+            mTextToSpeech.speak(text.toString(), TextToSpeech.QUEUE_FLUSH, hash);*/
+        }
+    }
+
+    private void addSpeakText(String text){
+        mTextToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+    }
+
     private class FetchArticlesTask extends AsyncTask<Void, Void, ArticlePostItem> {
 
         private String mArticleID;
@@ -847,11 +1073,11 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
                     where("article_id = ?" , mArticleID).executeSingle();
 
             if(articlePostItem == null){
-                Log.i("TAGPOS", "Article Post is null");
+                i("TAGPOS", "Article Post is null");
                 return null;
             }
 
-            Log.i("TAGDATA", "articlePost " + articlePostItem);
+            i("TAGDATA", "articlePost " + articlePostItem);
 
             /*List<MediaItem> mediaItem = new Select().from(MediaItem.class).
                     where("parent_id = ?" , productPost.getProduct_id()).execute();
@@ -882,4 +1108,25 @@ public class FullArticleFragment extends Fragment implements IFullFragment, Comm
             IFullPresenter.updateArticle(articlePostItem);
         }
     }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.added_to_my_hunt);//getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed_from_my_hunt);//getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
+    }
+
+    @OnClick(R.id.listen_view)
+    void onListen(){
+
+        if(!mTextToSpeech.isSpeaking()) {
+            speakOut();
+        }
+        else {
+            mTextToSpeech.stop();
+        }
+    }
+
 }

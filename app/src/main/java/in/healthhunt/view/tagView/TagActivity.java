@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -14,11 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.crashlytics.android.Crashlytics;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,6 +35,7 @@ import in.healthhunt.presenter.tagPresenter.ITagPresenter;
 import in.healthhunt.presenter.tagPresenter.TagPresenterImp;
 import in.healthhunt.view.BaseActivity;
 import in.healthhunt.view.onBoardingView.OnBoardingActivity;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by abhishekkumar on 4/23/18.
@@ -43,6 +48,9 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
 
     @BindView(R.id.search_view)
     public AutoCompleteTextView mSearchView;
+
+    @BindView(R.id.cross)
+    public ImageView mCross;
 
     @BindView(R.id.done)
     public TextView mDone;
@@ -57,11 +65,13 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tags);
+        Fabric.with(this, new Crashlytics());
         ButterKnife.bind(this);
 
         addSpinnerAdapter();
         ITagPresenter = new TagPresenterImp(getApplicationContext(), this);
         ITagPresenter.loadFragment(TagFragment.class.getSimpleName(), null);
+        setSearchAdapter();
         //addTagAdapter();
         //mTagPresenterImp.fetchTags();
     }
@@ -82,6 +92,24 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         }
 
         ITagPresenter.storeSelectedTags();
+        /*List<TagItem> list = ITagPresenter.getSelectedTagList();
+        String tags = "";
+        if(list != null && !list.isEmpty()){
+            for(int i=0; i<list.size(); i++){
+                TagItem tag = list.get(i);
+                if(i<list.size() - 1) {
+                    tags = tags + tag.getId() + Constants.SEPARATOR;
+                }
+            }
+        }
+        Log.i("TAGUSER", "TAGS " + tags);
+
+        User currentUser = User.getCurrentUser();
+        if(currentUser != null){
+            currentUser.setTagList(tags);
+            currentUser.save();
+        }*/
+
         Intent intent = new Intent(getApplicationContext(), OnBoardingActivity.class);
         startActivity(intent);
         finish();
@@ -101,19 +129,18 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
     @Override
     public void updateAdapter() {
         mTagFragment.updateAdapter();
-        setSearchAdapter();
     }
 
     private void setSearchAdapter() {
 
-        List<TagItem> tagItemList = ITagPresenter.getTagList();
+       /* List<TagItem> tagItemList = ITagPresenter.getTagList();
         List<String> searchList = new ArrayList<String>();
 
         for(TagItem item: tagItemList){
             searchList.add(item.getName());
-        }
+        }*/
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.popup_window_item, searchList);
+        //  ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.popup_window_item, searchList);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels;
@@ -121,14 +148,51 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         mSearchView.setDropDownWidth(width);
         mSearchView.setDropDownHorizontalOffset(HealthHuntUtility.dpToPx(1, getApplicationContext()));
         mSearchView.setDropDownVerticalOffset(HealthHuntUtility.dpToPx(1, getApplicationContext()));
-        mSearchView.setAdapter(arrayAdapter);
+
+        final TagSearchAdapter tagSearchAdapter = new TagSearchAdapter(getApplicationContext(), R.layout.popup_window_item, ITagPresenter);
+        mSearchView.setAdapter(tagSearchAdapter);
+
+        mSearchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                tagSearchAdapter.getFilter().filter(str);
+                if(str.isEmpty()){
+                    mCross.setVisibility(View.GONE);
+                }
+                else {
+                    mCross.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
 
-                String selectedText = mSearchView.getText().toString();
-                for(TagItem fullTagItem: ITagPresenter.getTagList()){
+                //String selectedText = mSearchView.getText().toString();
+                TagItem fullTagItem = (TagItem) tagSearchAdapter.getTagItem(pos);
+
+                boolean isPressed = fullTagItem.isPressed();
+                if(!isPressed){
+                    fullTagItem.setPressed(true);
+                    ITagPresenter.addTag(fullTagItem);
+                }
+                /*else {
+                    ITagPresenter.removeTag(fullTagItem);
+                }*/
+
+                /*for(TagItem fullTagItem: ITagPresenter.getTagList()){
                     if(fullTagItem.getName().equalsIgnoreCase(selectedText)){
                         fullTagItem.setPressed(!fullTagItem.isPressed());
 
@@ -141,11 +205,29 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
                         }
                         break;
                     }
-                }
+                }*/
                 updateAdapter();
+                updateSelectAll();
+
             }
         });
 
+    }
+
+    private void updateSelectAll(){
+        int totalCount = ITagPresenter.getTagCount();
+        int prevCount = 0;
+        List<TagItem> list = ITagPresenter.getSelectedTagList();
+        if(list != null) {
+            prevCount = list.size();
+        }
+
+        if(totalCount == prevCount){
+            mTagFragment.updateCheckBox(true);
+        }
+        else {
+            mTagFragment.updateCheckBox(false);
+        }
     }
 
     /*@Override
@@ -205,6 +287,12 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         return ITagPresenter;
     }
 
+    @Override
+    public void updateSearchAdapter() {
+        TagSearchAdapter tagSearchAdapter = (TagSearchAdapter) mSearchView.getAdapter();
+        tagSearchAdapter.notifyDataSetChanged();
+    }
+
     private void showFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.tag_frame, fragment);
@@ -220,5 +308,11 @@ public class TagActivity extends BaseActivity implements ITagView, TagAdapter.On
         else {
             mDone.setTextColor(ContextCompat.getColor(this, R.color.hh_grey_dark));
         }
+        updateSelectAll();
+    }
+
+    @OnClick(R.id.cross)
+    void onCross(){
+        mSearchView.setText("");
     }
 }

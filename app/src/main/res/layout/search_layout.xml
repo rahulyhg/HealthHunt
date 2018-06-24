@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:textCursorDrawable="@drawable/edit_cursor_color_white"
+        android:layout_gravity="center"
+        android:hint="@string/search"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_toStartOf="@id/cross"
+        android:textColorHint="@android:color/white"/>
+
+    <ImageView
+        android:id="@+id/cross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_cross"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:tint="@android:color/white"/>
+
+</RelativeLayout>

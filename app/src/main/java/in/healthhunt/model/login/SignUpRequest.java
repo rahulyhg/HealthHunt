@@ -14,11 +14,11 @@ public class SignUpRequest {
     @SerializedName("password")
     private String mPassword;
 
-    @SerializedName("username")
+   /* @SerializedName("username")
     private String mUserName;
-
+*/
     @SerializedName("name")
-    private String mName ="charlene";
+    private String mName;
 
     @SerializedName("gender")
     private String mGender;
@@ -39,13 +39,13 @@ public class SignUpRequest {
         this.mPassword = mPassword;
     }
 
-    public String getmUserName() {
+    /*public String getmUserName() {
         return mUserName;
     }
 
     public void setmUserName(String mUserName) {
         this.mUserName = mUserName;
-    }
+    }*/
 
     public String getmName() {
         return mName;

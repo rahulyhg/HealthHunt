@@ -11,7 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.IMyFeedPresenter;
+import in.healthhunt.view.homeScreenView.myFeedView.articleView.ArticleViewHolder;
 import in.healthhunt.view.homeScreenView.myFeedView.articleView.ContinueArticleViewHolder;
+import in.healthhunt.view.homeScreenView.myFeedView.articleView.LatestArticleViewHolder;
+import in.healthhunt.view.homeScreenView.myFeedView.articleView.SponsoredArticleViewHolder;
+import in.healthhunt.view.homeScreenView.myFeedView.articleView.TrendingArticleViewHolder;
+import in.healthhunt.view.homeScreenView.myFeedView.productView.LatestProductViewHolder;
+import in.healthhunt.view.homeScreenView.myFeedView.productView.TopProductViewHolder;
 
 /**
  * Created by abhishekkumar on 4/27/18.
@@ -38,8 +44,26 @@ public class MyFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if(holder != null && holder instanceof ContinueArticleViewHolder) {
+        if(holder != null && holder instanceof ArticleViewHolder) {
+            ((ArticleViewHolder) holder).notifyDataChanged();
+        }
+        else if(holder != null && holder instanceof ContinueArticleViewHolder) {
             ((ContinueArticleViewHolder) holder).hideContinueView();
+
+        }else if(holder != null && holder instanceof TrendingArticleViewHolder) {
+            ((TrendingArticleViewHolder) holder).notifyDataChanged();
+        }
+        else if(holder != null && holder instanceof SponsoredArticleViewHolder) {
+            ((SponsoredArticleViewHolder) holder).notifyDataChanged();
+        }
+        else if(holder != null && holder instanceof TopProductViewHolder) {
+            ((TopProductViewHolder) holder).notifyDataChanged();
+        }
+        else if(holder != null && holder instanceof LatestArticleViewHolder) {
+            ((LatestArticleViewHolder) holder).notifyDataChanged();
+        }
+        else if(holder != null && holder instanceof LatestProductViewHolder) {
+            ((LatestProductViewHolder) holder).notifyDataChanged();
         }
     }
 

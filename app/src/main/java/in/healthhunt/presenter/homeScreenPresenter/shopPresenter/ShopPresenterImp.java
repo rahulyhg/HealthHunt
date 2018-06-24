@@ -53,6 +53,10 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
 
     @Override
     public void onProductSuccess(List<ProductPostItem> items) {
+        if(mProductPosts != null){
+            mProductPosts.clear();
+        }
+
         mProductPosts = items;
         IShopView.hideProgress();
         IShopView.updateAdapter();
@@ -128,6 +132,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(ArticleParams.PRODUCT_SERVICES));
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IProductInteractor.fetchAllProduct(mContext, map, this);
@@ -139,6 +144,7 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         Map<String, String> map = new HashMap<String, String>();
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(ArticleParams.PRODUCT_SERVICES));
+       // map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
 
@@ -160,7 +166,17 @@ public class ShopPresenterImp implements IShopPresenter, IProductInteractor.OnVi
         List<String> location = listMap.get(Constants.CITY_FILTER);
         if(location != null && !location.isEmpty()){
             String city = location.get(0);
-            Log.i("TAGFILTERVA", " city "+ city);
+
+            if(city.contains(",")){
+                //int index = city.indexOf(",");
+                //city = city.substring(0, index);
+                city = city.replace(", ","+");
+                Log.i("TAGFILTERVA", " city "+ city);
+            }
+
+            if(city != null){
+                city.trim();
+            }
             map.put(ArticleParams.LOCATION, city);
         }
 

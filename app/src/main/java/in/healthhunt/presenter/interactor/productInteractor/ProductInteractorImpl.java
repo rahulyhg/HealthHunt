@@ -9,6 +9,7 @@ import framework.retrofit.RestError;
 import framework.retrofit.WebServicesWrapper;
 import in.healthhunt.model.articles.fullProductResponse.FullProductResponse;
 import in.healthhunt.model.articles.productResponse.ProductData;
+import in.healthhunt.model.deletePost.DeleteProductData;
 import in.healthhunt.model.response.HHResponse;
 import retrofit2.Response;
 
@@ -34,17 +35,17 @@ public class ProductInteractorImpl implements IProductInteractor {
 
     @Override
     public void fetchFullProduct(Context context, String id, final OnFullViewFinishListener finishListener) {
-            WebServicesWrapper.getInstance(context).fetchFullProduct(id, new ResponseResolver<FullProductResponse>() {
-                @Override
-                public void onSuccess(FullProductResponse postResponse, Response response) {
-                        finishListener.onProductSuccess(postResponse.getData().getPost());
-                }
+        WebServicesWrapper.getInstance(context).fetchFullProduct(id, new ResponseResolver<FullProductResponse>() {
+            @Override
+            public void onSuccess(FullProductResponse postResponse, Response response) {
+                finishListener.onProductSuccess(postResponse.getData().getPost());
+            }
 
-                @Override
-                public void onFailure(RestError error, String msg) {
-                        finishListener.onError(error);
-                }
-            });
+            @Override
+            public void onFailure(RestError error, String msg) {
+                finishListener.onError(error);
+            }
+        });
     }
 
     @Override
@@ -82,12 +83,27 @@ public class ProductInteractorImpl implements IProductInteractor {
         WebServicesWrapper.getInstance(context).fetchProducts(queryMap, new ResponseResolver<HHResponse<ProductData>>() {
             @Override
             public void onSuccess(HHResponse<ProductData> productData, Response response2) {
-               // collectionProductFinishListener.onCollectionProductSuccess(productData.getData().getPosts());
+                // collectionProductFinishListener.onCollectionProductSuccess(productData.getData().getPosts());
             }
 
             @Override
             public void onFailure(RestError error, String msg) {
                 collectionProductFinishListener.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void deleteProduct(Context context, String id, final OnDeleteFinishListener deleteFinishListener) {
+        WebServicesWrapper.getInstance(context).deleteProduct(id, new ResponseResolver<HHResponse<DeleteProductData>>() {
+            @Override
+            public void onSuccess(HHResponse<DeleteProductData> deleteProductDataHHResponse, Response response) {
+                deleteFinishListener.onProductDeleteSuccess(deleteProductDataHHResponse.getData().getPost());
+            }
+
+            @Override
+            public void onFailure(RestError error, String msg) {
+                deleteFinishListener.onError(error);
             }
         });
     }

@@ -28,9 +28,9 @@ public class ShopViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.shop_article_bookmark)
     public ImageView mBookMark;
 
-    @BindView(R.id.shop_article_content)
+   /* @BindView(R.id.shop_article_content)
     public TextView mShopContent;
-
+*/
     /*@BindView(R.id.shop_category_image)
     public ImageView mCategoryImage;
 
@@ -39,6 +39,25 @@ public class ShopViewHolder extends RecyclerView.ViewHolder {
 */
     @BindView(R.id.shop_article_item_view)
     LinearLayout mShopItemView;
+
+    @BindView(R.id.shop_product_name)
+    TextView mProductName;
+
+    @BindView(R.id.shop_product_type)
+    TextView mProductType;
+
+    @BindView(R.id.shop_product_price)
+    TextView mProductPrice;
+
+    @BindView(R.id.shop_product_unit)
+    TextView mProductUnit;
+
+    @BindView(R.id.free_trail)
+    TextView mFreeTrail;
+
+    @BindView(R.id.price_view)
+    LinearLayout mPriceView;
+
 
     private int mViewHolderPos;
 

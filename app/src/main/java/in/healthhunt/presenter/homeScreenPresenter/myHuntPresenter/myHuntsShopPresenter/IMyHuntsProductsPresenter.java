@@ -21,4 +21,5 @@ public interface IMyHuntsProductsPresenter extends IPostPresenter {
      void loadFragment(String fragmentName, Bundle bundle);
      void fetchProducts(String userId);
      void updateProductSaved(ProductPostItem postItem);
+     void deleteProduct(String id);
 }

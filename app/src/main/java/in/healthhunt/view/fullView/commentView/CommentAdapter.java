@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
+import java.io.UnsupportedEncodingException;
+
 import in.healthhunt.R;
 import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.Content;
@@ -30,6 +32,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     private IFullPresenter IFullPresenter;
     private Context mContext;
     private ClickListener mClickListener;
+    private int mEditCommentId = Integer.MIN_VALUE;
 
     public CommentAdapter(Context context, IFullPresenter fullPresenter) {
         mContext = context;
@@ -56,10 +59,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                 String name = author.getName();
                 holder.mUserName.setText(name);
 
-                User user = User.getUser();
+                User user = User.getCurrentUser();
                 String user_id = user.getUserId();//HealthHuntPreference.getString(mContext, Constants.USER_ID);
-                Log.i("TAGUSERU", "User_ID " + user_id + " Author ID " + author.getId() );
-                if(user_id.equals(String.valueOf(author.getId()))){
+                Log.i("TAGUSERU", "User_ID " + user_id + " Author ID " + author.getAuthor_id() );
+                if(user_id.equals(String.valueOf(author.getAuthor_id()))){
                     holder.mCommentEdit.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -82,6 +85,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
             Content content = commentsItem.getContent();
             if(content != null) {
+
+
+                Log.i("TAGTAGTAG", "Content " + content.getRendered());
+                //byte[] data = Base64.decode(str, Base64.DEFAULT);
+
                 URLImageParser imageGetter = new URLImageParser(mContext, holder.mCommentText);
                 Spannable html;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -89,10 +97,46 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
                 } else {
                     html = (Spannable) Html.fromHtml(content.getRendered(), imageGetter, null);
                 }
-                holder.mCommentText.setText(html.toString().trim());
-                holder.mCommentText.setVisibility(View.VISIBLE);
-                holder.mCommentEditText.setVisibility(View.GONE);
-                holder.mCommentUpdate.setVisibility(View.GONE);
+
+                //String str = content.getRendered();
+                /*try {
+                    *//*byte[] encodeValue = Base64.encode(str.getBytes("UTF-8"), Base64.DEFAULT);
+                    byte[] decodeValue = Base64.decode(encodeValue, Base64.DEFAULT);
+
+                    //byte[] data = Base64.decode(str, Base64.DEFAULT);
+                    str = new String(decodeValue, "UTF-8");
+                }*//*
+                catch (UnsupportedEncodingException unsupportedEncodingException){
+
+                }*/
+                String str = null;
+                try {
+                    str = java.net.URLDecoder.decode( html.toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                Log.i("TAGCOMMENT", "comment ID " + commentsItem.getId());
+                holder.mCommentText.setText(str);
+                if(mEditCommentId > 0 && mEditCommentId == commentsItem.getId()) {
+                    /*holder.mCommentText.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setVisibility(View.GONE);
+                    holder.mCommentUpdate.setVisibility(View.GONE);*/
+                    holder.mCommentText.setVisibility(View.GONE);
+                    holder.mCommentEditText.setVisibility(View.VISIBLE);
+                    holder.mCommentUpdate.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setText("");
+                    holder.mCommentEditText.append(str.trim());
+                    //holder.mCommentEditText.setText(holder.mCommentText.getText().toString().trim());
+                    //holder.mCommentEditText.setSelection(holder.mCommentText.getText().toString().length() - 1);
+                    holder.mCommentEditText.requestFocus();
+                    //holder.mCommentEditText.setShowSoftInputOnFocus(true);
+                }
+                else {
+                    holder.mCommentText.setVisibility(View.VISIBLE);
+                    holder.mCommentEditText.setVisibility(View.GONE);
+                    holder.mCommentUpdate.setVisibility(View.GONE);
+                }
             }
 
         }
@@ -110,5 +154,9 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
     public interface ClickListener {
         void onMore(View v, int position);
         void update(View v, int position);
+    }
+
+    public void addEditCommentPos(int editCommentId){
+        mEditCommentId = editCommentId;
     }
 }

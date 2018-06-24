@@ -96,8 +96,10 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if(categories != null && !categories.isEmpty()){
                 categoryName = categories.get(0).getName();
                 holder.mCategoryName.setText(categoryName);
-                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, R.color.hh_blue_light), PorterDuff.Mode.SRC_IN);
                 int res = HealthHuntUtility.getCategoryIcon(categoryName);
+                int color = HealthHuntUtility.getCategoryColor(categoryName);
+                holder.mCategoryName.setTextColor(ContextCompat.getColor(mContext, color));
+                holder.mCategoryImage.setColorFilter(ContextCompat.getColor(mContext, color), PorterDuff.Mode.SRC_IN);
                 if(res != 0){
                     holder.mCategoryImage.setImageResource(res);
                 }
@@ -164,9 +166,17 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private void setProductContent(ViewAllProductHolder holder, ProductPostItem postsItem) {
 
         if(postsItem != null) {
-            String productName = postsItem.getProduct_type_other_name();
+            /*String productName = postsItem.getProduct_type_other_name();
             if (productName != null) {
                 holder.mProductName.setText(productName);
+            }*/
+
+            Title title = postsItem.getTitle();
+            if(title != null){
+                String render = title.getRendered();
+                if(render != null){
+                    holder.mProductName.setText(render);
+                }
             }
 
 
@@ -174,10 +184,10 @@ public class ViewAllAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (price != null) {
                 String postQuantity = postsItem.getPost_quantity();
                 String rs = mContext.getString(R.string.rs);
+                price = HealthHuntUtility.addSeparator(price);
                 rs = rs + " " + price + "/" + postQuantity;
                 holder.mProductPrice.setText(rs);
             }
-
 
             String postUnit = postsItem.getPost_unit();
             if (postUnit != null) {

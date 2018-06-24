@@ -65,6 +65,7 @@
             android:layout_marginStart="95dp"
             android:layout_marginEnd="95dp"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/button_bg"
             android:text="@string/get_started"
             android:textColor="@android:color/white"

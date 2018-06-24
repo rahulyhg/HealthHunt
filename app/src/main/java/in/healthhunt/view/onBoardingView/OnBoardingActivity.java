@@ -6,12 +6,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
+import com.crashlytics.android.Crashlytics;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.presenter.onBoardingPresenter.OnBoardingPresenter;
 import in.healthhunt.view.BaseActivity;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by abhishekkumar on 4/24/18.
@@ -31,6 +34,7 @@ public class OnBoardingActivity extends BaseActivity implements IOnBoardingView 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+        Fabric.with(this, new Crashlytics());
         ButterKnife.bind(this);
 
         mOnBoardingPresenter = new OnBoardingPresenter(getApplicationContext(), this);

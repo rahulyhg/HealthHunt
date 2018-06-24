@@ -30,4 +30,5 @@ public interface IMyFeedView extends IView {
     void loadNonFooterFragment(String fragmentName, Bundle bundle);
     void updateArticleSaved(ArticlePostItem postItem);
     void updateProductSaved(ProductPostItem productPostItem);
+    List<String> getCategories();
 }

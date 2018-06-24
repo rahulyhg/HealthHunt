@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 
@@ -74,6 +75,9 @@ public class SignUpFragment extends Fragment {
     @BindView(R.id.term_and_conditions)
     TextView mTermAndConditions;
 
+    @BindView(R.id.login_view)
+    LinearLayout mLoginView;
+
     private ListPopupWindow mListPopupWindow;
     private ILoginPresenter IPresenter;
     private Unbinder unbinder;
@@ -86,9 +90,18 @@ public class SignUpFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_signup, container,  false);
         unbinder = ButterKnife.bind(this, view);
         mSkipView.setVisibility(View.GONE);
+
+        clearFields();
         addLink();
         addGenderWindow();
         return view;
+    }
+
+    public void clearFields() {
+        mUsername.setText("");
+        mEmail.setText("");
+        mPassword.setText("");
+        mGender.setText("");
     }
 
     private void addGenderWindow() {
@@ -150,6 +163,7 @@ public class SignUpFragment extends Fragment {
 
     @OnClick(R.id.sign_up)
     void onSignUp() {
+        mLoginView.clearFocus();
         isLoginType = LoginActivity.LOGIN_TYPE_NORMAL;
         IPresenter.validateCredentialsSignUp(mUsername.getText().toString(), mGender.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString());
     }

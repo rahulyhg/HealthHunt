@@ -11,13 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticlePostItem;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
 import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.viewAllPresenter.IViewAllPresenter;
@@ -37,10 +42,16 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     @BindView(R.id.view_all_recycler_list)
     RecyclerView mViewAllViewer;
 
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
+
     private IViewAllPresenter IViewAllPresenter;
     private ProgressDialog mProgress;
     private int mType;
     private IHomeView IHomeView;
+    private boolean isRelated;
+    private String mFullViewItemSelectedId;
+    private String mRelatedId;
 
 
     @Override
@@ -58,11 +69,12 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
         String id = null;
         if(bundle != null) {
             mType = bundle.getInt(ArticleParams.ARTICLE_TYPE);
-            id = bundle.getString(ArticleParams.ID);
+            mRelatedId = bundle.getString(ArticleParams.ID);
+            isRelated = bundle.getBoolean(Constants.IS_RELATED);
         }
 
         Log.i("TAGTYPE " , "TYPE " + mType);
-        IViewAllPresenter.fetchAll(mType, id);
+
     }
 
     @Nullable
@@ -70,15 +82,77 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_all, container, false);
         ButterKnife.bind(this, view);
-        IHomeView.updateTitle(getArticleName());
         IHomeView.setStatusBarTranslucent(false);
         IHomeView.hideBottomNavigationSelection();
         IHomeView.showBottomFooter();
+        IHomeView.hideDrawerMenu();
         IHomeView.showActionBar();
+        IHomeView.updateTitle(getArticleName());
+        IViewAllPresenter.fetchAll(mType, mRelatedId);
+//        if(mFullViewItemSelectedId != null && !mFullViewItemSelectedId.isEmpty()){
+//            updateBookOfSelectedItem();
+//        }
         setAdapter();
         return view;
     }
 
+  /*  private void updateBookOfSelectedItem() {
+
+        switch (mType){
+            case ArticleParams.BASED_ON_TAGS:
+            case ArticleParams.LATEST_ARTICLES:
+            case ArticleParams.RELATED_ARTICLES:
+                updateBookOfSelectedArticle();
+                break;
+            case ArticleParams.LATEST_PRODUCTS:
+            case ArticleParams.RELATED_PRODUCTS:
+                updateBookOfSelectedAProduct();
+                break;
+        }
+
+
+    }
+*/
+   /* private void updateBookOfSelectedAProduct() {
+        List<ProductPostItem> productPostItems = IViewAllPresenter.getAllProduct();
+        if(productPostItems != null && !productPostItems.isEmpty()){
+            for (ProductPostItem postItem: productPostItems){
+                if(postItem.getProduct_id().equalsIgnoreCase(mFullViewItemSelectedId)){
+                    CurrentUser currentUser = postItem.getCurrent_user();
+                    if(currentUser != null) {
+                        if(!currentUser.isBookmarked()){
+                            IViewAllPresenter.bookmark(mFullViewItemSelectedId);
+                        }
+                        else {
+                            IViewAllPresenter.unBookmark(mFullViewItemSelectedId);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private void updateBookOfSelectedArticle() {
+        List<ArticlePostItem> articlePostItems = IViewAllPresenter.getAllArticles();
+        if(articlePostItems != null && !articlePostItems.isEmpty()){
+            for (ArticlePostItem postItem: articlePostItems){
+                if(postItem.getArticle_Id().equalsIgnoreCase(mFullViewItemSelectedId)){
+                    CurrentUser currentUser = postItem.getCurrent_user();
+                    if(currentUser != null) {
+                        if(!currentUser.isBookmarked()){
+                            IViewAllPresenter.bookmark(mFullViewItemSelectedId);
+                        }
+                        else {
+                            IViewAllPresenter.unBookmark(mFullViewItemSelectedId);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    }
+*/
     private void setAdapter() {
         ViewAllAdapter viewAllAdapter = new ViewAllAdapter(getContext(), IViewAllPresenter, mType);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -121,7 +195,20 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
 
     @Override
     public void updateAdapter() {
-        mViewAllViewer.getAdapter().notifyDataSetChanged();;
+        mViewAllViewer.getAdapter().notifyDataSetChanged();
+        updateVisibility();
+    }
+
+    public void updateVisibility(){
+        int count = IViewAllPresenter.getCount(mType);
+        if(count == 0){
+            mNoRecords.setVisibility(View.VISIBLE);
+            mViewAllViewer.setVisibility(View.GONE);
+        }
+        else {
+            mNoRecords.setVisibility(View.GONE);
+            mViewAllViewer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -156,12 +243,27 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
 
     @Override
     public void updateArticleSaved(ArticlePostItem postItem) {
-        IHomeView.updateArticleSavedData(postItem);
+        IHomeView.updateMyhuntsArticleSaved(postItem);
+        showToast(postItem.getCurrent_user());
+        IHomeView.updateMyFeedArticle(postItem);
     }
 
     @Override
     public void updateProductSaved(ProductPostItem postItem) {
-        IHomeView.updateProductSavedData(postItem);
+        IHomeView.updateMyhuntsProductSaved(postItem);
+        showToast(postItem.getCurrent_user());
+        IHomeView.updateMyFeedProduct(postItem);
+        IHomeView.updateShop(postItem);
+    }
+
+    @Override
+    public boolean isRelated() {
+        return isRelated;
+    }
+
+    @Override
+    public List<String> getCategories() {
+        return IHomeView.getCategories();
     }
 
 
@@ -191,21 +293,20 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
 
     @Override
     public void ItemClicked(View v, int position) {
-        String id = null;
         String fragmentTag = FullArticleFragment.class.getSimpleName();
         int postType = ArticleParams.ARTICLE;
         switch (mType){
             case ArticleParams.BASED_ON_TAGS:
             case ArticleParams.LATEST_ARTICLES:
             case ArticleParams.RELATED_ARTICLES:
-                id = String.valueOf(IViewAllPresenter.getArticle(position).getArticle_Id());
+                mFullViewItemSelectedId = String.valueOf(IViewAllPresenter.getArticle(position).getArticle_Id());
                 postType = ArticleParams.ARTICLE;
                 fragmentTag = FullArticleFragment.class.getSimpleName();
                 break;
 
             case ArticleParams.LATEST_PRODUCTS:
             case ArticleParams.RELATED_PRODUCTS:
-                id = String.valueOf(IViewAllPresenter.getProduct(position).getProduct_id());
+                mFullViewItemSelectedId = String.valueOf(IViewAllPresenter.getProduct(position).getProduct_id());
                 postType = ArticleParams.PRODUCT;
                 fragmentTag = FullProductFragment.class.getSimpleName();
                 break;
@@ -218,7 +319,16 @@ public class ViewAllFragment extends Fragment implements IViewAll, ViewAllAdapte
 
         Bundle bundle = new Bundle();
         bundle.putInt(ArticleParams.POST_TYPE, postType);
-        bundle.putString(ArticleParams.ID, id);
+        bundle.putString(ArticleParams.ID, mFullViewItemSelectedId);
         IViewAllPresenter.loadFragment(fragmentTag, bundle);
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.added_to_my_hunt);//getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed_from_my_hunt);//getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 }

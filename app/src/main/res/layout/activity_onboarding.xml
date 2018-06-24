@@ -18,7 +18,7 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/dots"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="160dp"
             android:layout_marginEnd="160dp"
@@ -26,7 +26,8 @@
             android:layout_gravity="bottom|center"
             app:tabBackground="@drawable/dot_selector"
             app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"/>
+            app:tabIndicatorHeight="0dp"
+            />
 
         <!--<LinearLayout-->
         <!--andrauthor_idd:idauthor_media_category_tag_id@+id/scroll_indicator"-->

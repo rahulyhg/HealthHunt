@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
 import in.healthhunt.model.beans.Constants;
 import in.healthhunt.model.beans.SpaceDecoration;
@@ -66,6 +67,12 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     @BindView(R.id.suggestion_view)
     LinearLayout mSuggestionView;
 
+    @BindView(R.id.no_records)
+    TextView mNoRecords;
+
+   /* @BindView(R.id.shop_view)
+    LinearLayout mShopView;
+*/
     private IHomeView IHomeView;
     private Map<Integer, List<String>> mFilterData;
 
@@ -83,8 +90,10 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        mSuggestionHeader.setText(getString(R.string.healthhunt_shop));
         mSuggestionContent.setText(R.string.healthhunt_shop_content);
         Log.i("TAGSHOWPR", "IHomeView ONCREATE " + IHomeView);
+        IHomeView.updateTitle(getString(R.string.shop));
         setAdapter();
         return view;
     }
@@ -117,6 +126,19 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
     @Override
     public void updateAdapter() {
         mShopViewer.getAdapter().notifyDataSetChanged();
+        updateVisibility();
+    }
+
+    public void updateVisibility(){
+        int count = IShopPresenter.getCount();
+        if(count == 0){
+            mNoRecords.setVisibility(View.VISIBLE);
+            mShopViewer.setVisibility(View.GONE);
+        }
+        else {
+            mNoRecords.setVisibility(View.GONE);
+            mShopViewer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -150,7 +172,9 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
 
     @Override
     public void updateProductSaved(ProductPostItem productPostItem) {
-        IHomeView.updateProductSavedData(productPostItem);
+        IHomeView.updateMyhuntsProductSaved(productPostItem);
+        showToast(productPostItem.getCurrent_user());
+        IHomeView.updateMyFeedProduct(productPostItem);
     }
 
     @Override
@@ -177,7 +201,7 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
         IHomeView.updateTitle(getString(R.string.filter));
         IHomeView.hideBottomNavigationSelection();
         IHomeView.getHomePresenter().loadNonFooterFragment(FilterFragment.class.getSimpleName(), null);
-      }
+    }
 
     private void setAdapter() {
         ShopAdapter shopAdapter = new ShopAdapter(getContext(), IShopPresenter);
@@ -202,5 +226,28 @@ public class ShopFragment extends Fragment implements IShopView, ShopAdapter.Cli
             bundle.putString(ArticleParams.ID, String.valueOf(postsItem.getProduct_id()));
             IShopPresenter.loadFragment(FullProductFragment.class.getSimpleName(), bundle);
         }
+    }
+
+    public void updateDataOfProducts(ProductPostItem productPostItem){
+        List<ProductPostItem> list = IShopPresenter.getAllProducts();
+        for(ProductPostItem postItem: list){
+            if(postItem.getProduct_id().equalsIgnoreCase(productPostItem.getProduct_id())){
+                CurrentUser currentUser = postItem.getCurrent_user();
+                if(currentUser != null){
+                    currentUser.setBookmarked(productPostItem.getCurrent_user().isBookmarked());
+                }
+                updateAdapter();
+                break;
+            }
+        }
+    }
+
+    private void showToast(CurrentUser currentUser) {
+        boolean isBookMark = currentUser.isBookmarked();
+        String str = getString(R.string.added_to_my_hunt);//getString(R.string.saved);
+        if(!isBookMark){
+            str = getString(R.string.removed_from_my_hunt);//getString(R.string.removed);
+        }
+        IHomeView.showToast(str);
     }
 }

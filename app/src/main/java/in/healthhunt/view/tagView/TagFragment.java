@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.CheckBox;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,12 +28,11 @@ public class TagFragment extends Fragment{
     @BindView(R.id.tags_recycler_list)
     public RecyclerView mRecyclerView;
 
-    @BindView(R.id.select_all)
-    public TextView mSelectAll;
+    @BindView(R.id.select_all_checkbox)
+    public CheckBox mSelectAll;
 
     private ITagPresenter ITagPresenter;
     private ITagView ITagView;
-    private boolean isSelectAll;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +64,7 @@ public class TagFragment extends Fragment{
         mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
-    @OnClick(R.id.select_all)
+    /*@OnClick(R.id.select_all)
     void onSelectAll(){
         isSelectAll = !isSelectAll;
         TagAdapter tagAdapter = (TagAdapter) mRecyclerView.getAdapter();
@@ -76,6 +75,31 @@ public class TagFragment extends Fragment{
         else {
             ITagPresenter.unSelectAll();
             tagAdapter.setSelectAll(false);
+        }
+    }*/
+
+    @OnClick(R.id.select_all_checkbox)
+    void onClickCheckBox(){
+        boolean isSelect = mSelectAll.isChecked();
+        TagAdapter tagAdapter = (TagAdapter) mRecyclerView.getAdapter();
+        if(!isSelect){
+            ITagPresenter.selectAll();
+            tagAdapter.setSelectAll(true);
+            mSelectAll.setChecked(true);
+        }
+        else {
+            ITagPresenter.unSelectAll();
+            tagAdapter.setSelectAll(false);
+            mSelectAll.setChecked(false);
+        }
+    }
+
+    void updateCheckBox(boolean isCheck){
+        if(isCheck){
+            mSelectAll.setChecked(true);
+        }
+        else {
+            mSelectAll.setChecked(false);
         }
     }
 }

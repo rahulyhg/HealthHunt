@@ -78,8 +78,8 @@
                     android:id="@+id/product_search_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/search_icon"
-                    android:layout_toLeftOf="@id/record"
+                    android:layout_toRightOf="@id/search_icon"
+                    android:layout_toLeftOf="@id/cross_product"
                     android:layout_centerInParent="true"
                     android:gravity="left|center"
                     android:paddingStart="10dp"
@@ -89,8 +89,20 @@
                     android:fontFamily="@string/font_family_regular"
                     android:textColor="@color/hh_grey_dark"/>
 
-
                 <ImageView
+                    android:id="@+id/cross_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_cross"
+                    android:visibility="gone"/>
+
+                <!-- android:layout_toLeftOf="@id/record"-->
+
+                <!--<ImageView
                     android:id="@+id/record"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -101,7 +113,7 @@
                     android:src="@mipmap/ic_record"
                     android:alpha="54"
                     android:backgroundTint="#000000"
-                    />
+                    />-->
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -180,8 +192,8 @@
                     android:id="@+id/brand_search_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/brand_search_icon"
-                    android:layout_toLeftOf="@id/brand_record"
+                    android:layout_toRightOf="@id/brand_search_icon"
+                    android:layout_toLeftOf="@id/cross_brand"
                     android:layout_centerInParent="true"
                     android:gravity="left|center"
                     android:paddingStart="10dp"
@@ -191,8 +203,21 @@
                     android:fontFamily="@string/font_family_regular"
                     android:textColor="@color/hh_grey_dark"/>
 
-
                 <ImageView
+                    android:id="@+id/cross_brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_cross"
+                    android:visibility="gone"/>
+
+
+                <!-- android:layout_toLeftOf="@id/brand_record" -->
+
+                <!--<ImageView
                     android:id="@+id/brand_record"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -203,7 +228,7 @@
                     android:src="@mipmap/ic_record"
                     android:alpha="54"
                     android:backgroundTint="#000000"
-                    />
+                    />-->
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -282,8 +307,8 @@
                     android:id="@+id/city_search_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/city_search_icon"
-                    android:layout_toLeftOf="@id/city_record"
+                    android:layout_toRightOf="@id/city_search_icon"
+                    android:layout_toLeftOf="@id/cross_city"
                     android:layout_centerInParent="true"
                     android:gravity="left|center"
                     android:paddingStart="10dp"
@@ -293,8 +318,20 @@
                     android:fontFamily="@string/font_family_regular"
                     android:textColor="@color/hh_grey_dark"/>
 
-
                 <ImageView
+                    android:id="@+id/cross_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@mipmap/ic_cross"
+                    android:visibility="gone"/>
+
+
+                <!--    android:layout_toLeftOf="@id/city_record" -->
+               <!-- <ImageView
                     android:id="@+id/city_record"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -305,7 +342,7 @@
                     android:src="@mipmap/ic_record"
                     android:alpha="54"
                     android:backgroundTint="#000000"
-                    />
+                    />-->
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView

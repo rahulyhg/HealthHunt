@@ -26,8 +26,8 @@ public interface IMyFeedPresenter {
     List<ArticlePostItem> getTrendingArticles();
     List<ArticlePostItem> getLatestArticles();
     List<ArticlePostItem> getSponsoredArticles();
-    List<ProductPostItem> getTopProductArticles();
-    List<ProductPostItem> getLatestProductArticles();
+    List<ProductPostItem> getTopProducts();
+    List<ProductPostItem> getLatestProducts();
     Map<Integer, Integer> getArticlesType();
     void fetchData();
     int getView(int type);

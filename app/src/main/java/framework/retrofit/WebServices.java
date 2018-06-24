@@ -3,6 +3,7 @@ package framework.retrofit;
 import java.util.List;
 import java.util.Map;
 
+import in.healthhunt.model.articles.ArticleParams;
 import in.healthhunt.model.articles.articleResponse.ArticleData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkData;
 import in.healthhunt.model.articles.bookmarkResponse.BookMarkResponse;
@@ -13,6 +14,8 @@ import in.healthhunt.model.comment.AllCommentInfo;
 import in.healthhunt.model.comment.CommentData;
 import in.healthhunt.model.comment.CommentRequest;
 import in.healthhunt.model.comment.CommentsItem;
+import in.healthhunt.model.deletePost.DeleteArticleData;
+import in.healthhunt.model.deletePost.DeleteProductData;
 import in.healthhunt.model.filter.FilterData;
 import in.healthhunt.model.likes.LikesInfo;
 import in.healthhunt.model.likes.LikesRequest;
@@ -23,6 +26,7 @@ import in.healthhunt.model.login.UserData;
 import in.healthhunt.model.notification.NotificationData;
 import in.healthhunt.model.response.HHResponse;
 import in.healthhunt.model.tags.TagData;
+import in.healthhunt.model.user.UserRequest;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -51,6 +55,9 @@ public interface WebServices {
 
  @GET("posts")
  Call<HHResponse<ArticleData>> fetchArticles(@QueryMap Map<String, String> params);
+
+ @GET("posts")
+ Call<HHResponse<ArticleData>> fetchArticlesCategory(@QueryMap Map<String, String> params, @Query(ArticleParams.TAGS_FILTER) List<String> categories);
 
  @GET("posts")
  Call<HHResponse<ProductData>> fetchProducts(@QueryMap Map<String, String> params);
@@ -87,6 +94,27 @@ public interface WebServices {
 
  @GET("notifications")
  Call<HHResponse<NotificationData>> fetchNotifications(@QueryMap Map<String, String> params);
+
+ @GET("posts")
+ Call<HHResponse<ArticleData>> searchArticles(@QueryMap Map<String, String> params);
+
+ @GET("tags")
+ Call<HHResponse<TagData>> fetchCategories(@QueryMap Map<String, String> params);
+
+ @POST("posts/{id}/delete")
+ Call<HHResponse<DeleteArticleData>> deleteArticle(@Path("id") String id);
+
+ @POST("posts/{id}/delete")
+ Call<HHResponse<DeleteProductData>> deleteProduct(@Path("id") String id);
+
+ @POST("users/me")
+ Call<HHResponse<UserData>> updateUser(@Body UserRequest userRequest);
+
+ @GET("users/me")
+ Call<HHResponse<UserData>> fetchCurrentUser();
+
+
+
 
     /*@Header("authToken") String token,*/
 

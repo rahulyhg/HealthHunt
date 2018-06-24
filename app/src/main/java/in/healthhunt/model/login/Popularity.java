@@ -5,7 +5,7 @@ public class Popularity{
 	private int profile_views;
 	private int observed_posts;
 	private int nays;
-	private int likes;
+	private String likes;
 
 	public void setHays(int hays){
 		this.hays = hays;
@@ -39,11 +39,11 @@ public class Popularity{
 		return nays;
 	}
 
-	public void setLikes(int likes){
+	public void setLikes(String likes){
 		this.likes = likes;
 	}
 
-	public int getLikes(){
+	public String getLikes(){
 		return likes;
 	}
 

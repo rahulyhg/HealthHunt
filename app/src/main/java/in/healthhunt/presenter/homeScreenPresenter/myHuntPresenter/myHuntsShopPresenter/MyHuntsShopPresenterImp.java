@@ -28,7 +28,7 @@ import in.healthhunt.view.homeScreenView.myHuntsView.IMyHuntsView;
  */
 
 public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProductInteractor.OnProductFinishListener,
-        IBookMarkInteractor.OnFinishListener {
+        IBookMarkInteractor.OnFinishListener, IProductInteractor.OnDeleteFinishListener {
 
     private String TAG = MyHuntsShopPresenterImp.class.getSimpleName();
     private Context mContext;
@@ -68,6 +68,7 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                             if(!bookMarkInfo.isBookMark()){
                                 updateProductSaved(postItem);
                             }
+                            IMyHuntsView.updateSavedProduct(postItem);
                         }
                         break;
                     }
@@ -81,15 +82,15 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
     public void onProductSuccess(List<ProductPostItem> items, int type) {
         mProductCount--;
 
-        if(items == null || items.isEmpty()){
+        /*if(items == null || items.isEmpty()){
             Log.i("TAGITEMS", "Product Data is empty");
             return;
-        }
+        }*/
 
-        Log.i("TAGITEMS", "ITEMS " + items);
         switch (type){
             case ArticleParams.SAVED:
                 mProductSavedList = items;
+                Log.i("TAGITEMS", " type " + type + " Items "  + items);
                 break;
 
             case ArticleParams.APPROVED:
@@ -110,6 +111,12 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
             IMyHuntsView.hideProgress();
             IMyHuntsView.updateAdapter();
         }
+    }
+
+    @Override
+    public void onProductDeleteSuccess(ProductPostItem item) {
+        IMyHuntsView.hideProgress();
+        IMyHuntsView.deletePost(item.getProduct_id());
     }
 
     @Override
@@ -244,6 +251,7 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
 
     @Override
     public void fetchProducts(String userId) {
+        Log.i("TAGUSER", "USER " + userId);
         IMyHuntsView.showProgress();
         mProductCount = 3;
         fetchSavedProducts(userId);
@@ -274,11 +282,17 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
         }
     }
 
+    @Override
+    public void deleteProduct(String id) {
+        IMyHuntsView.showProgress();
+        IProductInteractor.deleteProduct(mContext, id, this);
+    }
+
     private void fetchSavedProducts(String userId) {
         Map<String, String> map = new HashMap<String, String>();
 
         String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+      //  String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
@@ -286,10 +300,11 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                 + ":" + userId + "}";*/
 
         Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_SAVED);
-        map.put(author, userId);
+       // map.put(author, userId);
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+        map.put(filter, ArticleParams.COLLECTION_SAVED);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IProductInteractor.fetchProduct(mContext, ArticleParams.SAVED, map, this);
@@ -299,7 +314,7 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
         Map<String, String> map = new HashMap<String, String>();
 
         String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+       // String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
@@ -307,10 +322,11 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                 + ":" + userId + "}";*/
 
         Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_CREATED);
-        map.put(author, userId);
+       // map.put(author, userId);
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+        map.put(filter, ArticleParams.COLLECTION_CREATED);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IProductInteractor.fetchProduct(mContext, ArticleParams.APPROVED, map, this);
@@ -320,7 +336,7 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
         Map<String, String> map = new HashMap<String, String>();
 
         String filter = ArticleParams.FILTER + "[" + ArticleParams.COLLECTION + "]";
-        String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
+       // String author = ArticleParams.FILTER + "[" + ArticleParams.AUTHOR + "]";
 
                 /*"'{"' +  + ArticleParams.COLLECTION + '"'
                 + ":" + '"' + ArticleParams.COLLECTION_SAVED + '"'
@@ -328,10 +344,11 @@ public class MyHuntsShopPresenterImp implements IMyHuntsProductsPresenter, IProd
                 + ":" + userId + "}";*/
 
         Log.i("TAGFILTER", "filter " + filter);
-        map.put(filter, ArticleParams.COLLECTION_RECEIVED);
-        map.put(author, userId);
+       // map.put(author, userId);
         map.put(ArticleParams.TYPE, ArticleParams.MARKET);
         map.put(ArticleParams.MARKT_TYPE, String.valueOf(1));
+        map.put(filter, ArticleParams.COLLECTION_RECEIVED);
+        map.put(ArticleParams.APP, String.valueOf(1));
         map.put(ArticleParams.OFFSET, String.valueOf(0));
         map.put(ArticleParams.LIMIT, String.valueOf(30));
         IProductInteractor.fetchProduct(mContext, ArticleParams.RECEIVED, map, this);

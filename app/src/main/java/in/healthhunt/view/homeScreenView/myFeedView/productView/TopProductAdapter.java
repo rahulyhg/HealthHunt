@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,9 +22,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import in.healthhunt.R;
 import in.healthhunt.model.articles.ArticleParams;
+import in.healthhunt.model.articles.commonResponse.Author;
 import in.healthhunt.model.articles.commonResponse.CurrentUser;
 import in.healthhunt.model.articles.commonResponse.MediaItem;
+import in.healthhunt.model.articles.commonResponse.Title;
 import in.healthhunt.model.articles.productResponse.ProductPostItem;
+import in.healthhunt.model.utility.HealthHuntUtility;
 import in.healthhunt.presenter.homeScreenPresenter.myFeedPresenter.productPresenter.IProductPresenter;
 
 /**
@@ -94,15 +98,21 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
 
-            String productName = postsItem.getProduct_type_other_name();
+            /*String productName = postsItem.getProduct_type_other_name();
             if(productName != null) {
                 holder.mProductName.setText(productName);
+            }*/
+
+            Title title = postsItem.getTitle();
+            if(title != null){
+                String render = title.getRendered();
+                holder.mProductName.setText(render);
             }
 
-            String brandName = postsItem.getBrand_other_name();
-            Log.i("TAGPRODU", "type " + brandName);
-            if(brandName != null) {
-                holder.mProductType.setText(brandName);
+            Author author = postsItem.getAuthor();
+            if(author != null) {
+                String authorName = author.getName();
+                holder.mProductType.setText(authorName);
             }
 
             CurrentUser currentUser = postsItem.getCurrent_user();
@@ -116,17 +126,33 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
-            String price = postsItem.getPost_price();
-            if(price != null) {
-                String postQuantity = postsItem.getPost_quantity();
-                String rs = mContext.getString(R.string.rs);
-                rs = rs + " " + price + "/" + postQuantity;
-                holder.mProductPrice.setText(rs);
+            int is_free_trail = 0;
+            String is_free = postsItem.getIs_free_trial();
+            if(is_free != null && !is_free.isEmpty()){
+                is_free_trail = Integer.parseInt(is_free);
             }
 
-            String postUnit = postsItem.getPost_unit();
-            if(postUnit != null) {
-                holder.mProductUnit.setText(postUnit);
+            if(is_free_trail == 0) {
+                holder.mPriceView.setVisibility(View.VISIBLE);
+                holder.mFreeTrail.setVisibility(View.GONE);
+
+                String price = postsItem.getPost_price();
+                if (price != null) {
+                    String postQuantity = postsItem.getPost_quantity();
+                    String rs = mContext.getString(R.string.rs);
+                    price = HealthHuntUtility.addSeparator(price);
+                    rs = rs + " " + price + "/" + postQuantity;
+                    holder.mProductPrice.setText(rs);
+                }
+
+                String postUnit = postsItem.getPost_unit();
+                if (postUnit != null) {
+                    holder.mProductUnit.setText(postUnit);
+                }
+            }
+            else {
+                holder.mPriceView.setVisibility(View.GONE);
+                holder.mFreeTrail.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -152,6 +178,12 @@ public class TopProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @BindView(R.id.top_product_unit)
         TextView mProductUnit;
+
+        @BindView(R.id.free_trail)
+        TextView mFreeTrail;
+
+        @BindView(R.id.price_view)
+        LinearLayout mPriceView;
 
         public TopProductItemViewHolder(View itemView) {
             super(itemView);
